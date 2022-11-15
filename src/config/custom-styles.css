@@ -1,0 +1,49 @@
+.custom-borderline {
+    /* you can change these variables to control the border */
+    --border-color: #8659b5;
+    --border-width: 4px;
+    --bottom-distance: 0px; /* you can increase this */
+    background-position: 50% calc(100% - var(--bottom-distance));
+    display: inline-block;
+    background-image: linear-gradient(var(--border-color), var(--border-color));
+    background-size: 0% var(--border-width);
+    background-repeat: no-repeat;
+    transition: background-size 0.3s;
+    margin-bottom: 10px;
+}
+
+.custom-borderline:hover {
+    cursor: pointer;
+    background-size: 100% var(--border-width);
+}
+
+/*  SCROLL BAR  */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b8b8b8;
+    border-radius: 7px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(161, 161, 161);
+}
+
+/* TEXT */
+
+* {
+    font-family: 'Work Sans', sans-serif;
+}
+
+/*  RANDOM  */
+
+.pointer {
+    cursor: pointer;
+}
