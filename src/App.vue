@@ -19,7 +19,7 @@ import SnackbarComponent from "@/components/ui/SnackbarComponent.vue"
 import HeaderComponent from "@/components/ui/HeaderComponent.vue"
 import FooterComponent from "@/components/ui/FooterComponent.vue"
 import DialogComponent from "@/components/ui/DialogComponent.vue"
-import DrawerComponent from "@/components/ui/DrawerComponent.vue";
+import DrawerComponent from "@/components/ui/DrawerComponent.vue"
 
 @Component({ components: { DialogComponent, SnackbarComponent, HeaderComponent, FooterComponent, DrawerComponent } })
 export default class App extends Vue {
@@ -37,4 +37,14 @@ export default class App extends Vue {
   opacity: 0;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  background-clip:content-box;
+  -webkit-background-clip: text;
+}
 </style>
