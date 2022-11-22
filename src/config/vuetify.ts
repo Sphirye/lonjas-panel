@@ -22,6 +22,9 @@ export default new Vuetify({
         info: '#2196F3',
         success: '#4CAF50',
         warning: '#FFC107',
+
+        'lonjas-base': '#1b1b31',
+        'lonjas-base-2': '#2e2638'
       }
     }
   }

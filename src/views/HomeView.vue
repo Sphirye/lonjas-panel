@@ -21,12 +21,14 @@ import DialogModule from "@/store/DialogModule"
 import LangModule from "@/store/LangModule"
 import Rules from "@/service/tool/Rules"
 import Dialog from "@/model/vue/Dialog"
+import SessionModule from "@/store/SessionModule";
 
 @Component
 export default class HomeView extends Vue {
 
 	@Ref() readonly form!: HTMLFormElement
 
+  get bruh() { return getModule(SessionModule) }
   get lang() { return getModule(LangModule).lang }
 	get rules() { return Rules }
 

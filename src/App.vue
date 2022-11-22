@@ -20,10 +20,14 @@ import HeaderComponent from "@/components/ui/HeaderComponent.vue"
 import FooterComponent from "@/components/ui/FooterComponent.vue"
 import DialogComponent from "@/components/ui/DialogComponent.vue"
 import DrawerComponent from "@/components/ui/DrawerComponent.vue"
+import LoginService from "@/service/LoginService"
 
 @Component({ components: { DialogComponent, SnackbarComponent, HeaderComponent, FooterComponent, DrawerComponent } })
 export default class App extends Vue {
 
+  async created() {
+    await LoginService.checkSession(this)
+  }
 
 }
 </script>

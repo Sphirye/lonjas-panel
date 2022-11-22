@@ -1,16 +1,18 @@
 <template>
-	<v-app-bar color="primary" dark clipped-left app flat>
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
-		<div class="d-flex align-center pointer" @click="$router.push('/').catch(err => {})">
-			<v-img alt="Vuetify Logo" class="shrink mr-2" contain src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png" transition="scale-transition" width="40"/>
-			<v-img alt="Vuetify Name" class="shrink mt-1 hidden-sm-and-down" contain min-width="100" src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png" width="100"/>
-		</div>
-		<v-spacer/>
-		<v-btn href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank" text>
-			<span class="mr-2">Latest Release</span>
-			<v-icon>mdi-open-in-new</v-icon>
-		</v-btn>
-	</v-app-bar>
+  <v-app-bar color="lonjas-base-2" dark clipped-left clipped-right app flat style="border-bottom: 1px solid rgba(64,64,64,0.52) !important;">
+    <v-app-bar-nav-icon @click.stop="toggleDrawer"/>
+
+    <div class="pointer" @click="$router.push('/').catch(err => {})">
+      <span class="uni-sans-heavy text-lg grey--text text--lighten-1 mx-3">LONJAS</span>
+    </div>
+
+    <v-spacer/>
+
+    <div class="mx-2">
+      <v-text-field :label="lang.search" dense append-icon="fas fa-search" outlined hide-details="auto" dark rounded/>
+    </div>
+
+  </v-app-bar>
 </template>
 
 <script lang="ts">
@@ -26,5 +28,9 @@ export default class HeaderComponent extends Vue {
 
   get drawer() { return this.drawerModule.drawer }
   set drawer(value: boolean) { this.drawerModule.setDrawer(value) }
+
+  toggleDrawer(){ this.drawerModule.toggle() }
+
+
 }
 </script>

@@ -67,10 +67,6 @@ export default class LoginView extends Vue {
   get sessionModule() { return getModule(SessionModule).session }
   get isLogged() { return LoginService.isLogged() }
 
-  created() {
-    this.isLogged ? this.$router.push("/") : null
-  }
-
   login() {
     if (this.form.validate()) {
     LoginService.login(this, this.email, this.password)

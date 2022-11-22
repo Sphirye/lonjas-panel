@@ -16,4 +16,17 @@ export default {
     about: "Acerca",
     search: "Buscar",
 
+    recentPosts: "Posts Recientes",
+    post: "Post",
+    posts: "Posts",
+    category: "Categoría",
+    categories: "Categorías",
+    character: "Personaje",
+    characters: "Personajes",
+    group: "Grupo",
+    groups: "Grupos",
+    clearFilters: "Limpiar filtros",
+    artist: "Artista",
+    artists: "Artistas"
+
 }

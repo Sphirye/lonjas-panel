@@ -5,6 +5,7 @@ import {getModule} from "vuex-module-decorators";
 import SessionModule from "@/store/SessionModule";
 import LoginResponse from "@/model/response/LoginResponse";
 import JsonTool from "@/service/tool/JsonTool";
+import {AxiosError} from "axios";
 
 export default class LoginService {
 
@@ -35,7 +36,28 @@ export default class LoginService {
         }
     }
 
+    static async checkSession(component: Vue) {
+        // @ts-ignore
+        component.loading = true
+        try {
+            let response = await component.axios.get(ConstantTool.BASE_URL + "/api/auth/check", {
+                headers: {Authorization: getModule(SessionModule).session.token}
+            })
+        } catch (error) {
+            let axiosError = error as AxiosError
+            console.log(axiosError.response?.status)
+        } finally {
+            // @ts-ignore
+            component.loading = false
+        }
+    }
+
+    static async deleteSession() {
+        this.sessionModule().session.token = ""
+        this.sessionModule().saveSession()
+    }
+
     static isLogged() {
-        return (getModule(SessionModule).session.token != null)
+        return (this.sessionModule().session.token != null)
     }
 }

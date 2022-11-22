@@ -6,9 +6,12 @@ import LoginService from "@/service/LoginService";
 
 Vue.use(VueRouter)
 
+
 const routes: Array<RouteConfig> = [
-  { path: '/', name: 'Home', component: () => import('../views/HomeView.vue'), meta: { requiresAuth: true } },
   { path: '/login', name: 'Login', component: () => import('../views/LoginView.vue'), meta: { requiresAuth: false } },
+  { path: '/', name: 'Home', component: () => import('../views/HomeView.vue'), meta: { requiresAuth: true } },
+  { path: '/artists', name: 'Artists', component: () => import('../views/ArtistsView.vue'), meta: { requiresAuth: true } },
+  { path: '/artists/:id', name: 'Artist', component: () => import('../views/ArtistView.vue'), meta: { requiresAuth: true } },
 ]
 
 const router = new VueRouter({

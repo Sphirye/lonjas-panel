@@ -31,7 +31,8 @@ export default class DrawerComponent extends Vue {
 
   buttons = [
     { title: this.lang.home, url: "/", id: 1 },
-    { title: this.lang.about, url: "/about", id: 2 },
+    { title: "Artistas", url: "/artists", id: 2 },
+    { title: this.lang.about, url: "/about", id: 3 },
   ]
 }
 </script>
