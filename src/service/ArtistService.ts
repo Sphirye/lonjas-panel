@@ -13,7 +13,7 @@ export default class ArtistService {
             // @ts-ignore
             component.artist = JsonTool.jsonConvert.deserializeObject(response.data, Artist)
         } catch (e) {
-
+            console.log(e)
         } finally {
             // @ts-ignore
             component.loading = false
@@ -31,7 +31,7 @@ export default class ArtistService {
             artists.splice(0, artists.length)
             list.forEach(v => artists.push(v))
         } catch (e) {
-
+            console.log(e)
         } finally {
             // @ts-ignore
             component.loading = false

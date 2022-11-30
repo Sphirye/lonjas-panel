@@ -2,7 +2,7 @@
   <v-app>
     <HeaderComponent/>
     <DrawerComponent/>
-    <v-main>
+    <v-main class="lonjas-base">
       <transition name="fade" mode="out-in">
         <router-view/>
       </transition>
@@ -25,8 +25,8 @@ import LoginService from "@/service/LoginService"
 @Component({ components: { DialogComponent, SnackbarComponent, HeaderComponent, FooterComponent, DrawerComponent } })
 export default class App extends Vue {
 
-  async created() {
-    await LoginService.checkSession(this)
+  async mounted() {
+    // await LoginService.checkSession(this)
   }
 
 }

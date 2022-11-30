@@ -3,7 +3,7 @@
 		<v-row>
 			<v-col cols="6">
 				<v-form ref="form">
-					<v-text-field :label="lang.search" :rules="[rules.required, rules.email]"/>
+					<v-text-field :label="lang.search" :rules="[rules.required, rules.email]" outlined dark/>
 					<v-btn @click="validate">XD</v-btn>
 				</v-form>
 			</v-col>
@@ -28,7 +28,6 @@ export default class HomeView extends Vue {
 
 	@Ref() readonly form!: HTMLFormElement
 
-  get bruh() { return getModule(SessionModule) }
   get lang() { return getModule(LangModule).lang }
 	get rules() { return Rules }
 

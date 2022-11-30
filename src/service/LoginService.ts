@@ -20,14 +20,12 @@ export default class LoginService {
         // @ts-ignore
         component.loading = true
         try {
-
             let response = await component.axios.post(ConstantTool.BASE_URL + "/public/auth/login", formData)
             let loginResponse: LoginResponse = JsonTool.jsonConvert.deserializeObject(response.data, LoginResponse)
             this.sessionModule().session.token = "Bearer " + loginResponse.token
             this.sessionModule().session.user = loginResponse.user!
             this.sessionModule().saveSession()
-
-            await component.$router.push("/home")
+            await component.$router.push("/")
         } catch (e) {
             getModule(SnackbarModule).makeToast("Algo ha salido mal al iniciar sesión.")
         } finally {
@@ -41,11 +39,10 @@ export default class LoginService {
         component.loading = true
         try {
             let response = await component.axios.get(ConstantTool.BASE_URL + "/api/auth/check", {
-                headers: {Authorization: getModule(SessionModule).session.token}
+                headers: { Authorization: getModule(SessionModule).session.token }
             })
         } catch (error) {
-            let axiosError = error as AxiosError
-            console.log(axiosError.response?.status)
+            console.log(error)
         } finally {
             // @ts-ignore
             component.loading = false

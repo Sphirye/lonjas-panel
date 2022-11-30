@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import {getModule} from "vuex-module-decorators"
 import SessionModule from "@/store/SessionModule"
-import LoginService from "@/service/LoginService";
+import LoginService from "@/service/LoginService"
 
 Vue.use(VueRouter)
 
@@ -12,12 +12,13 @@ const routes: Array<RouteConfig> = [
   { path: '/', name: 'Home', component: () => import('../views/HomeView.vue'), meta: { requiresAuth: true } },
   { path: '/artists', name: 'Artists', component: () => import('../views/ArtistsView.vue'), meta: { requiresAuth: true } },
   { path: '/artists/:id', name: 'Artist', component: () => import('../views/ArtistView.vue'), meta: { requiresAuth: true } },
+  { path: '/artists/:id/tweets/:tweetId', name: 'Artist', component: () => import('../views/TweetView.vue'), meta: { requiresAuth: true } },
+
 ]
 
 const router = new VueRouter({
   mode: 'history', base: process.env.BASE_URL, routes
 })
-
 
 router.beforeEach(async(to, from, next) => {
 
@@ -29,15 +30,15 @@ router.beforeEach(async(to, from, next) => {
 
   sessionModule.loadSession()
 
-  if (to.path == "/login" && LoginService.isLogged()) {
-    return next({ path: '/' })
-  }
-
   if (to.meta?.requiresAuth) {
     if (!LoginService.isLogged()) {
       return next({ path:'/login' })
     }
   }
+
+  // if (to.path == "/login" && LoginService.isLogged()) {
+  //   return next({ path: '/' })
+  // }
 
   next()
 })

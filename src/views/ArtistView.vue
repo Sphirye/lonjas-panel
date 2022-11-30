@@ -1,12 +1,9 @@
 <template>
   <v-container fluid class="px-8">
     <template v-if="artist.id">
-      <v-row dense align="center">
-        <span class="uni-sans-heavy text-md white--text mx-4">{{ lang.artist }}</span>
-      </v-row>
 
       <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
-      <v-row justify="start" align="start" dense>
+      <v-row no-gutter justify="start" align="start" dense>
         <v-col cols="4">
           <v-card flat class="lonjas-base-2" dark>
             <v-card-title>
@@ -20,47 +17,63 @@
             </v-card-title>
             <v-divider class="mx-3"/>
             <v-card-text>
-              <div class="px-3">
+              <div>
 
-                <h3 class="mb-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eu lorem quis arcu venenatis pharetra ac at tortor.</h3>
+                <h3 style="white-space: pre-wrap;" class="mx-4">{{ artist.twitter.description }}</h3>
 
-                <v-row align="center">
-                  <v-col cols="10">
-                    <h3 class="font-weight-medium">Posts: {{ totalPosts }}
-                      <v-tooltip top max-width="150px">
-                        <template v-slot:activator="{ on, attrs }">
-                          <span v-on="on" v-bind="attrs" class="grey--text text--darken-1 pointer">?</span>
-                        </template>
-                        <span class="text-center">Cantidad total de posts añadidos a la galería.</span>
-                      </v-tooltip>
-                    </h3>
-                    <h3 class="font-weight-medium">
-                      Last update: 30 min ago.
-                    </h3>
-                  </v-col>
-                  <v-col cols="2">
-                    <v-icon size="30">fab fa-twitter</v-icon>
-                  </v-col>
-                </v-row>
+                <v-divider class="my-3"/>
+                <div class="mx-3">
+                  <v-row align="center">
+                    <v-col cols="10">
+                      <h3 class="font-weight-medium">Posts: {{ totalPosts }}
+                        <v-tooltip top max-width="150px">
+                          <template v-slot:activator="{ on, attrs }">
+                            <span v-on="on" v-bind="attrs" class="grey--text text--darken-1 pointer">?</span>
+                          </template>
+                          <span class="text-center">Cantidad total de posts añadidos a la galería.</span>
+                        </v-tooltip>
+                      </h3>
+                      <h3 class="font-weight-medium">
+                        Last update: 30 min ago.
+                      </h3>
+                    </v-col>
+                    <v-col cols="2">
+                      <v-icon size="30">fab fa-twitter</v-icon>
+                    </v-col>
+                  </v-row>
+                </div>
               </div>
             </v-card-text>
           </v-card>
         </v-col>
 
         <v-col cols="8">
-          <v-row dense align="center">
-            <span class="uni-sans-heavy text-md white--text mx-4">{{ lang.posts }}</span>
+          <v-row no-gutters align="center">
+            <v-tabs v-model="tab" centered background-color="transparent">
+              <v-tabs-slider color="yellow"></v-tabs-slider>
+              <v-tab v-for="item in tabs" :key="item.route" active-class="grey darken-2 grey--text">
+                <span class="uni-sans-heavy text-sm white--text">{{ item.name }}</span>
+              </v-tab>
+            </v-tabs>
           </v-row>
-          <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
-          <v-row no-gutters dense>
-            <v-col cols="4" v-for="(post, key) in posts" :key="key">
-              <v-card class="ma-1" outlined dark rounded height="250px">
-                <v-img class="rounded-b" height="250px" :src="post.images[0]"/>
-              </v-card>
-            </v-col>
-          </v-row>
+          <v-tabs-items v-model="tab" class="transparent">
+
+            <v-tab-item :value="0" :key="0">
+              XDD
+              <ArtistPostsTab :artist="artist"/>
+            </v-tab-item>
+
+            <v-tab-item :value="1" :key="1">
+              <ArtistTweetsTab :artist="artist"/>
+            </v-tab-item>
+
+            <v-tab-item :value="2" :key="2">Videos</v-tab-item>
+          </v-tabs-items>
+
         </v-col>
       </v-row>
+
+
     </template>
   </v-container>
 </template>
@@ -78,11 +91,20 @@ import Dialog from "@/model/vue/Dialog"
 import Artist from "@/model/Artist"
 import Post from "@/model/Post";
 import PostService from "@/service/PostService";
+import ArtistPostsTab from "@/components/tabs/ArtistPostsTab.vue";
+import ArtistTweetsTab from "@/components/tabs/ArtistTweetsTab.vue";
 
-@Component( { components: { PostCardComponent } } )
+@Component( { components: { PostCardComponent, ArtistPostsTab, ArtistTweetsTab } } )
 export default class PostsView extends Vue {
 
   @Ref() readonly form!: HTMLFormElement
+
+  tab = null
+  tabs = [
+    { name: "Posts", route: "/posts"  },
+    { name: "Tweets", route: "/tweets" },
+    { name: "Videos", route: "/videos" },
+  ]
 
   loading: boolean = false
   artist: Artist = new Artist()
@@ -101,7 +123,6 @@ export default class PostsView extends Vue {
 
   async refresh() {
     await ArtistService.getArtist(this, Number(this.$route.params.id))
-    await this.getPosts()
   }
 
   async getPosts() {

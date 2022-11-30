@@ -36,7 +36,7 @@ export default class PostService {
             posts.splice(0, posts.length)
             list.forEach(v => posts.push(v))
         } catch (e) {
-
+            console.log(e)
         } finally {
             // @ts-ignore
             component.loading = false
@@ -56,7 +56,7 @@ export default class PostService {
             // @ts-ignore
             component.totalPosts = Number(response.headers["x-total-count"])
         } catch (e) {
-
+            console.log(e)
         } finally {
             // @ts-ignore
             component.loading = false

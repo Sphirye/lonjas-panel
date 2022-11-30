@@ -2,7 +2,7 @@
   <v-container class="my-16">
     <v-row justify="center">
       <v-form ref="form">
-        <v-card outlined color="grey" tile>
+        <v-card outlined color="grey darken-3" tile>
           <v-card-title class="pt-10">
             <div class="mx-auto my-auto d-flex flex-column justify-center align-center">
               <v-icon color="grey lighten-4" size="62">far fa-circle-user</v-icon>
@@ -13,8 +13,8 @@
             <v-row dense>
               <v-col cols="12">
                 <v-text-field
-                    v-model="email" :rules="[rules.required, rules.email]" label="Email" hide-details="auto"
-                    filled flat background-color="grey lighten-3" color="grey" class="rounded-0 input-dark-error"
+                    v-model="email" :label="lang.search"  hide-details="auto"
+                    :rules="[rules.required, rules.email]" outlined dark
                 />
               </v-col>
               <v-divider class="white mx-5 my-1"/>
@@ -23,7 +23,7 @@
                     v-model="password" :rules="[rules.required]" label="Contraseña" hide-details="auto"
                     :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword"
-                    filled flat background-color="grey lighten-3" color="grey" class="rounded-0 input-dark-error"
+                    outlined dark
                 />
               </v-col>
             </v-row>
@@ -57,6 +57,7 @@ export default class LoginView extends Vue {
 
   @Ref() readonly form!: HTMLFormElement
 
+  xd: String = "xasid"
   loading: boolean = false
   email: string = ""
   password: string = ""

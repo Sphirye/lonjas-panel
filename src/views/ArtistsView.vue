@@ -21,7 +21,7 @@
 
     <v-row align="start" dense>
       <v-col cols="auto" v-for="(artist, key) in artists" :key="key">
-        <artist-card-component :artist="artist"/>
+        <ArtistCardComponent :artist="artist"/>
       </v-col>
     </v-row>
   </v-container>
