@@ -43,18 +43,33 @@ export default class PostService {
         }
     }
 
-    static async getPostsByArtist(component: Vue, id: number, posts: Post[], page: number, size: number) {
+    static async getPostsByArtist(component: Vue, posts: Post[], id: number, page: number, size: number) {
         // @ts-ignore
         component.loading = true
         try {
             const response = await component.axios.get(`${ConstantTool.BASE_URL}/public/artist/${id}/post`, {
-                params: {page, size}
+                params: { page, size }
             })
             let list = JsonTool.jsonConvert.deserializeArray(response.data, Post)
             posts.splice(0, posts.length)
             list.forEach(v => posts.push(v))
             // @ts-ignore
             component.totalPosts = Number(response.headers["x-total-count"])
+        } catch (e) {
+            console.log(e)
+        } finally {
+            // @ts-ignore
+            component.loading = false
+        }
+    }
+
+    static async createPostFromTweet(component: Vue, artistId: number, tweetId: string) {
+        // @ts-ignore
+        component.loading = true
+        try {
+            const response = await component.axios.post(`${ConstantTool.BASE_URL}/api/artist/${artistId}/post`, null, {
+                params: { tweetId }
+            })
         } catch (e) {
             console.log(e)
         } finally {

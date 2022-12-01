@@ -7,18 +7,17 @@ import Tweet from "@/model/twitter/Tweet"
 
 export default class TweetService {
 
-    static async getTweet(component: Vue, id: number) {
+    static async getTweet(component: Vue, id: String) {
         // @ts-ignore
         component.loading = true
         try {
             let response = await component.axios.get(ConstantTool.BASE_URL + `/public/twitter/tweet/${id}`, {
                 headers: { Authorization: getModule(SessionModule).session.token }
             })
-            let tweet = JsonTool.jsonConvert.deserialize(response, Tweet)
             // @ts-ignore
-            component.tweet = tweet
+            component.tweet = JsonTool.jsonConvert.deserializeObject(response.data, Tweet)
         } catch (e) {
-
+            console.log(e)
         } finally {
             // @ts-ignore
             component.loading = false
@@ -36,7 +35,6 @@ export default class TweetService {
             let list = JsonTool.jsonConvert.deserializeArray(response.data, Tweet)
             tweets.splice(0, tweets.length)
             list.forEach(v => tweets.push(v))
-
         } catch (e) {
             console.log(e)
         } finally {

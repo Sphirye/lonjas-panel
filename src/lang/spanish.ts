@@ -15,6 +15,7 @@ export default {
     home: "Inicio",
     about: "Acerca",
     search: "Buscar",
+    options: "Opciones",
 
     recentPosts: "Posts Recientes",
     post: "Post",

@@ -59,7 +59,6 @@
           <v-tabs-items v-model="tab" class="transparent">
 
             <v-tab-item :value="0" :key="0">
-              XDD
               <ArtistPostsTab :artist="artist"/>
             </v-tab-item>
 
@@ -123,10 +122,6 @@ export default class PostsView extends Vue {
 
   async refresh() {
     await ArtistService.getArtist(this, Number(this.$route.params.id))
-  }
-
-  async getPosts() {
-    await PostService.getPostsByArtist(this, this.artist.id!, this.posts, this.page - 1, this.size)
   }
 
   validate() {
