@@ -49,7 +49,7 @@
                         <v-subheader class="text-sm">{{ lang.options }}</v-subheader>
                         <div class="px-3"><v-divider/></div>
                         <v-list-item-group class="my-2">
-                          <v-list-item @click="dialog=true">
+                          <v-list-item @click="createPostDialog = true">
                             <v-list-item-icon class="mx-2 my-auto">
                               <v-icon>far fa-square-plus</v-icon>
                             </v-list-item-icon>
@@ -94,29 +94,8 @@
       </v-row>
     </template>
 
-    <v-dialog v-model="dialog" width="750px">
-      <v-card width="100%" height="100%" dark>
-        <v-card-title class="headline primary--text">
-          <v-row class="py-1" align="center" no-gutters>
-            <h5 class="mx-3 grey--text font-weight-bold">Crear post</h5>
-          </v-row>
-        </v-card-title>
-
-        <div class="mx-4">
-          <v-progress-linear color="grey" :indeterminate="loading"/>
-        </div>
-
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="7">
-                <v-text-field label="Id del Tweet" outlined rounded dense hide-details="auto"/>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-
-      </v-card>
+    <v-dialog v-model="createPostDialog" width="750px">
+      <CreatePostDialog :dialog.sync="createPostDialog"/>
     </v-dialog>
   </v-container>
 </template>
@@ -125,19 +104,21 @@
 import {Component, Prop, Ref, Vue} from 'vue-property-decorator'
 import TweetService from "@/service/TweetService"
 import {getModule} from "vuex-module-decorators"
+import PostService from "@/service/PostService"
 import LangModule from "@/store/LangModule"
 import Tweet from "@/model/twitter/Tweet"
 import Artist from "@/model/Artist"
+import CreatePostDialog from "@/components/dialog/CreatePostDialog.vue";
 
-@Component
+@Component( {components: { CreatePostDialog }})
 export default class ArtistTweetsTab extends Vue {
 
   get lang() { return getModule(LangModule).lang }
-  artist: Artist = new Artist()
   loading: boolean = false
+  artist: Artist = new Artist()
   tweet: Tweet = new Tweet()
 
-  dialog: boolean = false
+  createPostDialog: boolean = false
 
   created() {
     this.refresh()
@@ -145,10 +126,6 @@ export default class ArtistTweetsTab extends Vue {
 
   async refresh() {
     await TweetService.getTweet(this, this.$route.params.tweetId)
-  }
-
-  async createPost() {
-    // await PostService.createPostFromTweet(this,)
   }
 }
 </script>

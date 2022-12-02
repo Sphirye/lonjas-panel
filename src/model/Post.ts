@@ -3,12 +3,13 @@ import Character from "@/model/Character"
 import Category from "@/model/Category"
 import Artist from "@/model/Artist"
 import Tag from "@/model/Tag"
+import Tweet from "@/model/twitter/Tweet";
 
 @JsonObject("Post")
 export default class Post {
 
-    @JsonProperty("id", String, true)
-    id?: string = undefined
+    @JsonProperty("id", Number, true)
+    id?: number = undefined
 
     @JsonProperty("artist", Artist, true)
     artist?: Artist = undefined
@@ -22,13 +23,9 @@ export default class Post {
     @JsonProperty("characters", [Character], true)
     characters?: Character[] = undefined
 
-    @JsonProperty("images", [String], true)
-    images?: string[] = undefined
-
-    @JsonProperty("description", String, true)
-    description?: string = undefined
-
     @JsonProperty("approved", Boolean, true)
     approved?: boolean = undefined
 
+    @JsonProperty("tweet", Tweet, true)
+    tweet?: Tweet = undefined
 }

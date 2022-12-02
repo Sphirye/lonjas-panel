@@ -2,6 +2,8 @@ import ConstantTool from "@/service/tool/ConstantTool"
 import JsonTool from "@/service/tool/JsonTool"
 import {Vue} from "vue-property-decorator"
 import Post from "@/model/Post"
+import {getModule} from "vuex-module-decorators";
+import SessionModule from "@/store/SessionModule";
 
 export default class PostService {
 
@@ -63,11 +65,12 @@ export default class PostService {
         }
     }
 
-    static async createPostFromTweet(component: Vue, artistId: number, tweetId: string) {
+    static async createPostFromTweet(component: Vue, artistId: string, tweetId: string) {
         // @ts-ignore
         component.loading = true
         try {
-            const response = await component.axios.post(`${ConstantTool.BASE_URL}/api/artist/${artistId}/post`, null, {
+            const response = await component.axios.post(`${ConstantTool.BASE_URL}/api/artist/${artistId}/post/tweet`, null, {
+                headers: { Authorization: getModule(SessionModule).session.token },
                 params: { tweetId }
             })
         } catch (e) {

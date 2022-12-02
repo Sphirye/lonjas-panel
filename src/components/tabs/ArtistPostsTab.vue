@@ -3,15 +3,19 @@
     <v-row align="center">
       <v-progress-linear class="mt-4" color="grey" :indeterminate="loading"/>
       <v-col cols="3" v-for="(post, key) in posts" :key="key">
-        <v-hover v-slot="{ hover }">
-          <v-img>
-            <v-expand-transition>
-              <v-sheet tile color="rgba(44,48,59,0.84)" v-if="hover" class="d-flex flex-column transition-fast-in-fast-out" style="height: 100%">
-                XDDD
-              </v-sheet>
-            </v-expand-transition>
-          </v-img>
-        </v-hover>
+        <v-card height="200px" max-height="250px" outlined dark rounded>
+          <v-hover v-slot="{ hover }">
+            <v-img width="100%" height="100%" class="pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="post.tweet.images[0]">
+              <v-expand-transition>
+                <v-sheet tile color="rgba(44,48,59,0.84)" v-if="hover" class="d-flex flex-column transition-fast-in-fast-out" style="height: 100%">
+                  <div class="px-3 pb-4 pt-2">
+                    <p class="work-sans grey--text mt-2">"{{post.tweet.text}}"</p>
+                  </div>
+                </v-sheet>
+              </v-expand-transition>
+            </v-img>
+          </v-hover>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
