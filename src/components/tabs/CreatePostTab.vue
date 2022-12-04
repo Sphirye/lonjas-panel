@@ -1,5 +1,5 @@
 <template>
-  <v-card width="100%" height="100%" dark color="lonjas-base-2">
+  <v-card dark color="lonjas-base-2">
     <v-card-title class="headline primary--text">
       <v-row class="py-1" align="center" no-gutters>
         <h5 class="mx-3 grey--text text--lighten-2 font-weight-bold">Crear post</h5>
@@ -11,14 +11,14 @@
     </div>
 
     <v-card-text>
-      <v-container>
+      <v-container fluid class="px-0 mx-0">
         <v-form ref="form">
           <v-row dense>
             <v-col cols="7">
-              <v-text-field :rules="[rules.required]" type="number" v-model="tweetId" label="Id del Tweet" outlined rounded dense hide-details/>
+              <v-text-field :rules="[rules.required]" type="number" v-model="tweetId" disabled label="Id del Tweet" outlined rounded dense hide-details/>
             </v-col>
             <v-col cols="5">
-              <v-autocomplete hide-details outlined class="rounded mb-1" dense label="Tags"/>
+              <v-autocomplete hide-details outlined class="rounded mb-1" dense :items="tags" multiple chips deletable-chips small-chips label="Tags" item-text="name" item-value="id" v-model="selectedTags"/>
               <v-autocomplete hide-details outlined class="rounded my-1" dense label="Grupos"/>
               <v-autocomplete hide-details outlined class="rounded mt-1" dense label="Personajes"/>
             </v-col>
@@ -29,13 +29,15 @@
 
     <v-card-actions>
       <v-spacer/>
-      <v-btn depressed class="secondary font-weight-bold" @click="close">
+      <v-btn depressed class="secondary font-weight-bold" @click="$emit('back')">
         Cancelar
       </v-btn>
       <v-btn depressed class="success darken-2 font-weight-bold" @click="createPost">
         Continuar
       </v-btn>
     </v-card-actions>
+
+    {{selectedTags}}
 
   </v-card>
 </template>
@@ -51,47 +53,41 @@ import Artist from "@/model/Artist"
 import DialogModule from "@/store/DialogModule";
 import Dialog from "@/model/vue/Dialog";
 import Rules from "@/service/tool/Rules";
+import TagService from "@/service/TagService";
+import Tag from "@/model/Tag";
 
 @Component
-export default class CreatePostDialog extends Vue {
+export default class CreatePostTab extends Vue {
 
   get lang() { return getModule(LangModule).lang }
 
+  @Prop({ default: '' }) readonly tweetId!: string
   @Ref() readonly form!: HTMLFormElement
-  @PropSync('dialog', { type: Boolean }) syncedDialog!: boolean
   loading: boolean = false
-  tweetId: string = ""
   artist: Artist = new Artist()
   tweet: Tweet = new Tweet()
+  tags: Tag[] = []
+  selectedTags = []
 
   get rules() { return Rules }
 
   created() {
-    console.log(this.$route.params)
     this.refresh()
   }
 
   async refresh() {
-    await TweetService.getTweet(this, this.$route.params.tweetId)
+    await TweetService.getTweet(this, this.tweetId)
+    await TagService.getTags(this, this.tags, 0, 5,null)
   }
 
   async createPost() {
     if (this.form.validate()) {
       getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea crear un post a partir de este tweet?", async () => {
-        // await PostService.createPostFromTweet(this, this.$route.params.artistId, this.tweet.id!!)
-        await this.$router.push(`/artists/${this.$route.params.artistId}`)
+        await PostService.createPostFromTweet(this, this.$route.params.id, this.tweet.id!!, this.selectedTags)
+        // this.$router.go(0)
+        // await this.$router.push(`/artists/${this.$route.params.artistId}`)
       }))
     }
-  }
-
-  close() {
-    this.syncedDialog = false
-  }
-
-  clear() {
-    this.tweetId = ""
-    this.artist = new Artist()
-    this.tweet = new Tweet()
   }
 }
 </script>

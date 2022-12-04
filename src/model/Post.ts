@@ -5,6 +5,11 @@ import Artist from "@/model/Artist"
 import Tag from "@/model/Tag"
 import Tweet from "@/model/twitter/Tweet";
 
+export enum PostFrom {
+    TWEET = "tweet",
+    UNKNOW = "unknow"
+}
+
 @JsonObject("Post")
 export default class Post {
 

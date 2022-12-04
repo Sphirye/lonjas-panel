@@ -3,7 +3,7 @@
     <template v-if="artist.id">
 
       <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
-      <v-row no-gutter justify="start" align="start" dense>
+      <v-row no-gutters justify="start" align="start" dense>
         <v-col cols="4">
           <v-card flat class="lonjas-base-2" dark>
             <v-card-title>
@@ -48,30 +48,27 @@
         </v-col>
 
         <v-col cols="8">
-          <v-row no-gutters align="center">
-            <v-tabs v-model="tab" centered background-color="transparent">
-              <v-tabs-slider color="yellow"></v-tabs-slider>
-              <v-tab v-for="item in tabs" :key="item.route" active-class="grey darken-2 grey--text">
-                <span class="uni-sans-heavy text-sm white--text">{{ item.name }}</span>
-              </v-tab>
-            </v-tabs>
-          </v-row>
-          <v-tabs-items v-model="tab" class="transparent">
+          <template>
+            <v-row no-gutters align="center" dense>
+              <v-tabs v-model="tab" centered background-color="transparent">
+                <v-tab v-for="item in tabs" :key="item.route" active-class="grey darken-2 grey--text">
+                  <span class="uni-sans-heavy text-sm white--text">{{ item.name }}</span>
+                </v-tab>
+              </v-tabs>
+            </v-row>
+            <v-tabs-items v-model="tab" class="transparent">
 
-            <v-tab-item :value="0" :key="0">
-              <ArtistPostsTab :artist="artist"/>
-            </v-tab-item>
+              <v-tab-item :value="0" :key="0">
+                <ArtistPostsTab v-if="tab == 0" :artist="artist"/>
+              </v-tab-item>
 
-            <v-tab-item :value="1" :key="1">
-              <ArtistTweetsTab :artist="artist"/>
-            </v-tab-item>
-
-            <v-tab-item :value="2" :key="2">Videos</v-tab-item>
-          </v-tabs-items>
-
+              <v-tab-item :value="1" :key="1">
+                <ArtistTweetsTab v-if="tab == 1" :artist="artist"/>
+              </v-tab-item>
+            </v-tabs-items>
+          </template>
         </v-col>
       </v-row>
-
 
     </template>
   </v-container>
@@ -80,7 +77,7 @@
 <script lang="ts">
 
 import PostCardComponent from "@/components/PostCardComponent.vue"
-import {Component, Ref, Vue} from 'vue-property-decorator'
+import {Component, Ref, Vue, Watch} from 'vue-property-decorator'
 import ArtistService from "@/service/ArtistService"
 import {getModule} from "vuex-module-decorators"
 import DialogModule from "@/store/DialogModule"
@@ -92,17 +89,19 @@ import Post from "@/model/Post";
 import PostService from "@/service/PostService";
 import ArtistPostsTab from "@/components/tabs/ArtistPostsTab.vue";
 import ArtistTweetsTab from "@/components/tabs/ArtistTweetsTab.vue";
+import RouterTool from "@/service/tool/RouterTool";
+import Tab from "@/model/vue/Tab";
 
 @Component( { components: { PostCardComponent, ArtistPostsTab, ArtistTweetsTab } } )
 export default class PostsView extends Vue {
 
   @Ref() readonly form!: HTMLFormElement
 
-  tab = null
-  tabs = [
+  tab = 0
+
+  tabs: Tab[] = [
     { name: "Posts", route: "/posts"  },
-    { name: "Tweets", route: "/tweets" },
-    { name: "Videos", route: "/videos" },
+    { name: "Tweets", route: "/tweets" }
   ]
 
   loading: boolean = false
@@ -118,6 +117,7 @@ export default class PostsView extends Vue {
 
   created() {
     this.refresh()
+    this.tab = RouterTool.configTabs(this, this.tabs)
   }
 
   async refresh() {
@@ -128,6 +128,11 @@ export default class PostsView extends Vue {
     getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea continuar?", () => {
       alert("Has continuado.")
     }))
+  }
+
+  @Watch("tab")
+  watchTab() {
+    RouterTool.watchTabs(this, "/artists/" + this.$route.params.id, this.tab, this.tabs)
   }
 
 }

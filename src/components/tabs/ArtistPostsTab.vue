@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <v-row align="center">
+  <v-container fluid>
+    <v-row align="center" dense>
       <v-progress-linear class="mt-4" color="grey" :indeterminate="loading"/>
       <v-col cols="3" v-for="(post, key) in posts" :key="key">
         <v-card height="200px" max-height="250px" outlined dark rounded>

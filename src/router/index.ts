@@ -11,9 +11,7 @@ const routes: Array<RouteConfig> = [
   { path: '/login', name: 'Login', component: () => import('../views/LoginView.vue'), meta: { requiresAuth: false } },
   { path: '/', name: 'Home', component: () => import('../views/HomeView.vue'), meta: { requiresAuth: true } },
   { path: '/artists', name: 'Artists', component: () => import('../views/ArtistsView.vue'), meta: { requiresAuth: true } },
-  { path: '/artists/:id', name: 'Artist', component: () => import('../views/ArtistView.vue'), meta: { requiresAuth: true } },
-  { path: '/artists/:artistId/tweets/:tweetId', name: 'Tweet', component: () => import('../views/TweetView.vue'), meta: { requiresAuth: true } },
-
+  { path: '/artists/:id(\\d+)(/posts)?(/tweets)?', name: 'Artist', component: () => import('../views/ArtistView.vue'), meta: { requiresAuth: true } },
 ]
 
 const router = new VueRouter({

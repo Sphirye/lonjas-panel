@@ -4,6 +4,7 @@ import {Vue} from "vue-property-decorator"
 import Post from "@/model/Post"
 import {getModule} from "vuex-module-decorators";
 import SessionModule from "@/store/SessionModule";
+import SnackbarModule from "@/store/SnackbarModule";
 
 export default class PostService {
 
@@ -65,14 +66,19 @@ export default class PostService {
         }
     }
 
-    static async createPostFromTweet(component: Vue, artistId: string, tweetId: string) {
+    static async createPostFromTweet(component: Vue, artistId: string, tweetId: string, tags: number[]) {
         // @ts-ignore
         component.loading = true
+
+        let formData = new FormData()
+        formData.set("tweetId", tweetId)
+        formData.set("tags", tags.toString())
+
         try {
-            const response = await component.axios.post(`${ConstantTool.BASE_URL}/api/artist/${artistId}/post/tweet`, null, {
-                headers: { Authorization: getModule(SessionModule).session.token },
-                params: { tweetId }
+            const response = await component.axios.post(`${ConstantTool.BASE_URL}/api/artist/${artistId}/post/tweet`, formData, {
+                headers: { Authorization: getModule(SessionModule).session.token }
             })
+            getModule(SnackbarModule).makeToast("Post creado exitosamente.")
         } catch (e) {
             console.log(e)
         } finally {

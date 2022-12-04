@@ -1,40 +1,30 @@
 <template>
-  <v-container fluid class="px-8">
-    <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
+  <v-container fluid class="px-0 pt-0">
+    <v-tabs class="d-none" v-model="tab">
+      <v-tab v-for="(item, key) in tabs" :key="key"/>
+    </v-tabs>
 
-    <template v-if="tweet.id">
-      <v-row align="start">
-        <v-col cols="4">
-          <v-card flat class="lonjas-base-2" dark>
-            <v-card-title>
-              <v-avatar size="128">
-                <v-img contain :src="tweet.author.profileImageUrl"/>
-              </v-avatar>
-              <div class="ml-6">
-                <h3 class="mb-0">{{ tweet.author.name }}</h3>
-                <p class="font-weight-regular grey--text">@{{ tweet.author.username }}</p>
-              </div>
-            </v-card-title>
-            <v-divider class="mx-3"/>
-            <v-card-text>
-              <div>
-                <h3 style="white-space: pre-wrap;" class="mx-4">{{ tweet.author.description }}</h3>
-                <v-divider class="my-3"/>
-              </div>
-            </v-card-text>
-          </v-card>
-        </v-col>
+    <v-tabs-items v-model="tab" class="transparent">
+      <v-tab-item>
+        <v-row no-gutters>
+          <v-btn @click="$emit('back')" icon dark>
+            <v-icon>fas fa-arrow-left</v-icon>
+          </v-btn>
+        </v-row>
+        <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
 
-        <v-col cols="8">
-          <v-card outlined class="lonjas-base-2" dark>
-            <v-card-text>
-              <v-row dense no-gutters>
-                <v-col cols="1" class="d-flex justify-center">
+        <template v-if="tweet.id">
+          <v-card dark color="lonjas-base-2" class="pr-2 pt-2">
+            <v-row no-gutters style="flex-wrap: nowrap;">
+              <v-col cols="1" class="d-flex justify-center flex-grow-0 flex-shrink-0">
+                <div color="transparent" class="py-2">
                   <v-avatar>
                     <v-img :src="tweet.author.profileImageUrl"/>
                   </v-avatar>
-                </v-col>
-                <v-col cols="11">
+                </div>
+              </v-col>
+              <v-col cols="11" style="min-width: 100px;" class="flex-grow-0 flex-shrink-">
+                <div color="transparent">
                   <div class="d-flex align-center">
                     <h2 class="font-weight-bold">{{ tweet.author.name }}</h2>
                     <h3 class="font-weight-light grey--text text--lighten-2 mx-1">@{{ tweet.author.username }}</h3>
@@ -49,7 +39,7 @@
                         <v-subheader class="text-sm">{{ lang.options }}</v-subheader>
                         <div class="px-3"><v-divider/></div>
                         <v-list-item-group class="my-2">
-                          <v-list-item @click="createPostDialog = true">
+                          <v-list-item @click="tab = 1">
                             <v-list-item-icon class="mx-2 my-auto">
                               <v-icon>far fa-square-plus</v-icon>
                             </v-list-item-icon>
@@ -86,46 +76,84 @@
                       </v-sheet>
                     </v-col>
                   </v-row>
-                </v-col>
-              </v-row>
-            </v-card-text>
+                </div>
+              </v-col>
+            </v-row>
           </v-card>
-        </v-col>
-      </v-row>
-    </template>
+        </template>
+      </v-tab-item>
 
-    <v-dialog v-model="createPostDialog" width="750px">
-      <CreatePostDialog :dialog.sync="createPostDialog"/>
-    </v-dialog>
+      <v-tab-item>
+        <v-row no-gutters>
+          <v-btn @click="tab = 0" icon dark>
+            <v-icon>fas fa-arrow-left</v-icon>
+          </v-btn>
+        </v-row>
+        <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
+
+        <template v-if="tab == 1">
+          <CreatePostTab @back="tab = 0" :tweet-id="tweet.id"/>
+        </template>
+
+      </v-tab-item>
+    </v-tabs-items>
+
   </v-container>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Ref, Vue} from 'vue-property-decorator'
-import TweetService from "@/service/TweetService"
 import {getModule} from "vuex-module-decorators"
-import PostService from "@/service/PostService"
 import LangModule from "@/store/LangModule"
-import Tweet from "@/model/twitter/Tweet"
 import Artist from "@/model/Artist"
+import PostService from "@/service/PostService"
+import Post from "@/model/Post";
+import Tweet from "@/model/twitter/Tweet";
+import TweetService from "@/service/TweetService";
 import CreatePostDialog from "@/components/dialog/CreatePostDialog.vue";
+import Tab from "@/model/vue/Tab";
+import CreatePostTab from "@/components/tabs/CreatePostTab.vue";
 
-@Component( {components: { CreatePostDialog }})
-export default class ArtistTweetsTab extends Vue {
+@Component( { components: { CreatePostDialog, CreatePostTab } } )
+export default class TweetTab extends Vue {
 
   get lang() { return getModule(LangModule).lang }
+
+  @Prop() readonly tweetId!: string
   loading: boolean = false
-  artist: Artist = new Artist()
+  dialog: boolean = false
   tweet: Tweet = new Tweet()
 
-  createPostDialog: boolean = false
+  tab: number = 0
+
+  tabs: Tab[] = [
+    { name: "Tweet" },
+    { name: "Create Post" }
+  ]
 
   created() {
     this.refresh()
   }
 
   async refresh() {
-    await TweetService.getTweet(this, this.$route.params.tweetId)
+    await TweetService.getTweet(this, this.tweetId)
   }
+
+  back() {
+    this.$emit('back')
+  }
+
 }
 </script>
+
+<style>
+.pre-blur-image .v-image__image{
+  image-rendering: crisp-edges !important;
+  transition: all 0.5s;
+}
+
+.blur-image .v-image__image {
+  filter: blur(2px);
+  -webkit-filter: blur(2px);
+}
+</style>
