@@ -18,8 +18,19 @@
               <v-text-field :rules="[rules.required]" type="number" v-model="tweetId" disabled label="Id del Tweet" outlined rounded dense hide-details/>
             </v-col>
             <v-col cols="5">
-              <v-autocomplete hide-details outlined class="rounded mb-1" dense :items="tags" multiple chips deletable-chips small-chips label="Tags" item-text="name" item-value="id" v-model="selectedTags"/>
-              <v-autocomplete hide-details outlined class="rounded my-1" dense label="Grupos"/>
+
+              <v-autocomplete
+                  hide-details outlined class="rounded mb-1" dense
+                  :items="tags" multiple chips deletable-chips small-chips
+                  label="Tags" item-text="name" item-value="id" v-model="selectedTags"
+              />
+
+              <v-autocomplete
+                  hide-details outlined class="rounded my-1" dense label="Grupos"
+                  :items="categories" v-model="selectedCategories" item-value="id"
+                  multiple chips deletable-chips small-chips item-text="name"
+              />
+
               <v-autocomplete hide-details outlined class="rounded mt-1" dense label="Personajes"/>
             </v-col>
           </v-row>
@@ -36,9 +47,6 @@
         Continuar
       </v-btn>
     </v-card-actions>
-
-    {{selectedTags}}
-
   </v-card>
 </template>
 
@@ -55,6 +63,8 @@ import Dialog from "@/model/vue/Dialog";
 import Rules from "@/service/tool/Rules";
 import TagService from "@/service/TagService";
 import Tag from "@/model/Tag";
+import Category from "@/model/Category";
+import CategoryService from "@/service/CategoryService";
 
 @Component
 export default class CreatePostTab extends Vue {
@@ -66,26 +76,29 @@ export default class CreatePostTab extends Vue {
   loading: boolean = false
   artist: Artist = new Artist()
   tweet: Tweet = new Tweet()
+
   tags: Tag[] = []
-  selectedTags = []
+  selectedTags: number[] = []
+
+  categories: Category[] = []
+  selectedCategories: number[] = []
 
   get rules() { return Rules }
 
-  created() {
-    this.refresh()
+  async created() {
+    await TweetService.getTweet(this, this.tweetId)
+    await this.refresh()
   }
 
   async refresh() {
-    await TweetService.getTweet(this, this.tweetId)
     await TagService.getTags(this, this.tags, 0, 5,null)
+    await CategoryService.getCategories(this, this.categories, 0, 5, null)
   }
 
   async createPost() {
     if (this.form.validate()) {
       getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea crear un post a partir de este tweet?", async () => {
-        await PostService.createPostFromTweet(this, this.$route.params.id, this.tweet.id!!, this.selectedTags)
-        // this.$router.go(0)
-        // await this.$router.push(`/artists/${this.$route.params.artistId}`)
+        await PostService.createPostFromTweet(this, this.$route.params.id, this.tweet.id!!, this.selectedTags, this.selectedCategories)
       }))
     }
   }
