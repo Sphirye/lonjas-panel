@@ -31,7 +31,11 @@
                   multiple chips deletable-chips small-chips item-text="name"
               />
 
-              <v-autocomplete hide-details outlined class="rounded mt-1" dense label="Personajes"/>
+              <v-autocomplete
+                  hide-details outlined class="rounded my-1" dense label="Personajes"
+                  :items="characters" v-model="selectedCharacters" item-value="id"
+                  multiple chips deletable-chips small-chips item-text="name"
+              />
             </v-col>
           </v-row>
         </v-form>
@@ -65,6 +69,8 @@ import TagService from "@/service/TagService";
 import Tag from "@/model/Tag";
 import Category from "@/model/Category";
 import CategoryService from "@/service/CategoryService";
+import Character from "@/model/Character";
+import CharacterService from "@/service/CharacterService";
 
 @Component
 export default class CreatePostTab extends Vue {
@@ -83,6 +89,9 @@ export default class CreatePostTab extends Vue {
   categories: Category[] = []
   selectedCategories: number[] = []
 
+  characters: Character[] = []
+  selectedCharacters: number[] = []
+
   get rules() { return Rules }
 
   async created() {
@@ -93,12 +102,15 @@ export default class CreatePostTab extends Vue {
   async refresh() {
     await TagService.getTags(this, this.tags, 0, 5,null)
     await CategoryService.getCategories(this, this.categories, 0, 5, null)
+    await CharacterService.getCharacters(this, this.characters, 0, 5, null)
   }
 
   async createPost() {
     if (this.form.validate()) {
       getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea crear un post a partir de este tweet?", async () => {
-        await PostService.createPostFromTweet(this, this.$route.params.id, this.tweet.id!!, this.selectedTags, this.selectedCategories)
+        await PostService.createPostFromTweet(
+            this, this.$route.params.id, this.tweet.id!!, this.selectedTags, this.selectedCategories, this.selectedCharacters
+        )
       }))
     }
   }

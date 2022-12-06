@@ -66,7 +66,7 @@ export default class PostService {
         }
     }
 
-    static async createPostFromTweet(component: Vue, artistId: string, tweetId: string, tags: number[], categories: number[]) {
+    static async createPostFromTweet(component: Vue, artistId: string, tweetId: string, tags: number[], categories: number[], characters: number[]) {
         // @ts-ignore
         component.loading = true
 
@@ -74,6 +74,7 @@ export default class PostService {
         formData.set("tweetId", tweetId)
         formData.set("tags", tags.toString())
         formData.set("categories", categories.toString())
+        formData.set("characters", characters.toString())
 
         try {
             const response = await component.axios.post(`${ConstantTool.BASE_URL}/api/artist/${artistId}/post/tweet`, formData, {
