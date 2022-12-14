@@ -7,12 +7,50 @@ import {getModule} from "vuex-module-decorators";
 import SessionModule from "@/store/SessionModule";
 
 export default class TagService {
-    static async getTags(component: Vue, tags: Tag[], page: number, size: number, search: string | null) {
+
+    static async getTag(component: Vue, id: number) {
+        // @ts-ignore
+        component.loading = true
+        try {
+            const response = await component.axios.get(`${ConstantTool.BASE_URL}/api/tag/${id}`, {
+                headers: { Authorization: getModule(SessionModule).session.token }
+            })
+            // @ts-ignore
+            component.tag = JsonTool.jsonConvert.deserializeObject(response.data, Tag)
+        } catch (e) {
+
+        } finally {
+            // @ts-ignore
+            component.loading = false
+        }
+    }
+    static async getPublicTags(component: Vue, tags: Tag[], page: number, size: number, search: string | null) {
         // @ts-ignore
         component.loading = true
         try {
             const response = await component.axios.get(`${ConstantTool.BASE_URL}/public/tag`, {
                 params: { page, size, search }
+            })
+            let list = JsonTool.jsonConvert.deserializeArray(response.data, Tag)
+            tags.splice(0, tags.length)
+            list.forEach(v => tags.push(v))
+            // @ts-ignore
+            component.totalPosts = Number(response.headers["x-total-count"])
+        } catch (e) {
+            console.log(e)
+        } finally {
+            // @ts-ignore
+            component.loading = false
+        }
+    }
+
+    static async getTags(component: Vue, tags: Tag[], page: number, size: number, search: string | null, enabled: boolean | null) {
+        // @ts-ignore
+        component.loading = true
+        try {
+            const response = await component.axios.get(`${ConstantTool.BASE_URL}/api/tag`, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+                params: { page, size, search, enabled }
             })
             let list = JsonTool.jsonConvert.deserializeArray(response.data, Tag)
             tags.splice(0, tags.length)
@@ -36,6 +74,21 @@ export default class TagService {
 
         try {
             const response = await component.axios.post(`${ConstantTool.BASE_URL}/api/tag`, formData, {
+                headers: { Authorization: getModule(SessionModule).session.token }
+            })
+        } catch (e) {
+
+        } finally {
+            // @ts-ignore
+            component.loading = false
+        }
+    }
+
+    static async deleteTag(component: Vue, id: number) {
+        // @ts-ignore
+        component.loading = true
+        try {
+            const response = await component.axios.delete(`${ConstantTool.BASE_URL}/api/tag/${id}`, {
                 headers: { Authorization: getModule(SessionModule).session.token }
             })
         } catch (e) {
