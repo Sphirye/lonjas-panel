@@ -35,7 +35,9 @@ export default class DrawerComponent extends Vue {
   buttons = [
     { title: this.lang.home, route: "/", icon: "fas fa-house-user", id: 1 },
     { title: "Artistas", route: "/artists", icon: "fas fa-paint-brush", id: 2 },
+    { title: "Tags", route: "/tags", icon: "fas fa-tags", id: 3 },
   ]
+
 }
 </script>
 

@@ -16,6 +16,7 @@ export default {
     about: "Acerca",
     search: "Buscar",
     options: "Opciones",
+    continue: "Continuar",
 
     recentPosts: "Posts Recientes",
     post: "Post",

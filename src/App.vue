@@ -4,7 +4,7 @@
     <DrawerComponent/>
     <v-main class="lonjas-base">
       <transition name="fade" mode="out-in">
-        <router-view/>
+        <router-view class="my-4"/>
       </transition>
     </v-main>
     <SnackbarComponent/>

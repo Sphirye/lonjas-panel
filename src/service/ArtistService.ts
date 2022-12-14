@@ -30,6 +30,7 @@ export default class ArtistService {
             let list = JsonTool.jsonConvert.deserializeArray(response.data, Artist)
             artists.splice(0, artists.length)
             list.forEach(v => artists.push(v))
+
         } catch (e) {
             console.log(e)
         } finally {

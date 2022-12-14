@@ -1,5 +1,5 @@
 <template>
-  <v-container class="my-4">
+  <v-container>
     <v-row dense align="center">
       <span class="uni-sans-heavy text-md white--text mx-4">{{ lang.artists }}</span>
       <v-spacer/>
