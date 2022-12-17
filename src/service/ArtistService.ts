@@ -2,6 +2,8 @@ import ConstantTool from "@/service/tool/ConstantTool"
 import JsonTool from "@/service/tool/JsonTool"
 import {Vue} from "vue-property-decorator"
 import Artist from "@/model/Artist"
+import {getModule} from "vuex-module-decorators";
+import SessionModule from "@/store/SessionModule";
 
 export default class ArtistService {
 
@@ -33,6 +35,22 @@ export default class ArtistService {
 
         } catch (e) {
             console.log(e)
+        } finally {
+            // @ts-ignore
+            component.loading = false
+        }
+    }
+
+    static async createFromTwitter(component: Vue, twitterId: string) {
+        // @ts-ignore
+        component.loading = true
+        try {
+            let response = await component.axios.post(ConstantTool.BASE_URL + `/api/artist/create/twitter`, null,{
+                headers: { Authorization: getModule(SessionModule).session.token },
+                params: { twitterId }
+            })
+        } catch (e) {
+
         } finally {
             // @ts-ignore
             component.loading = false

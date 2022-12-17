@@ -1,8 +1,8 @@
 <template>
-  <v-card outlined dark rounded width="200px" height="200px" @click="$router.push('/artists/' + artist.id)">
-    <v-img contain class="mx-3 my-2 pre-blur-image rounded-b" :src="artist.twitter.profileImageUrl"/>
-    <v-card-text class="text-center">
-      <h3>{{ artist.twitter.name }}</h3>
+  <v-card outlined dark rounded width="150px" @click="$router.push('/artists/' + artist.id)">
+    <v-img contain class="ma-2 pre-blur-image rounded-b" :src="artist.twitter.profileImageUrl"/>
+    <v-card-text class="text-center py-0">
+      <h3 class="line-clamp">{{ artist.twitter.name }}</h3>
       <p>@{{ artist.twitter.username }}</p>
     </v-card-text>
   </v-card>
@@ -33,4 +33,12 @@ export default class ArtistCardComponent extends Vue {
   filter: blur(2px);
   -webkit-filter: blur(2px);
 }
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 </style>
