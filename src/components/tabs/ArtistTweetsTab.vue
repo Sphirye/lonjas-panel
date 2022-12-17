@@ -5,9 +5,22 @@
     </v-tabs>
 
     <v-tabs-items v-model="tab" class="transparent">
+      <v-progress-linear color="grey" :indeterminate="loading"/>
       <v-tab-item :value="0" :key="0">
+
+        <v-row align="center" no-gutters class="mt-2 py-2">
+          <v-spacer/>
+          <v-sheet color="transparent">
+            <v-text-field outlined dense dark hide-details rounded :label="lang.search" v-model="search" @keydown.enter="refresh"/>
+          </v-sheet>
+          <v-btn icon dark class="mx-2" outlined @click="syncTweets">
+            <v-icon small>fas fa-arrows-rotate</v-icon>
+          </v-btn>
+        </v-row>
+
+        <v-divider class="mb-2" dark/>
+
         <v-row align="center" dense>
-          <v-progress-linear class="mt-4" color="grey" :indeterminate="loading"/>
           <v-col cols="3" v-for="(tweet, key) in tweets" :key="key">
             <v-card height="200px" max-height="250px" outlined dark rounded @click="selectTweet(tweet)">
               <v-hover v-slot="{ hover }">
@@ -46,6 +59,9 @@ import Tweet from "@/model/twitter/Tweet"
 import Artist from "@/model/Artist"
 import Tab from "@/model/vue/Tab";
 import TweetTab from "@/components/tabs/TweetTab.vue";
+import DialogModule from "@/store/DialogModule";
+import Dialog from "@/model/vue/Dialog";
+import ArtistService from "@/service/ArtistService";
 
 @Component({ components: { TweetTab } })
 export default class ArtistTweetsTab extends Vue {
@@ -56,7 +72,7 @@ export default class ArtistTweetsTab extends Vue {
   loading: boolean = false
   tweets: Tweet[] = []
   page: number = 1
-  size: number = 16
+  size: number = 20
   search: string = ""
   tab: number = 0
   tweet: Tweet = new Tweet()
@@ -82,6 +98,12 @@ export default class ArtistTweetsTab extends Vue {
   selectTweet(tweet: Tweet) {
     this.tweet = tweet
     this.tab = 1
+  }
+
+  syncTweets() {
+    getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea sincronizar los tweets de este usuario?", async () => {
+      await TweetService.syncUserTweets(this, this.artist.twitter!.id!)
+    }))
   }
 
 }

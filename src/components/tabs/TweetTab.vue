@@ -6,18 +6,18 @@
 
     <v-tabs-items v-model="tab" class="transparent">
       <v-tab-item>
-        <v-row no-gutters>
+        <v-row no-gutters class="my-1">
           <v-btn @click="$emit('back')" icon dark>
             <v-icon>fas fa-arrow-left</v-icon>
           </v-btn>
         </v-row>
-        <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
+        <v-progress-linear color="grey" :indeterminate="loading"/>
 
         <template v-if="tweet.id">
-          <v-card dark color="lonjas-base-2" class="pr-2 pt-2">
+          <v-card dark color="lonjas-base-2" class="px-2 py-2 my-2">
             <v-row no-gutters style="flex-wrap: nowrap;">
-              <v-col cols="1" class="d-flex justify-center flex-grow-0 flex-shrink-0">
-                <div color="transparent" class="py-2">
+              <v-col cols="auto" class="d-flex justify-center flex-grow-0 flex-shrink-0">
+                <div color="transparent" class="pa-2">
                   <v-avatar>
                     <v-img :src="tweet.author.profileImageUrl"/>
                   </v-avatar>
@@ -26,8 +26,8 @@
               <v-col cols="11" style="min-width: 100px;" class="flex-grow-0 flex-shrink-">
                 <div color="transparent">
                   <div class="d-flex align-center">
-                    <h2 class="font-weight-bold">{{ tweet.author.name }}</h2>
-                    <h3 class="font-weight-light grey--text text--lighten-2 mx-1">@{{ tweet.author.username }}</h3>
+                    <h3 class="font-weight-bold">{{ tweet.author.name }}</h3>
+                    <h4 class="font-weight-light grey--text text--lighten-2 mx-1">@{{ tweet.author.username }}</h4>
                     <v-spacer/>
                     <v-menu transition="slide-x-transition" rounded bottom left offset-y :close-on-click="false">
                       <template v-slot:activator="{ on, attrs }">
@@ -63,7 +63,7 @@
                     </v-menu>
                   </div>
                   <div class="mb-2">
-                    <h3 class="font-weight-regular">{{ tweet.text }}</h3>
+                    <h4 class="font-weight-regular">{{ tweet.text }}</h4>
                   </div>
                   <v-row justify="start">
                     <v-col cols="auto">

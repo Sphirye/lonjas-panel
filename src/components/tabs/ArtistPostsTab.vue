@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
+    <v-progress-linear color="grey" :indeterminate="loading"/>
     <v-row align="center" dense>
-      <v-progress-linear class="mt-4" color="grey" :indeterminate="loading"/>
       <v-col cols="3" v-for="(post, key) in posts" :key="key">
         <v-card height="200px" max-height="250px" outlined dark rounded>
           <v-hover v-slot="{ hover }">

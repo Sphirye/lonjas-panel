@@ -28,7 +28,7 @@
       </v-col>
     </v-row>
 
-    <v-dialog v-model="dialog" width="600px">
+    <v-dialog v-model="dialog" width="600px" persistent>
       <RegisterArtistDialog :dialog.sync="dialog" v-if="dialog" @created="refresh"/>
     </v-dialog>
   </v-container>

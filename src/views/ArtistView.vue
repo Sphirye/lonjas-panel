@@ -2,7 +2,7 @@
   <v-container fluid class="px-8">
     <template v-if="artist.id">
 
-      <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
+      <v-progress-linear class="mb-4" color="grey" :indeterminate="loading"/>
       <v-row no-gutters justify="start" align="start" dense>
         <v-col cols="4">
           <v-card flat class="lonjas-base-2" dark>
