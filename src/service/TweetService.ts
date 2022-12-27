@@ -57,4 +57,19 @@ export default class TweetService {
             component.loading = false
         }
     }
+
+    static async deleteTweet(component: Vue, id: string) {
+        // @ts-ignore
+        component.loading = true
+        try {
+            let response = await component.axios.delete(ConstantTool.BASE_URL + `/api/twitter/tweet/${id}`, {
+                headers: { Authorization: getModule(SessionModule).session.token }
+            })
+        } catch (e) {
+            console.log(e)
+        } finally {
+            // @ts-ignore
+            component.loading = false
+        }
+    }
 }

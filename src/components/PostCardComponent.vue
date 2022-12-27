@@ -27,7 +27,7 @@
             </div>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <span class="work-sans grey--text mx-auto mb-2" v-bind="attrs" v-on="on">{{ post.category.name }}</span>
+                <span class="work-sans grey--text mx-auto mb-2" v-bind="attrs" v-on="on">{{ post.categories.name }}</span>
               </template>
               <span class="work-sans">{{ lang.category }}</span>
             </v-tooltip>

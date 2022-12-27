@@ -1,13 +1,24 @@
-import {JsonObject, JsonProperty} from "json2typescript"
-import Character from "@/model/Character"
+import {JsonConverter, JsonCustomConvert, JsonObject, JsonProperty} from "json2typescript"
+import Character, {Gender} from "@/model/Character"
 import Category from "@/model/Category"
 import Artist from "@/model/Artist"
 import Tag from "@/model/Tag"
 import Tweet from "@/model/twitter/Tweet";
 
-export enum PostFrom {
-    TWEET = "tweet",
-    UNKNOW = "unknow"
+export enum Type {
+    TWEET = "TWEET",
+}
+
+@JsonConverter
+class TypeConverter implements JsonCustomConvert<Type> {
+
+    deserialize(data: string): Type {
+        return (<any>Type)[data]
+    }
+    serialize(data: Type): any {
+        return data.toString()
+    }
+
 }
 
 @JsonObject("Post")
@@ -22,8 +33,8 @@ export default class Post {
     @JsonProperty("tags", [Tag], true)
     tags?: Tag[] = undefined
 
-    @JsonProperty("category", Category, true)
-    category?: Category = undefined
+    @JsonProperty("categories", [Category], true)
+    categories?: Category[] = undefined
 
     @JsonProperty("characters", [Character], true)
     characters?: Character[] = undefined
@@ -33,4 +44,8 @@ export default class Post {
 
     @JsonProperty("tweet", Tweet, true)
     tweet?: Tweet = undefined
+
+    @JsonProperty("type", TypeConverter, true)
+    type?: Type = undefined
+
 }

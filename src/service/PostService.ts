@@ -50,7 +50,8 @@ export default class PostService {
         // @ts-ignore
         component.loading = true
         try {
-            const response = await component.axios.get(`${ConstantTool.BASE_URL}/public/artist/${id}/post`, {
+            const response = await component.axios.get(`${ConstantTool.BASE_URL}/api/artist/${id}/post`, {
+                headers: { Authorization: getModule(SessionModule).session.token },
                 params: { page, size }
             })
             let list = JsonTool.jsonConvert.deserializeArray(response.data, Post)

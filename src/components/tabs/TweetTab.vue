@@ -49,7 +49,7 @@
                             </v-list-item-content>
                           </v-list-item>
                           <v-divider class="mx-3"/>
-                          <v-list-item>
+                          <v-list-item @click="deleteTweet">
                             <v-list-item-icon class="mx-2 my-auto">
                               <v-icon>fas fa-trash</v-icon>
                             </v-list-item-icon>
@@ -58,7 +58,6 @@
                             </v-list-item-content>
                           </v-list-item>
                         </v-list-item-group>
-
                       </v-list>
                     </v-menu>
                   </div>
@@ -113,6 +112,8 @@ import TweetService from "@/service/TweetService";
 import CreatePostDialog from "@/components/dialog/CreatePostDialog.vue";
 import Tab from "@/model/vue/Tab";
 import CreatePostTab from "@/components/tabs/CreatePostTab.vue";
+import DialogModule from "@/store/DialogModule";
+import Dialog from "@/model/vue/Dialog";
 
 @Component( { components: { CreatePostDialog, CreatePostTab } } )
 export default class TweetTab extends Vue {
@@ -141,6 +142,12 @@ export default class TweetTab extends Vue {
 
   back() {
     this.$emit('back')
+  }
+
+  deleteTweet() {
+    getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Esta seguro de eliminar este tweet? (Este se deshabilitará y omitirá de futuras busquedas)", async () => {
+      await TweetService.deleteTweet(this, this.tweet.id!!)
+    }))
   }
 
 }

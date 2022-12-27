@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-tabs v-model="tab" class="d-none">
-      <v-tab v-for="(item, key) in tabs" :key="item.key"/>
+      <v-tab v-for="(item, key) in tabs" :key="key"/>
     </v-tabs>
 
     <v-tabs-items v-model="tab" class="transparent">
@@ -105,7 +105,6 @@ export default class ArtistTweetsTab extends Vue {
       await TweetService.syncUserTweets(this, this.artist.twitter!.id!)
     }))
   }
-
 }
 </script>
 
