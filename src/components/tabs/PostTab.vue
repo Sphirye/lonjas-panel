@@ -51,7 +51,7 @@
             <v-col cols="4">
               <v-autocomplete
                   hide-details outlined class="rounded my-1" dense label="Grupos"
-                  :items="categories" v-model="post.categories" item-value="id"
+                  :items="categories" v-model="post.categories" item-value="id" cache-items
                   multiple chips deletable-chips small-chips item-text="name"
               />
             </v-col>
@@ -65,9 +65,10 @@
             </v-col>
 
             <v-col cols="4">
+
               <v-autocomplete
                   hide-details outlined class="rounded my-1" dense label="Tags"
-                  :items="tags" v-model="post.tags" item-value="id"
+                  :items="tags" v-model="post.tags" item-value="id" cache-items
                   multiple chips deletable-chips small-chips item-text="name"
               />
             </v-col>
@@ -129,6 +130,12 @@ export default class PostTab extends Vue {
     await PostService.getPost(this, this.postId)
 
     if (this.post.id) {
+
+      this.post.tags?.forEach(v => this.tags.push(v))
+      this.post.categories?.forEach(v => this.categories.push(v))
+      this.post.characters?.forEach(v => this.characters.push(v))
+
+
       await TagService.getTags(this, this.tags, 2, 8, null, true)
       await CategoryService.getCategories(this, this.categories, 2, 8, null)
       await CharacterService.getCharacters(this, this.characters, 2, 8, null)

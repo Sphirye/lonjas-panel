@@ -31,13 +31,13 @@ export default class Post {
     artist?: Artist = undefined
 
     @JsonProperty("tags", [Tag], true)
-    tags?: Tag[] = undefined
+    tags?: Tag[] = []
 
     @JsonProperty("categories", [Category], true)
-    categories?: Category[] = undefined
+    categories?: Category[] = []
 
     @JsonProperty("characters", [Character], true)
-    characters?: Character[] = undefined
+    characters?: Character[] = []
 
     @JsonProperty("approved", Boolean, true)
     approved?: boolean = undefined
