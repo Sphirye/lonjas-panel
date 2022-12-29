@@ -74,7 +74,7 @@
             </v-col>
 
 
-            <v-col cols="6">
+            <v-col cols="12">
               <v-carousel show-arrows>
                 <template v-for="(image, key) in post.tweet.images">
                   <v-carousel-item :src="image" :key="key" contain/>
@@ -84,6 +84,13 @@
             </v-col>
           </v-row>
         </v-card-text>
+
+        <v-card-actions>
+          <v-spacer/>
+          <v-btn color="indigo" depressed>
+            {{ lang.save }}
+          </v-btn>
+        </v-card-actions>
       </v-card>
     </template>
   </v-container>
@@ -107,6 +114,7 @@ import Character from "@/model/Character";
 import TagService from "@/service/TagService";
 import CharacterService from "@/service/CharacterService";
 import CategoryService from "@/service/CategoryService";
+import {Route} from "vue-router";
 
 @Component( { components: { CreatePostDialog, CreatePostTab } } )
 export default class PostTab extends Vue {

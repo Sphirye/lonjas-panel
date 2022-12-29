@@ -5,8 +5,29 @@ import Post from "@/model/Post";
 import Tag from "@/model/Tag";
 import {getModule} from "vuex-module-decorators";
 import SessionModule from "@/store/SessionModule";
+import Response from "@/model/response/Response";
+import {Any} from "json2typescript";
+import axios from "axios/index";
 
 export default class TagService {
+
+    static async getTags2(page: number, size: number, search: string | null): Promise<Response<Tag[]>> {
+        try {
+            const response = await axios.get(`${ConstantTool.BASE_URL}/public/tag`, {
+                params: { page, size, search }
+            })
+            const tags = JsonTool.jsonConvert.deserializeArray(response.data, Tag)
+            const xTotalCount = Number(response.headers["x-total-count"])
+
+            return Promise.resolve({
+                result: tags,
+                xTotalCount
+            })
+        } catch (e) {
+            return Promise.reject(e)
+        }
+
+    }
 
     static async getTag(component: Vue, id: number) {
         // @ts-ignore

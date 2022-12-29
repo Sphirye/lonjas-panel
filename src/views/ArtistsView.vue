@@ -23,7 +23,7 @@
     <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
 
     <v-row align="start" dense>
-      <v-col cols="auto" v-for="(artist, key) in artists" :key="key">
+      <v-col cols="auto" v-for="(artist, key) in artists.items" :key="key">
         <ArtistCardComponent :artist="artist"/>
       </v-col>
     </v-row>
@@ -43,12 +43,17 @@ import Artist from "@/model/Artist";
 import ArtistService from "@/service/ArtistService";
 import ArtistCardComponent from "@/components/ArtistCardComponent.vue";
 import RegisterArtistDialog from "@/components/dialog/RegisterArtistDialog.vue";
+import Handler from "@/handlers/Handler";
+import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 
 @Component( { components: { ArtistCardComponent, RegisterArtistDialog } } )
 export default class ArtistsView extends Vue {
 
   artist: Artist = new Artist()
-  artists: Artist[] = []
+  artists: MultipleItem<Artist> = {
+    items: [],
+    totalItems: 0
+  }
 
   dialog: boolean = false
   loading: boolean = false
@@ -64,7 +69,12 @@ export default class ArtistsView extends Vue {
   }
 
   async refresh() {
-    await ArtistService.getArtists(this, this.artists, this.page - 1, this.size, this.search)
+
+    try {
+      await Handler.getItems(this, this.artists, () => { return ArtistService.getArtists(this.page - 1, this.size, this.search) })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   resetAll() {

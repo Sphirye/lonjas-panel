@@ -4,6 +4,8 @@ import {Vue} from "vue-property-decorator"
 import Artist from "@/model/Artist"
 import {getModule} from "vuex-module-decorators";
 import SessionModule from "@/store/SessionModule";
+import axios from "axios";
+import Response from "@/model/response/Response";
 
 export default class ArtistService {
 
@@ -22,22 +24,20 @@ export default class ArtistService {
         }
     }
 
-    static async getArtists(component: Vue, artists: Artist[], page: number, size: number, search: string) {
-        // @ts-ignore
-        component.loading = true
+    static async getArtists(page: number, size: number, search: string | null): Promise<Response<Artist[]>> {
         try {
-            const response = await component.axios.get(`${ConstantTool.BASE_URL}/public/artist`, {
+            const response = await axios.get(`${ConstantTool.BASE_URL}/public/artist`, {
                 params: { page, size, search }
             })
-            let list = JsonTool.jsonConvert.deserializeArray(response.data, Artist)
-            artists.splice(0, artists.length)
-            list.forEach(v => artists.push(v))
+            let artists = JsonTool.jsonConvert.deserializeArray(response.data, Artist)
+            const xTotalCount = Number(response.headers["x-total-count"])
 
+            return Promise.resolve({
+                result: artists,
+                xTotalCount
+            })
         } catch (e) {
-            console.log(e)
-        } finally {
-            // @ts-ignore
-            component.loading = false
+            return Promise.reject(e)
         }
     }
 

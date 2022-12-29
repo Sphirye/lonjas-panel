@@ -19,7 +19,7 @@
         <v-divider class="mb-2" dark/>
 
         <v-row align="center" dense>
-          <v-col cols="3" v-for="(post, key) in posts" :key="key">
+          <v-col cols="3" v-for="(post, key) in posts.items" :key="key">
             <v-card height="200px" max-height="250px" outlined dark rounded @click="selectPost(post)">
               <v-hover v-slot="{ hover }">
                 <v-img width="100%" height="100%" class="pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="post.tweet.images[0]">
@@ -66,6 +66,8 @@ import PostService from "@/service/PostService"
 import Post from "@/model/Post";
 import Tab from "@/model/vue/Tab";
 import PostTab from "@/components/tabs/PostTab.vue";
+import {MultipleItem} from "@/handlers/interfaces/ContentUI";
+import Handler from "@/handlers/Handler";
 
 @Component( { components: { PostTab } } )
 export default class ArtistPostsTab extends Vue {
@@ -77,7 +79,11 @@ export default class ArtistPostsTab extends Vue {
 
   loading: boolean = false
   tab: number = 0
-  posts: Post[] = []
+  posts: MultipleItem<Post> = {
+    items: [],
+    totalItems: 0
+  }
+
   post: Post = new Post()
   page: number = 1
   size: number = 10
@@ -92,7 +98,13 @@ export default class ArtistPostsTab extends Vue {
   }
 
   async refresh() {
-    await PostService.getPostsByArtist(this, this.posts, this.artist.id!, this.page - 1, this.size)
+    try {
+      await Handler.getItems(this, this.posts, () => {
+        return PostService.getPostsByArtist(this.artist.id!!, this.page - 1, this.size)
+      })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   selectPost(post: Post) {

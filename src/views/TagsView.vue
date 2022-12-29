@@ -15,11 +15,9 @@
     <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
 
     <v-row align="start" dense>
-      <v-col cols="auto" v-for="(tag, key) in tags" :key="key">
+      <v-col cols="auto" v-for="(tag, key) in tags.items" :key="key">
         <v-card outlined dark @click="$router.push(`/tags/${tag.id}`)">
-          <v-card-title>
-            {{ tag.name }}
-          </v-card-title>
+          <v-card-title>{{ tag.name }}</v-card-title>
         </v-card>
       </v-col>
     </v-row>
@@ -27,6 +25,7 @@
     <v-dialog v-model="dialog" width="600px">
       <CreateTagDialog :dialog.sync="dialog" @created="this.refresh"/>
     </v-dialog>
+
   </v-container>
 </template>
 
@@ -38,26 +37,47 @@ import {getModule} from "vuex-module-decorators"
 import Tag from "@/model/Tag";
 import TagService from "@/service/TagService";
 import CreateTagDialog from "@/components/dialog/CreateTagDialog.vue";
+import {Route} from "vue-router";
+import Handler from "@/handlers/Handler";
+import {MultipleItem} from "@/handlers/interfaces/ContentUI";
+
+Component.registerHooks(['beforeRouteLeave'])
 
 @Component({ components: { CreateTagDialog } })
 export default class TagsService extends Vue {
 
   lang = getModule(LangModule).lang
   loading: boolean = false
-  tags: Tag[] = []
   search: string = ""
   page: number = 1
   size: number = 20
   totalItems: number = 0
   dialog: boolean =false
 
+  tags: MultipleItem<Tag> = {
+    items: [],
+    totalItems: 0
+  }
 
   created() {
     this.refresh()
   }
 
+  beforeRouteLeave(to: any, from: any, next: any) {
+    const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+    if (answer) {
+      next()
+    } else {
+      next(false)
+    }
+  }
+
   async refresh() {
-    await TagService.getTags(this, this.tags, this.page - 1, this.size, this.search, null)
+    try {
+      await Handler.getItems(this, this.tags, () => { return TagService.getTags2(this.page - 1, this.size, this.search) })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
 }

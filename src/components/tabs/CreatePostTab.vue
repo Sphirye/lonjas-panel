@@ -21,20 +21,20 @@
 
               <v-autocomplete
                   hide-details outlined class="rounded mb-1" dense
-                  :items="tags" multiple chips deletable-chips small-chips
+                  :items="tags.items" multiple chips deletable-chips small-chips
                   label="Tags" item-text="name" item-value="id" v-model="selectedTags"
               />
 
               <v-autocomplete
                   hide-details outlined class="rounded my-1" dense label="Grupos"
-                  :items="categories" v-model="selectedCategories" item-value="id"
-                  multiple chips deletable-chips small-chips item-text="name"
+                  :items="categories.items" v-model="selectedCategories" item-value="id"
+                  multiple chips deletable-chips small-chips item-text="name" dark
               />
 
               <v-autocomplete
                   hide-details outlined class="rounded my-1" dense label="Personajes"
-                  :items="characters" v-model="selectedCharacters" item-value="id"
-                  multiple chips deletable-chips small-chips item-text="name"
+                  :items="characters.items" v-model="selectedCharacters" item-value="id"
+                  multiple chips deletable-chips small-chips item-text="name" dark
               />
             </v-col>
           </v-row>
@@ -71,6 +71,8 @@ import Category from "@/model/Category";
 import CategoryService from "@/service/CategoryService";
 import Character from "@/model/Character";
 import CharacterService from "@/service/CharacterService";
+import {MultipleItem} from "@/handlers/interfaces/ContentUI";
+import Handler from "@/handlers/Handler";
 
 @Component
 export default class CreatePostTab extends Vue {
@@ -83,13 +85,13 @@ export default class CreatePostTab extends Vue {
   artist: Artist = new Artist()
   tweet: Tweet = new Tweet()
 
-  tags: Tag[] = []
+  tags: MultipleItem<Tag> = { items: [], totalItems: 0 }
   selectedTags: number[] = []
 
-  categories: Category[] = []
+  categories: MultipleItem<Category> = { items: [], totalItems: 0 }
   selectedCategories: number[] = []
 
-  characters: Character[] = []
+  characters: MultipleItem<Character> = { items: [], totalItems: 0 }
   selectedCharacters: number[] = []
 
   get rules() { return Rules }
@@ -100,9 +102,14 @@ export default class CreatePostTab extends Vue {
   }
 
   async refresh() {
-    await TagService.getTags(this, this.tags, 0, 5,null, null)
-    await CategoryService.getCategories(this, this.categories, 0, 5, null)
-    await CharacterService.getCharacters(this, this.characters, 0, 5, null)
+
+    try {
+      await Handler.getItems(this, this.categories, () => CategoryService.getCategories2(0, 5, null))
+      await Handler.getItems(this, this.tags, () => TagService.getTags2(0, 5, null))
+      await Handler.getItems(this, this.characters, () => CharacterService.getCharacters2(0, 5, null))
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   async createPost() {

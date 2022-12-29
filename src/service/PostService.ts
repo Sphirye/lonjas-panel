@@ -5,6 +5,10 @@ import Post from "@/model/Post"
 import {getModule} from "vuex-module-decorators";
 import SessionModule from "@/store/SessionModule";
 import SnackbarModule from "@/store/SnackbarModule";
+import axios from "axios";
+import Response from "@/model/response/Response";
+import Tag from "@/model/Tag";
+import Artist from "@/model/Artist";
 
 export default class PostService {
 
@@ -46,24 +50,17 @@ export default class PostService {
         }
     }
 
-    static async getPostsByArtist(component: Vue, posts: Post[], id: number, page: number, size: number) {
-        // @ts-ignore
-        component.loading = true
+    static async getPostsByArtist(id: number, page: number, size: number): Promise<Response<Post[]>> {
         try {
-            const response = await component.axios.get(`${ConstantTool.BASE_URL}/api/artist/${id}/post`, {
+            const response = await axios.get(`${ConstantTool.BASE_URL}/api/artist/${id}/post`, {
                 headers: { Authorization: getModule(SessionModule).session.token },
                 params: { page, size }
             })
-            let list = JsonTool.jsonConvert.deserializeArray(response.data, Post)
-            posts.splice(0, posts.length)
-            list.forEach(v => posts.push(v))
-            // @ts-ignore
-            component.totalPosts = Number(response.headers["x-total-count"])
+            let posts = JsonTool.jsonConvert.deserializeArray(response.data, Post)
+            const xTotalCount = Number(response.headers["x-total-count"])
+            return Promise.resolve({ result: posts, xTotalCount })
         } catch (e) {
-            console.log(e)
-        } finally {
-            // @ts-ignore
-            component.loading = false
+            return Promise.reject(e)
         }
     }
 

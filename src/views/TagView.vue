@@ -1,22 +1,23 @@
 <template>
   <v-container fluid>
-    <v-row dense align="center">
-      <span class="uni-sans-heavy text-md white--text mx-4">Tag</span>
-      <v-spacer/>
-      <v-btn class="mx-2" color="red" depressed dark @click="deleteTag">{{ lang.delete }}</v-btn>
-    </v-row>
 
-    <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
+      <v-row dense align="center">
+        <span class="uni-sans-heavy text-md white--text mx-4">Tag</span>
+        <v-spacer/>
+        <v-btn class="mx-2" color="red" depressed dark @click="deleteTag">{{ lang.delete }}</v-btn>
+      </v-row>
 
-    <v-row align="start" dense>
-      <v-col cols="12">
-        <v-text-field v-model="tag.name" dense outlined dark hide-details rounded :label="lang.name"/>
-      </v-col>
-    </v-row>
+      <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
 
-    <v-dialog v-model="dialog" width="600px">
-      <CreateTagDialog :dialog.sync="dialog" @created="this.refresh"/>
-    </v-dialog>
+      <v-row align="start" dense>
+        <v-col cols="12">
+          <v-text-field v-model="tag.name" dense outlined dark hide-details rounded :label="lang.name"/>
+        </v-col>
+      </v-row>
+
+      <v-dialog v-model="dialog" width="600px">
+        <CreateTagDialog :dialog.sync="dialog" @created="this.refresh"/>
+      </v-dialog>
   </v-container>
 </template>
 
@@ -30,19 +31,25 @@ import TagService from "@/service/TagService";
 import CreateTagDialog from "@/components/dialog/CreateTagDialog.vue";
 import DialogModule from "@/store/DialogModule";
 import Dialog from "@/model/vue/Dialog";
+import Handler from "@/handlers/Handler";
+import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 
 @Component({ components: { CreateTagDialog } })
 export default class TagView extends Vue {
 
   lang = getModule(LangModule).lang
   loading: boolean = false
-  tags: Tag[] = []
   tag: Tag = new Tag()
+  tags: MultipleItem<Tag> = {
+    items: [],
+    totalItems: 0
+  }
   search: string = ""
   page: number = 1
   size: number = 20
   totalItems: number = 0
   dialog: boolean =false
+
 
 
   created() {
