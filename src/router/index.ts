@@ -6,7 +6,6 @@ import LoginService from "@/service/LoginService"
 
 Vue.use(VueRouter)
 
-
 const routes: Array<RouteConfig> = [
   { path: '/login', name: 'Login', component: () => import('../views/LoginView.vue'), meta: { requiresAuth: false } },
   { path: '/', name: 'Home', component: () => import('../views/HomeView.vue'), meta: { requiresAuth: true } },
@@ -14,6 +13,7 @@ const routes: Array<RouteConfig> = [
   { path: '/artists/:id(\\d+)(/posts)?(/tweets)?', name: 'Artist', component: () => import('../views/ArtistView.vue'), meta: { requiresAuth: true } },
   { path: '/tags', name: "Tags", component: () => import('../views/TagsView.vue'), meta: { requiresAuth: true } },
   { path: '/tags/:id', name: "Tag", component: () => import('../views/TagView.vue'), meta: { requiresAuth: true } },
+  { path: '/categories', name: "Category", component: () => import('../views/CategoryView.vue'), meta: { requiresAuth: true } },
 
 ]
 

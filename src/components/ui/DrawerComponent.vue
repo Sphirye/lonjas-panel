@@ -3,10 +3,8 @@
     <v-list class="my-0 py-0">
       <template v-for="(button,index) in buttons">
         <v-list-item class="d-flex justify-start" :key="index" @click="$router.push(button.route).catch(err => {})">
-          <v-list-item-icon>
-            <v-icon dark>{{button.icon}}</v-icon>
-          </v-list-item-icon>
           <v-list-item-action-text>
+            <v-icon dark class="mr-3">{{button.icon}}</v-icon>
             <span class="grey--text my-auto text-sm font-weight-medium">{{ button.title.toUpperCase() }}</span>
           </v-list-item-action-text>
         </v-list-item>
@@ -36,6 +34,7 @@ export default class DrawerComponent extends Vue {
     { title: this.lang.home, route: "/", icon: "fas fa-house-user", id: 1 },
     { title: "Artistas", route: "/artists", icon: "fas fa-paint-brush", id: 2 },
     { title: "Tags", route: "/tags", icon: "fas fa-tags", id: 3 },
+    { title: "Categorías", route: "/categories", icon: "fas fa-tags", id: 3 },
   ]
 
 }

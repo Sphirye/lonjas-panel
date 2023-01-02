@@ -49,7 +49,7 @@
         <v-progress-linear class="mb-2" color="grey" :indeterminate="loading"/>
 
         <template v-if="tab == 1">
-          <PostTab :post-id="post.id" v-if="post.id"/>
+          <PostTab :post-id="post.id" v-if="post.id" @back="tab = 0"/>
         </template>
       </v-tab-item>
     </v-tabs-items>

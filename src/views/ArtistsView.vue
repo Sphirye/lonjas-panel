@@ -20,7 +20,8 @@
         <v-icon small>fas fa-plus</v-icon>
       </v-btn>
     </v-row>
-    <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
+
+    <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
 
     <v-row align="start" dense>
       <v-col cols="auto" v-for="(artist, key) in artists.items" :key="key">
@@ -69,9 +70,8 @@ export default class ArtistsView extends Vue {
   }
 
   async refresh() {
-
     try {
-      await Handler.getItems(this, this.artists, () => { return ArtistService.getArtists(this.page - 1, this.size, this.search) })
+      await Handler.getItems(this, this.artists, () => ArtistService.getArtists(this.page - 1, this.size, this.search))
     } catch (e) {
       console.log(e)
     }

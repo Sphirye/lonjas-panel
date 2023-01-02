@@ -87,4 +87,24 @@ export default class PostService {
         }
     }
 
+    static async patchPost(id: number, request: Post) {
+        try {
+            const response = await axios.patch(`${ConstantTool.BASE_URL}/api/post/${id}`, request, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+            })
+        } catch (e) {
+            return Promise.reject(e)
+        }
+    }
+
+    static async deletePost(id: number) {
+        try {
+             const response = await axios.delete(`${ConstantTool.BASE_URL}/api/post/${id}`, {
+                 headers: { Authorization: getModule(SessionModule).session.token },
+             })
+        } catch (e) {
+            return Promise.reject(e)
+        }
+    }
+
 }

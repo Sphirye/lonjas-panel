@@ -39,3 +39,6 @@ export default class HomeView extends Vue {
 
 }
 </script>
+
+<style>
+</style>
