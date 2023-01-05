@@ -1,15 +1,25 @@
-import {Vue} from "vue-property-decorator";
-import Category from "@/model/Category";
-import ConstantTool from "@/service/tool/ConstantTool";
-import JsonTool from "@/service/tool/JsonTool";
-import axios from "axios";
-import Response from "@/model/response/Response";
-import {getModule} from "vuex-module-decorators";
-import SessionModule from "@/store/SessionModule";
+import ConstantTool from "@/service/tool/ConstantTool"
+import Response from "@/model/response/Response"
+import {getModule} from "vuex-module-decorators"
+import SessionModule from "@/store/SessionModule"
+import JsonTool from "@/service/tool/JsonTool"
+import Category from "@/model/Category"
+import axios from "axios"
 
 export default class CategoryService {
 
-    static async getPublicCategories2(page: number, size: number, search: string | null): Promise<Response<Category[]>> {
+    static async createCategories(name: string): Promise<Category> {
+        try {
+            const response = await axios.post(ConstantTool.BASE_URL + "/api/category", null, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+                params: { name }
+            })
+            const category = JsonTool.jsonConvert.deserializeObject(response.data, Category)
+            return Promise.resolve(category)
+        } catch (e) { return Promise.resolve(e) }
+    }
+
+    static async getPublicCategories(page: number, size: number, search: string | null): Promise<Response<Category[]>> {
         try {
             const response = await axios.get(ConstantTool.BASE_URL + "/public/category", {
                 params: { page, size, search }
@@ -21,9 +31,7 @@ export default class CategoryService {
                 result: categories,
                 xTotalCount
             })
-        } catch (e) {
-            return Promise.resolve(e)
-        }
+        } catch (e) { return Promise.resolve(e) }
     }
 
     static async getCategories(page: number, size: number, search: string | null, active: boolean | null): Promise<Response<Category[]>> {
@@ -41,26 +49,6 @@ export default class CategoryService {
             })
         } catch (e) {
             return Promise.resolve(e)
-        }
-    }
-
-    static async getPublicCategories(component: Vue, categories: Category[], page: number, size: number, search: string | null) {
-        // @ts-ignore
-        component.loading = true
-
-        try {
-            let response = await component.axios.get(ConstantTool.BASE_URL + "/public/category", {
-                params: { page, size, search }
-            })
-
-            let list = JsonTool.jsonConvert.deserializeArray(response.data, Category)
-            categories.splice(0, categories.length)
-            list.forEach(v => categories.push(v))
-        } catch (e) {
-
-        } finally {
-            // @ts-ignore
-            component.loading = false
         }
     }
 

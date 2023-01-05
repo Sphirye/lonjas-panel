@@ -31,7 +31,7 @@
     </v-row>
 
     <v-dialog v-model="dialog" width="500px">
-      <CreateCharacterDialog :dialog.sync="dialog"/>
+      <CreateCharacterDialog :dialog.sync="dialog" @created="refresh"/>
     </v-dialog>
 
   </v-container>

@@ -15,6 +15,7 @@
       <v-btn icon outlined @click="showSearchBar = !showSearchBar" dark class="mr-3">
         <v-icon small>fas fa-search</v-icon>
       </v-btn>
+      <v-btn class="mx-2" depressed @click="dialog = true">Añadir</v-btn>
     </v-row>
 
     <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
@@ -28,6 +29,10 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="dialog" width="500px">
+      <CreateCategoryDialog :dialog.sync="dialog" @created="refresh"/>
+    </v-dialog>
 
   </v-container>
 </template>
@@ -44,8 +49,9 @@ import Handler from "@/handlers/Handler";
 import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 import Category from "@/model/Category";
 import CategoryService from "@/service/CategoryService";
+import CreateCategoryDialog from "@/components/dialog/CreateCategoryDialog.vue";
 
-@Component
+@Component( { components: { CreateCategoryDialog } } )
 export default class CategoriesView extends Vue {
 
   @Ref() readonly form!: HTMLFormElement

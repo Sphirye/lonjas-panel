@@ -153,7 +153,7 @@ export default class PostTab extends Vue {
 
       try {
         try {
-          await Handler.getItems(this, this.categories2, () => CategoryService.getPublicCategories2(0, 5, null))
+          await Handler.getItems(this, this.categories2, () => CategoryService.getPublicCategories(0, 5, null))
           await Handler.getItems(this, this.tags2, () => TagService.getTags2(0, 5, null))
           await Handler.getItems(this, this.characters2, () => CharacterService.getCharacters2(0, 5, null))
         } catch (e) {

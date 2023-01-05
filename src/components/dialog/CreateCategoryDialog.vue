@@ -2,7 +2,7 @@
   <v-card dark color="lonjas-base-2">
     <v-card-title>
       <v-row class="py-1" align="center" no-gutters>
-        <h4 class="grey--text text--lighten-2 font-weight-bold">Crear Personaje</h4>
+        <h4 class="grey--text text--lighten-2 font-weight-bold">Crear Categoría</h4>
       </v-row>
     </v-card-title>
 
@@ -16,13 +16,6 @@
           <v-col cols="12">
             <v-text-field label="Nombre" hide-details outlined dense rounded v-model="name" :rules="[rules.required]"/>
           </v-col>
-          <v-col cols="12">
-            <v-select
-                label="Categoría" hide-details outlined dense rounded
-                v-model="category" :items="categories.items" item-text="name"
-                :rules="[rules.required2]" clearable return-object dark required
-            />
-          </v-col>
         </v-row>
       </v-form>
     </v-card-text>
@@ -32,7 +25,7 @@
       <v-btn depressed class="secondary font-weight-bold" @click="close">
         {{ lang.cancel }}
       </v-btn>
-      <v-btn depressed class="success darken-2 font-weight-bold" @click="createCharacter">
+      <v-btn depressed class="success darken-2 font-weight-bold" @click="createCategory">
         {{ lang.continue }}
       </v-btn>
     </v-card-actions>
@@ -57,7 +50,7 @@ import CategoryService from "@/service/CategoryService";
 import CharacterService from "@/service/CharacterService";
 
 @Component
-export default class CreateCharacterDialog extends Vue {
+export default class CreateCategoryDialog extends Vue {
 
   get rules() { return Rules }
 
@@ -67,24 +60,11 @@ export default class CreateCharacterDialog extends Vue {
   loading: boolean = false
 
   name: string = ""
-  category: Nullable<Category> = null
 
-  categories: MultipleItem<Category> = { items: [], totalItems: 0 }
-
-  created() {
-    this.refresh()
-  }
-
-  async refresh() {
-    try {
-      await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 5, null))
-    } catch (e) { console.log(e) }
-  }
-
-  async createCharacter() {
+  async createCategory() {
     if (this.form.validate()) {
-      getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Esta seguro de crear este personaje?", async () => {
-        await CharacterService.createCharacter(this.name, this.category!!.id!!)
+      getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Esta seguro de crear esta categoría?", async () => {
+        await CategoryService.createCategories(this.name)
         this.$emit("created")
         this.close()
       }))
