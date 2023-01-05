@@ -63,14 +63,14 @@ export default class TagsService extends Vue {
     this.refresh()
   }
 
-  beforeRouteLeave(to: any, from: any, next: any) {
-    const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
-    if (answer) {
-      next()
-    } else {
-      next(false)
-    }
-  }
+  // beforeRouteLeave(to: any, from: any, next: any) {
+  //   const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+  //   if (answer) {
+  //     next()
+  //   } else {
+  //     next(false)
+  //   }
+  // }
 
   async refresh() {
     try {

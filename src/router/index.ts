@@ -13,8 +13,8 @@ const routes: Array<RouteConfig> = [
   { path: '/artists/:id(\\d+)(/posts)?(/tweets)?', name: 'Artist', component: () => import('../views/ArtistView.vue'), meta: { requiresAuth: true } },
   { path: '/tags', name: "Tags", component: () => import('../views/TagsView.vue'), meta: { requiresAuth: true } },
   { path: '/tags/:id', name: "Tag", component: () => import('../views/TagView.vue'), meta: { requiresAuth: true } },
-  { path: '/categories', name: "Category", component: () => import('../views/CategoryView.vue'), meta: { requiresAuth: true } },
-
+  { path: '/categories', name: "Categories", component: () => import('../views/CategoriesView.vue'), meta: { requiresAuth: true } },
+  { path: '/characters', name: "Characters", component: () => import('../views/CharactersView.vue'), meta: { requiresAuth: true } },
 ]
 
 const router = new VueRouter({

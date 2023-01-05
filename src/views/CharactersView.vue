@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row dense align="center">
-      <span class="uni-sans-heavy text-md white--text mx-4">{{ lang.categories }}</span>
+      <span class="uni-sans-heavy text-md white--text mx-4">{{ lang.characters }}</span>
       <v-spacer/>
       <v-expand-x-transition>
         <v-sheet class="transparent mr-3" v-if="showSearchBar" dark>
@@ -15,19 +15,24 @@
       <v-btn icon outlined @click="showSearchBar = !showSearchBar" dark class="mr-3">
         <v-icon small>fas fa-search</v-icon>
       </v-btn>
+      <v-btn class="mx-2" depressed @click="dialog = true">Añadir</v-btn>
     </v-row>
 
     <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
 
     <v-row align="start" dense>
-      <v-col cols="auto" v-for="(category, key) in categories.items" :key="key">
+      <v-col cols="auto" v-for="(character, key) in characters.items" :key="key">
         <v-card outlined dark rounded>
           <v-card-title>
-            {{ category.name }}
+            {{ character.name }}
           </v-card-title>
         </v-card>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="dialog" width="500px">
+      <CreateCharacterDialog :dialog.sync="dialog"/>
+    </v-dialog>
 
   </v-container>
 </template>
@@ -44,9 +49,12 @@ import Handler from "@/handlers/Handler";
 import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 import Category from "@/model/Category";
 import CategoryService from "@/service/CategoryService";
+import Character from "@/model/Character";
+import CharacterService from "@/service/CharacterService";
+import CreateCharacterDialog from "@/components/dialog/CreateCharacterDialog.vue";
 
-@Component
-export default class HomeView extends Vue {
+@Component({ components: { CreateCharacterDialog } })
+export default class CharactersView extends Vue {
 
   @Ref() readonly form!: HTMLFormElement
 
@@ -56,7 +64,13 @@ export default class HomeView extends Vue {
   search: string = ""
   page: number = 1
   size: number = 20
+
   categories: MultipleItem<Category> = {
+    items: [],
+    totalItems: 0
+  }
+
+  characters: MultipleItem<Character> = {
     items: [],
     totalItems: 0
   }
@@ -64,9 +78,7 @@ export default class HomeView extends Vue {
   get lang() { return getModule(LangModule).lang }
   get rules() { return Rules }
 
-  created() {
-    this.refresh()
-  }
+  created() { this.refresh() }
 
   validate() {
     getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea continuar?", () => {
@@ -76,7 +88,7 @@ export default class HomeView extends Vue {
 
   async refresh() {
     try {
-      await Handler.getItems(this, this.categories, () => CategoryService.getCategories(this.page - 1, this.size, this.search, null))
+      await Handler.getItems(this, this.characters, () => CharacterService.getCharacters2(this.page - 1, this.size, this.search))
     } catch (e) {
       console.log(e)
     }

@@ -4,6 +4,8 @@ import {Vue} from "vue-property-decorator"
 import Character from "@/model/Character"
 import axios from "axios";
 import Response from "@/model/response/Response";
+import {getModule} from "vuex-module-decorators";
+import SessionModule from "@/store/SessionModule";
 
 export default class CharacterService {
 
@@ -20,22 +22,15 @@ export default class CharacterService {
         }
     }
 
-    static async getCharacters(component: Vue, characters: Character[], page: number, size: number, search: string | null) {
-        // @ts-ignore
-        component.loading = true
-
+    static async createCharacter(name: string, categoryId: number) {
         try {
-            let response = await component.axios.get(ConstantTool.BASE_URL + "/public/character", {
-                params: { page, size, search }
+            const response = await axios.post(ConstantTool.BASE_URL + "/api/character", null, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+                params: { name, categoryId },
             })
-            let list = JsonTool.jsonConvert.deserializeArray(response.data, Character)
-            characters.splice(0, characters.length)
-            list.forEach(v => characters.push(v))
         } catch (e) {
-
-        } finally {
-            // @ts-ignore
-            component.loading = false
+            return Promise.reject(e)
         }
     }
+
 }
