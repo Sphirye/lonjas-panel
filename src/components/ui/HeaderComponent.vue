@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon @click.stop="toggleDrawer"/>
 
     <div class="pointer" @click="$router.push('/').catch(err => {})">
-      <span class="uni-sans-heavy text-lg grey--text text--lighten-1 mx-3">LONJAS</span>
+      <h1 class="uni-sans-heavy grey--text text--lighten-1 mx-3">LONJAS</h1>
     </div>
 
     <v-spacer/>

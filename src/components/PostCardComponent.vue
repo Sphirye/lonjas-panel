@@ -1,36 +1,25 @@
 <template>
   <v-card outlined dark rounded>
     <v-hover v-slot="{ hover }">
-      <v-img height="250px" class="mx-3 my-2 pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="post.images[0]">
+      <v-img height="250px" class="ma-1 pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="images[0]">
         <v-expand-transition>
           <v-sheet tile color="rgba(44,48,59,0.84)" v-if="hover" class="d-flex flex-column transition-fast-in-fast-out" style="height: 100%">
-            <div class="px-3 pb-4 pt-2">
-              <span class="work-sans font-weight-bold" v-line-clamp="1">{{post.artist.twitter.name}}</span>
-              <p class="work-sans grey--text">@{{post.artist.twitter.username}}</p>
-              <p class="work-sans grey--text mt-2" v-line-clamp="2">"{{post.description}}"</p>
-            </div>
 
-            <v-spacer/>
+            <v-card-title v-if="post.type == Type.TWEET" class="px-2">
+              <p class="work-sans font-weight-bold line-clamp-1 text-20 pb-0 mb-0">{{post.artist.twitter.name}}</p>
+              <span class="work-sans grey--text mx-auto text-15">@{{post.artist.twitter.username}}</span>
+            </v-card-title>
 
-            <div class="d-flex justify-space-around align-center my-2">
-              <v-btn text>
-                See Full
+            <v-card-text>
+              <p class="work-sans grey--text py-0 my-0 line-clamp-2 text-15">"{{post.tweet.text}}"</p>
+            </v-card-text>
+
+            <v-card-actions class="mt-auto">
+              <v-spacer/>
+              <v-btn icon>
+                <v-icon>fab fa-twitter</v-icon>
               </v-btn>
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn icon color="blue" v-bind="attrs" v-on="on">
-                    <v-icon>fab fa-twitter</v-icon>
-                  </v-btn>
-                </template>
-                <span class="work-sans">Sauce</span>
-              </v-tooltip>
-            </div>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <span class="work-sans grey--text mx-auto mb-2" v-bind="attrs" v-on="on">{{ post.categories.name }}</span>
-              </template>
-              <span class="work-sans">{{ lang.category }}</span>
-            </v-tooltip>
+            </v-card-actions>
           </v-sheet>
         </v-expand-transition>
       </v-img>
@@ -46,13 +35,26 @@ import LangModule from "@/store/LangModule"
 import Rules from "@/service/tool/Rules"
 import Dialog from "@/model/vue/Dialog"
 import PostService from "@/service/PostService";
-import Post from "@/model/Post";
+import Post, {Type} from "@/model/Post";
 
-@Component
+@Component({
+  computed: {
+    Type() {
+      return Type
+    }
+  }
+})
 export default class PostCardComponent extends Vue {
 
   @Prop() readonly post!: Post
   get lang() { return getModule(LangModule).lang }
+
+  get images(): Nullable<string[]> {
+    switch (this.post.type) {
+      case (Type.TWEET): return this.post.tweet!!.images!!; break;
+      default: return null
+    }
+  }
 
 }
 </script>

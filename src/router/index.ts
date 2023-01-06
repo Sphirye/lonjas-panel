@@ -15,6 +15,7 @@ const routes: Array<RouteConfig> = [
   { path: '/tags/:id', name: "Tag", component: () => import('../views/TagView.vue'), meta: { requiresAuth: true } },
   { path: '/categories', name: "Categories", component: () => import('../views/CategoriesView.vue'), meta: { requiresAuth: true } },
   { path: '/characters', name: "Characters", component: () => import('../views/CharactersView.vue'), meta: { requiresAuth: true } },
+  { path: '/posts', name: "Posts", component: () => import('../views/PostsView.vue'), meta: { requiresAuth: true } },
 ]
 
 const router = new VueRouter({

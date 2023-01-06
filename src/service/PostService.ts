@@ -9,6 +9,7 @@ import axios from "axios";
 import Response from "@/model/response/Response";
 import Tag from "@/model/Tag";
 import Artist from "@/model/Artist";
+import Category from "@/model/Category";
 
 export default class PostService {
 
@@ -27,27 +28,23 @@ export default class PostService {
         }
     }
 
-    static async getPosts(component: Vue, posts: Post[], page: number, size: number, categoryId: number | null, characterIds: number[] | null, tagIds: number[] | null) {
-        // @ts-ignore
-        component.loading = true
+    static async getPosts(
+        page: number, size: number, artistId: Nullable<number>, categoryIds: Nullable<number[]>,
+        characterIds: Nullable<number[]>, tagIds: Nullable<number[]>, enabled: Nullable<boolean>
+    ): Promise<Response<Category[]>> {
         try {
-            const response = await component.axios.get(`${ConstantTool.BASE_URL}/public/post`, {
+            const response = await axios.get(`${ConstantTool.BASE_URL}/api/post`, {
+                headers: { Authorization: getModule(SessionModule).session.token },
                 params: {
-                    page: page, size: size, categoryId,
-                    characterIds: characterIds ? characterIds.toString() : null,
-                    tagIds: tagIds ? tagIds.toString() : null
-                }
-            })
-
-            let list = JsonTool.jsonConvert.deserializeArray(response.data, Post)
-            posts.splice(0, posts.length)
-            list.forEach(v => posts.push(v))
-        } catch (e) {
-            console.log(e)
-        } finally {
-            // @ts-ignore
-            component.loading = false
-        }
+                    page, size, enabled, artistId,
+                    categoryIds: categoryIds?.toString(),
+                    characterIds: characterIds?.toString(),
+                    tagIds: tagIds?.toString()
+                }})
+            let posts = JsonTool.jsonConvert.deserializeArray(response.data, Post)
+            const xTotalCount = Number(response.headers["x-total-count"])
+            return Promise.resolve({ result: posts, xTotalCount })
+        } catch (e) { return Promise.reject(e) }
     }
 
     static async getPostsByArtist(id: number, page: number, size: number): Promise<Response<Post[]>> {

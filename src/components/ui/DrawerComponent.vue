@@ -36,8 +36,8 @@ export default class DrawerComponent extends Vue {
     { title: "Tags", route: "/tags", icon: "fas fa-tags", id: 3 },
     { title: "Categorías", route: "/categories", icon: "fas fa-tags", id: 3 },
     { title: "Personajes", route: "/characters", icon: "fas fa-tags", id: 3 },
+    { title: "Posts", route: "/posts", icon: "fas fa-tags", id: 3 },
   ]
-
 }
 </script>
 
