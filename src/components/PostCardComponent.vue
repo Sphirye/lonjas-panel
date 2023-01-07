@@ -11,7 +11,7 @@
             </v-card-title>
 
             <v-card-text>
-              <p class="work-sans grey--text py-0 my-0 line-clamp-2 text-15">"{{post.tweet.text}}"</p>
+              <p class="work-sans grey--text py-0 my-0 line-clamp-3 text-15">"{{post.tweet.text}}"</p>
             </v-card-text>
 
             <v-card-actions class="mt-auto">

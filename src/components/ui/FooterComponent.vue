@@ -1,5 +1,5 @@
 <template>
-	<v-footer color="primary lighten-1">
+	<v-footer color="lonjas-base-2">
 		<v-row justify="center" no-gutters>
 			<v-btn color="white" text rounded class="my-2">Button</v-btn>
 			<v-btn color="white" text rounded class="my-2">Button</v-btn>

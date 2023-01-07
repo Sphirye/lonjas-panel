@@ -69,12 +69,33 @@
 .uni-sans-thin { font-family: "Uni Sans Thin"; }
 
 /*      IM NOT LEARNING SCSS TODAY MY SON       */
-/*.text-15 { font: 15px/20px 'Work Sans', sans-serif; }*/
-/*.text-20 { font: 20px/25px 'Work Sans', sans-serif; }*/
-/*.text-25 { font: 25px/30px 'Work Sans', sans-serif; }*/
-/*.text-30 { font: 30px/35px 'Work Sans', sans-serif; }*/
-/*.text-35 { font: 35px/40px 'Work Sans', sans-serif; }*/
-/*.text-40 { font: 40px/45px 'Work Sans', sans-serif; }*/
+.text-15 {
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.text-20 {
+    font-size: 20px;
+    line-height: 25px;
+}
+
+
+.text-25 {
+    font-size: 25px;
+    line-height: 30px;
+}
+
+
+.text-30 {
+    font-size: 30px;
+    line-height: 35px;
+}
+
+.text-35 {
+    font-size: 35px;
+    line-height: 40px;
+}
+
 
 /*  RANDOM  */
 

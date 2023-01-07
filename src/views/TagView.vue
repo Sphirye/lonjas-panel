@@ -1,19 +1,24 @@
 <template>
-  <v-container fluid>
-
-      <v-row dense align="center">
+  <v-container>
+    <v-card outlined dark>
+      <v-card-title>
         <span class="uni-sans-heavy text-md white--text mx-4">Tag</span>
-        <v-spacer/>
-        <v-btn class="mx-2" color="red" depressed dark @click="deleteTag">{{ lang.delete }}</v-btn>
-      </v-row>
+        <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
+      </v-card-title>
+      <v-card-text>
+        <v-row align="start" dense>
+          <v-col cols="12">
+            <v-text-field v-model="tag.name" dense outlined dark hide-details rounded :label="lang.name"/>
+          </v-col>
+        </v-row>
+      </v-card-text>
 
-      <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
-
-      <v-row align="start" dense>
-        <v-col cols="12">
-          <v-text-field v-model="tag.name" dense outlined dark hide-details rounded :label="lang.name"/>
-        </v-col>
-      </v-row>
+      <v-card-actions>
+        <v-btn color="red darken-3" @click="deleteTag" depressed>
+          <span class="font-weight-bold">{{ lang.delete }}</span>
+        </v-btn>
+      </v-card-actions>
+    </v-card>
 
       <v-dialog v-model="dialog" width="600px">
         <CreateTagDialog :dialog.sync="dialog" @created="this.refresh"/>

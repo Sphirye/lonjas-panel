@@ -6,20 +6,21 @@
       <v-row no-gutters justify="start" align="start" dense>
         <v-col cols="4">
           <v-card flat class="lonjas-base-2" dark>
-            <v-card-title>
+            <v-card-title class="mx-3">
               <v-avatar size="128">
                 <v-img contain :src="artist.twitter.profileImageUrl"/>
               </v-avatar>
-              <div class="ml-6">
-                <h3 class="mb-0">{{ artist.twitter.name }}</h3>
-                <p class="font-weight-regular grey--text">@{{ artist.twitter.username }}</p>
+              <div>
+                <span class="text-20 font-weight-bold grey--text text--lighten-2">{{ artist.twitter.name }}</span>
+                <br/>
+                <span class="font-weight-medium grey--text">@{{ artist.twitter.username }}</span>
               </div>
             </v-card-title>
             <v-divider class="mx-3"/>
             <v-card-text>
               <div>
 
-                <h3 style="white-space: pre-wrap;" class="mx-4">{{ artist.twitter.description }}</h3>
+                <p style="white-space: pre-wrap;" class="mx-4 font-weight-medium text-15">{{ artist.twitter.description }}</p>
 
                 <v-divider class="my-3"/>
                 <div class="mx-3">
@@ -52,7 +53,7 @@
             <v-row no-gutters align="center" dense>
               <v-tabs v-model="tab" centered background-color="transparent">
                 <v-tab v-for="item in tabs" :key="item.route" active-class="grey darken-2 grey--text">
-                  <span class="uni-sans-heavy text-sm white--text">{{ item.name }}</span>
+                  <span class="uni-sans-heavy grey--text text--lighten-2 text-20">{{ item.name }}</span>
                 </v-tab>
               </v-tabs>
             </v-row>

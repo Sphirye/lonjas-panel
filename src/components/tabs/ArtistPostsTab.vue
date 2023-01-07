@@ -12,7 +12,10 @@
         <v-row align="center" no-gutters class="mt-2 py-2">
           <v-spacer/>
           <v-sheet color="transparent">
-            <v-text-field outlined dense dark hide-details rounded append-icon="fas fa-search" :label="lang.search" v-model="search" @keydown.enter="refresh"/>
+            <v-text-field
+                outlined dense dark hide-details rounded append-icon="fas fa-search"
+                :label="lang.search" v-model="search" @keydown.enter="refresh"
+            />
           </v-sheet>
         </v-row>
 
@@ -99,9 +102,9 @@ export default class ArtistPostsTab extends Vue {
 
   async refresh() {
     try {
-      await Handler.getItems(this, this.posts, () => {
-        return PostService.getPostsByArtist(this.artist.id!!, this.page - 1, this.size)
-      })
+      await Handler.getItems(this, this.posts, () =>
+          PostService.getPosts(this.page - 1, this.size, this.artist.id!!, null, null, null, null)
+      )
     } catch (e) {
       console.log(e)
     }

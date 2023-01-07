@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row dense align="center">
-      <span class="uni-sans-heavy text-md white--text mx-4">Tags</span>
+      <span class="uni-sans-heavy text-25 grey--text  text--lighten-2 mx-4">Tags</span>
       <v-spacer/>
       <v-sheet color="transparent">
         <v-text-field

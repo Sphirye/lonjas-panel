@@ -5,13 +5,12 @@
         <v-list-item class="d-flex justify-start" :key="index" @click="$router.push(button.route).catch(err => {})">
           <v-list-item-action-text>
             <v-icon dark class="mr-3">{{button.icon}}</v-icon>
-            <span class="grey--text my-auto text-sm font-weight-medium">{{ button.title.toUpperCase() }}</span>
+            <span class="grey--text my-auto text-20">{{ button.title }}</span>
           </v-list-item-action-text>
         </v-list-item>
         <v-divider v-if="index != buttons.length - 1" :key="`${index}-divider`" class="grey darken-3 mx-2"/>
       </template>
     </v-list>
-
   </v-navigation-drawer>
 </template>
 

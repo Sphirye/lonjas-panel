@@ -14,7 +14,7 @@
     <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
 
     <v-row align="start" dense>
-      <v-col cols="2" v-for="(post, key) in posts.items" :key="key">
+      <v-col cols="6" sm="4" md="3" lg="2" v-for="(post, key) in posts.items" :key="key">
         <PostCardComponent :post="post"/>
       </v-col>
     </v-row>

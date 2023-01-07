@@ -33,6 +33,12 @@ export default class App extends Vue {
 </script>
 
 <style>
+
+* {
+  font-family: 'Work Sans', sans-serif;
+  font-weight: normal;
+}
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity .2s;
 }
