@@ -13,7 +13,7 @@ export default class Handler {
             const response = await service()
             content.item = response.result
         } catch (e) {
-            console.log("Error lmao")
+            console.log(e)
         } finally {
             component.loading = false
             if ("progress" in component) { component.progress = false }

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <v-row dense align="center">
       <span class="uni-sans-heavy text-25 grey--text  text--lighten-2 mx-4">Tags</span>
       <v-spacer/>
@@ -74,7 +74,7 @@ export default class TagsService extends Vue {
 
   async refresh() {
     try {
-      await Handler.getItems(this, this.tags, () => { return TagService.getTags2(this.page - 1, this.size, this.search) })
+      await Handler.getItems(this, this.tags, () => { return TagService.getTags(this.page - 1, this.size, this.search, null) })
     } catch (e) {
       console.log(e)
     }

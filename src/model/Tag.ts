@@ -7,4 +7,7 @@ export default class Tag {
 
     @JsonProperty("name", String, true)
     name?: string = undefined
+
+    @JsonProperty("enabled", Boolean, true)
+    enabled?: boolean = undefined
 }

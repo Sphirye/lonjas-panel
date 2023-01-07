@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row dense align="center">
-      <span class="uni-sans-heavy text-25 grey--text mx-4">{{ lang.artists }}</span>
+      <span class="uni-sans-heavy text-25 grey--text text--lighten-2 mx-4">{{ lang.artists }}</span>
       <v-spacer/>
       <v-expand-x-transition>
         <v-sheet class="transparent mr-3" v-if="showSearchBar" dark>

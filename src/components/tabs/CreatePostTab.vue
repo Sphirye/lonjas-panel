@@ -104,7 +104,7 @@ export default class CreatePostTab extends Vue {
   async refresh() {
     try {
       await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 5, null))
-      await Handler.getItems(this, this.tags, () => TagService.getTags2(0, 5, null))
+      await Handler.getItems(this, this.tags, () => TagService.getTags(0, 5, null, null))
       await Handler.getItems(this, this.characters, () => CharacterService.getCharacters2(0, 5, null))
     } catch (e) { console.log(e) }
   }

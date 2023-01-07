@@ -1,7 +1,7 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <v-row dense align="center">
-      <span class="uni-sans-heavy text-md white--text mx-4">{{ lang.characters }}</span>
+      <span class="uni-sans-heavy text-25 white--text mx-4">{{ lang.characters }}</span>
       <v-spacer/>
       <v-expand-x-transition>
         <v-sheet class="transparent mr-3" v-if="showSearchBar" dark>
