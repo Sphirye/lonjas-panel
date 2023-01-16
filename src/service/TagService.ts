@@ -16,10 +16,7 @@ export default class TagService {
             })
             const tags = JsonTool.jsonConvert.deserializeArray(response.data, Tag)
             const xTotalCount = Number(response.headers["x-total-count"])
-            return Promise.resolve({
-                result: tags,
-                xTotalCount
-            })
+            return Promise.resolve({result: tags, xTotalCount})
         } catch (e) {
             return Promise.reject(e)
         }
