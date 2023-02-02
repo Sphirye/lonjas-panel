@@ -70,33 +70,33 @@
 
 /*      IM NOT LEARNING SCSS TODAY MY SON       */
 .text-15 {
-    font-size: 15px;
-    line-height: 20px;
+    font-size: 15px !important;
+    line-height: 20px !important;
 }
 
 .text-20 {
-    font-size: 20px;
-    line-height: 25px;
+    font-size: 20px !important;
+    line-height: 25px !important;
 }
 
 
 .text-25 {
-    font-size: 25px;
-    line-height: 30px;
+    font-size: 25px !important;
+    line-height: 30px !important;
 }
 
 
 .text-30 {
-    font-size: 30px;
-    line-height: 35px;
+    font-size: 30px !important;
+    line-height: 35px !important;
 }
+
+
 
 .text-35 {
-    font-size: 35px;
-    line-height: 40px;
+    font-size: 35px !important;
+    line-height: 40px !important;
 }
-
-
 /*  RANDOM  */
 
 .pointer {

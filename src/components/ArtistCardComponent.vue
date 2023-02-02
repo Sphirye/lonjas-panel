@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined dark rounded width="150px" @click="$router.push('/artists/' + artist.id)">
+  <v-card outlined dark color="dark-4" rounded width="150px" @click="$router.push('/artists/' + artist.id)">
     <v-img contain class="ma-2 pre-blur-image rounded-b" height="132px" :src="artist.twitter.profileImageUrl"/>
     <v-card-text class="text-center py-0">
       <h3 class="line-clamp-1">{{ artist.twitter.name }}</h3>

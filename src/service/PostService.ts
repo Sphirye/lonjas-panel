@@ -61,27 +61,16 @@ export default class PostService {
         }
     }
 
-    static async createPostFromTweet(component: Vue, artistId: string, tweetId: string, tags: number[], categories: number[], characters: number[]) {
-        // @ts-ignore
-        component.loading = true
-
-        let formData = new FormData()
-        formData.set("tweetId", tweetId)
-        formData.set("tags", tags.toString())
-        formData.set("categories", categories.toString())
-        formData.set("characters", characters.toString())
-
+    static async createPostFromTweet(tweetId: string, tags: number[], categories: number[], characters: number[]): Promise<Response<Post>> {
         try {
-            const response = await component.axios.post(`${ConstantTool.BASE_URL}/api/artist/${artistId}/post/tweet`, formData, {
+            const response = await axios.post(`${ConstantTool.BASE_URL}/api/post/from/tweet/${tweetId}`, null, {
+                params: {tags, categories, characters},
                 headers: { Authorization: getModule(SessionModule).session.token }
             })
+            const post = JsonTool.jsonConvert.deserializeObject(response.data, Post)
             getModule(SnackbarModule).makeToast("Post creado exitosamente.")
-        } catch (e) {
-            console.log(e)
-        } finally {
-            // @ts-ignore
-            component.loading = false
-        }
+            return Promise.resolve({ result: post })
+        } catch (e) { return Promise.reject(e) }
     }
 
     static async patchPost(id: number, request: Post) {

@@ -17,7 +17,6 @@
             </v-list-item>
           </template>
         </v-select>
-<!--        <v-text-field clearable hide-details dense outlined dark rounded append-icon="mdi-magnify" :label="lang.search"/>-->
       </v-sheet>
       <v-btn class="mx-2" min-width="20px" width="40px" height="40px" depressed tile outlined dark @click="dialog = true">
         <v-icon dense>far fa-plus</v-icon>
@@ -28,11 +27,12 @@
 
     <v-row align="start" dense>
       <v-col cols="12">
-        <TwitterProfilesTab/>
+        <TwitterProfilesTab ref="twitterProfilesTab"/>
       </v-col>
     </v-row>
 
     <v-dialog v-model="dialog" width="600px">
+      <RegisterProfileDialog @refresh="refresh" :syncedDialog.sync="dialog"/>
     </v-dialog>
 
   </v-container>
@@ -51,10 +51,11 @@ import Handler from "@/handlers/Handler";
 import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 import Source from "@/model/vue/Source";
 import TwitterProfilesTab from "@/components/tabs/profiles/TwitterProfilesTab.vue";
+import RegisterProfileDialog from "@/components/dialog/RegisterProfileDialog.vue";
 
 Component.registerHooks(['beforeRouteLeave'])
 
-@Component({ components: { TwitterProfilesTab } })
+@Component({ components: { TwitterProfilesTab, RegisterProfileDialog } })
 export default class ProfilesView extends Vue {
 
   items: Source[] = [
@@ -74,30 +75,9 @@ export default class ProfilesView extends Vue {
     {align: 'center', width: 'auto', text: "Nombre", value: 'name'}
   ]
 
-  tags: MultipleItem<Tag> = {
-    items: [],
-    totalItems: 0
-  }
-
-  created() {
-    this.refresh()
-  }
-
-  // beforeRouteLeave(to: any, from: any, next: any) {
-  //   const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
-  //   if (answer) {
-  //     next()
-  //   } else {
-  //     next(false)
-  //   }
-  // }
-
   async refresh() {
-    try {
-      await Handler.getItems(this, this.tags, () => { return TagService.getTags(this.page - 1, this.size, this.search, null) })
-    } catch (e) {
-      console.log(e)
-    }
+    // @ts-ignore
+    console.log(this.$refs["twitterProfilesTab"].refresh())
   }
 
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-card width="100%" height="100%" dark color="lonjas-base-2">
+  <v-card width="100%" height="100%" dark color="dark-2">
     <v-card-title class="headline primary--text">
       <v-row class="py-1" align="center" no-gutters>
         <h5 class="mx-3 grey--text text--lighten-2 font-weight-bold">Crear post</h5>
@@ -13,17 +13,38 @@
     <v-card-text>
       <v-container>
         <v-form ref="form">
-          <v-row dense>
+          <v-row dense align="center">
             <v-col cols="7">
-              <v-text-field :rules="[rules.required]" type="number" v-model="tweetId" label="Id del Tweet" outlined rounded dense hide-details/>
+              <v-text-field disabled type="number" v-model="tweet.id" label="Id del Tweet" outlined rounded dense hide-details/>
+              <v-card class="mx-auto my-3" flat width="300px" height="300px">
+                <v-img :src="tweet.images[0]" width="300px" height="300px" class="rounded portrait"/>
+              </v-card>
             </v-col>
             <v-col cols="5">
-              <v-autocomplete hide-details outlined class="rounded mb-1" dense label="Tags"/>
-              <v-autocomplete hide-details outlined class="rounded my-1" dense label="Grupos"/>
-              <v-autocomplete hide-details outlined class="rounded mt-1" dense label="Personajes"/>
+              <v-autocomplete
+                  hide-details class="rounded" solo flat background-color="dark-1"
+                  :items="tags.items" multiple chips deletable-chips small-chips
+                  label="Tags" item-text="name" item-value="id" v-model="selectedTags"
+                  :rules="[rules.required]"
+              />
+
+              <v-autocomplete
+                  hide-details class="rounded my-3" label="Grupos" solo flat background-color="dark-1"
+                  :items="categories.items" v-model="selectedCategories" item-value="id"
+                  multiple chips deletable-chips small-chips item-text="name" dark
+                  :rules="[rules.required]"
+              />
+
+              <v-autocomplete
+                  hide-details solo flat class="rounded" label="Personajes" background-color="dark-1"
+                  :items="characters.items" v-model="selectedCharacters" item-value="id"
+                  multiple chips deletable-chips small-chips item-text="name" dark
+                  :rules="[rules.required]"
+              />
             </v-col>
           </v-row>
         </v-form>
+        <v-progress-linear color="grey" :indeterminate="loading"/>
       </v-container>
     </v-card-text>
 
@@ -51,35 +72,55 @@ import Artist from "@/model/Artist"
 import DialogModule from "@/store/DialogModule";
 import Dialog from "@/model/vue/Dialog";
 import Rules from "@/service/tool/Rules";
+import {MultipleItem, SingleItem} from "@/handlers/interfaces/ContentUI";
+import Tag from "@/model/Tag";
+import Category from "@/model/Category";
+import Character from "@/model/Character";
+import Handler from "@/handlers/Handler";
+import CategoryService from "@/service/CategoryService";
+import TagService from "@/service/TagService";
+import CharacterService from "@/service/CharacterService";
+import Post from "@/model/Post";
 
 @Component
 export default class CreatePostDialog extends Vue {
 
+  @PropSync('dialog', { type: Boolean }) syncedDialog!: boolean
+  @Ref() readonly form!: HTMLFormElement
+  @Prop() tweet!: Tweet
+  get rules() { return Rules }
   get lang() { return getModule(LangModule).lang }
 
-  @Ref() readonly form!: HTMLFormElement
-  @PropSync('dialog', { type: Boolean }) syncedDialog!: boolean
   loading: boolean = false
-  tweetId: string = ""
-  artist: Artist = new Artist()
-  tweet: Tweet = new Tweet()
+  tags: MultipleItem<Tag> = { items: [], totalItems: 0 }
+  selectedTags: number[] = []
+  categories: MultipleItem<Category> = { items: [], totalItems: 0 }
+  selectedCategories: number[] = []
+  characters: MultipleItem<Character> = { items: [], totalItems: 0 }
+  selectedCharacters: number[] = []
 
-  get rules() { return Rules }
+  post: SingleItem<Post> = { item: new Post() }
 
   created() {
-    console.log(this.$route.params)
     this.refresh()
   }
 
   async refresh() {
-    await TweetService.getTweet(this, this.$route.params.tweetId)
+    try {
+      await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 5, null))
+      await Handler.getItems(this, this.tags, () => TagService.getTags(0, 5, null, null))
+      await Handler.getItems(this, this.characters, () => CharacterService.getCharacters2(0, 5, null))
+    } catch (e) { console.log(e) }
   }
 
   async createPost() {
     if (this.form.validate()) {
       getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea crear un post a partir de este tweet?", async () => {
-        // await PostService.createPostFromTweet(this, this.$route.params.artistId, this.tweet.id!!)
-        await this.$router.push(`/artists/${this.$route.params.artistId}`)
+        try {
+          await Handler.getItem(this, this.post, () =>
+              PostService.createPostFromTweet(this.tweet.id!!, this.selectedTags, this.selectedCategories, this.selectedCharacters)
+          )
+        } catch (e) { console.log(e) }
       }))
     }
   }
@@ -89,8 +130,6 @@ export default class CreatePostDialog extends Vue {
   }
 
   clear() {
-    this.tweetId = ""
-    this.artist = new Artist()
     this.tweet = new Tweet()
   }
 }
@@ -107,5 +146,11 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+.portrait.v-card {
+  margin: 0 auto;
+  max-width: 600px;
+  width: 100%;
 }
 </style>

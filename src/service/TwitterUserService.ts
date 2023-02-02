@@ -4,22 +4,19 @@ import {getModule} from "vuex-module-decorators"
 import {Vue} from "vue-property-decorator"
 import JsonTool from "@/service/tool/JsonTool";
 import TwitterUser from "@/model/twitter/TwitterUser";
+import Response from "@/model/response/Response";
+import axios from "axios";
 
 export default class TwitterUserService {
 
-    static async registerTwitterUserByUsername(component: Vue, username: string) {
-        // @ts-ignore
-        component.loading = true
+    static async registerTwitterUserByUsername(username: string): Promise<Response<TwitterUser>> {
         try {
-            let response = await component.axios.post(ConstantTool.BASE_URL + `/api/twitter/user/register/by/username/${username}`, null,{
+            let response = await axios.post(ConstantTool.BASE_URL + `/api/twitter/user/register/by/username/${username}`, null,{
                 headers: { Authorization: getModule(SessionModule).session.token }
             })
-        } catch (e) {
-
-        } finally {
-            // @ts-ignore
-            component.loading = false
-        }
+            const profile = JsonTool.jsonConvert.deserializeObject(response.data, TwitterUser)
+            return Promise.resolve({ result: profile })
+        } catch (e) { return Promise.reject(e) }
     }
 
     static async getTwitterUserByUsername(component: Vue, username: string) {

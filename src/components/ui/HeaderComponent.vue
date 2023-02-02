@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="lonjas-base-2" dark clipped-left clipped-right app flat style="border-bottom: 1px solid rgba(64,64,64,0.52) !important;">
+  <v-app-bar color="dark-4" dark app clipped-left flat>
     <v-app-bar-nav-icon @click.stop="toggleDrawer"/>
 
     <div class="pointer" @click="$router.push('/').catch(err => {})">
@@ -9,7 +9,10 @@
     <v-spacer/>
 
     <div class="mx-2">
-      <v-text-field :label="lang.search" dense append-icon="fas fa-search" outlined hide-details="auto" dark rounded/>
+      <v-text-field
+          :label="lang.search + '...'" flat
+          hide-details="auto" background-color="dark-1" solo dense
+      />
     </div>
 
   </v-app-bar>

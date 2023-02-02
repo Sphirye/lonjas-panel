@@ -112,9 +112,7 @@ export default class CreatePostTab extends Vue {
   async createPost() {
     if (this.form.validate()) {
       getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea crear un post a partir de este tweet?", async () => {
-        await PostService.createPostFromTweet(
-            this, this.$route.params.id, this.tweet.id!!, this.selectedTags, this.selectedCategories, this.selectedCharacters
-        )
+
       }))
     }
   }

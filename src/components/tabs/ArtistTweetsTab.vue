@@ -21,7 +21,7 @@
         <v-divider class="mb-2" dark/>
 
         <v-row align="center" dense>
-          <v-col cols="3" v-for="(tweet, key) in tweets" :key="key">
+          <v-col cols="3" v-for="(tweet, key) in tweets2.items" :key="key">
             <v-card height="200px" max-height="250px" outlined dark rounded @click="selectTweet(tweet)">
               <v-hover v-slot="{ hover }">
                 <v-img width="100%" height="100%" class="pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="tweet.images[0]">
@@ -36,6 +36,7 @@
               </v-hover>
             </v-card>
           </v-col>
+          <v-pagination dark v-model="page" :length="pageCount" :total-visible="8"/>
         </v-row>
       </v-tab-item>
 
@@ -46,12 +47,11 @@
       </v-tab-item>
     </v-tabs-items>
 
-
   </v-container>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Ref, Vue} from 'vue-property-decorator'
+import {Component, Prop, Ref, Vue, Watch} from 'vue-property-decorator'
 import TweetService from "@/service/TweetService"
 import {getModule} from "vuex-module-decorators"
 import LangModule from "@/store/LangModule"
@@ -62,6 +62,8 @@ import TweetTab from "@/components/tabs/TweetTab.vue";
 import DialogModule from "@/store/DialogModule";
 import Dialog from "@/model/vue/Dialog";
 import ArtistService from "@/service/ArtistService";
+import Handler from "@/handlers/Handler";
+import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 
 @Component({ components: { TweetTab } })
 export default class ArtistTweetsTab extends Vue {
@@ -73,9 +75,12 @@ export default class ArtistTweetsTab extends Vue {
   tweets: Tweet[] = []
   page: number = 1
   size: number = 20
+  pageCount = 0
   search: string = ""
   tab: number = 0
   tweet: Tweet = new Tweet()
+
+  tweets2: MultipleItem<Tweet> = { items: [], totalItems: 0 }
 
   tabs: Tab[] = [
     { name: "Tweets" },
@@ -86,8 +91,13 @@ export default class ArtistTweetsTab extends Vue {
     this.refresh()
   }
 
-  refresh() {
-    TweetService.findArtistTweets(this, this.tweets, this.page - 1, this.size, this.search, this.artist.id!)
+  async refresh() {
+    try {
+      await Handler.getItems(this, this.tweets2, () =>
+        TweetService.findArtistTweets2(this.page, this.size, this.search, this.artist.id!)
+      )
+    } catch (e) { console.log(e) }
+    this.pageCount = Math.ceil(this.tweets2.totalItems! / this.size)
   }
 
   back() {
@@ -105,6 +115,9 @@ export default class ArtistTweetsTab extends Vue {
       await TweetService.syncUserTweets(this, this.artist.twitter!.id!)
     }))
   }
+
+  @Watch('page')
+  onPageChanged() { this.refresh() }
 }
 </script>
 

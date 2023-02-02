@@ -2,7 +2,7 @@
   <v-app>
     <HeaderComponent/>
     <DrawerComponent/>
-    <v-main class="lonjas-base">
+    <v-main class="dark-2">
       <transition name="fade" mode="out-in">
         <router-view class="my-4"/>
       </transition>

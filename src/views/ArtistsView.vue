@@ -51,11 +51,7 @@ import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 export default class ArtistsView extends Vue {
 
   artist: Artist = new Artist()
-  artists: MultipleItem<Artist> = {
-    items: [],
-    totalItems: 0
-  }
-
+  artists: MultipleItem<Artist> = { items: [], totalItems: 0 }
   dialog: boolean = false
   loading: boolean = false
   page: number = 1

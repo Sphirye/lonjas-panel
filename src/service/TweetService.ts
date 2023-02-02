@@ -4,8 +4,20 @@ import {getModule} from "vuex-module-decorators"
 import JsonTool from "@/service/tool/JsonTool"
 import {Vue} from "vue-property-decorator"
 import Tweet from "@/model/twitter/Tweet"
+import axios from "axios";
+import Response from "@/model/response/Response";
 
 export default class TweetService {
+
+    static async getTweet2(id: string): Promise<Response<Tweet>> {
+        try {
+            const response = await axios.get(ConstantTool.BASE_URL + `/api/twitter/tweet/${id}`, {
+                headers: { Authorization: getModule(SessionModule).session.token }
+            })
+            const tweet = JsonTool.jsonConvert.deserializeObject(response.data, Tweet)
+            return Promise.resolve({ result: tweet })
+        } catch (e) { return Promise.reject(e) }
+    }
 
     static async getTweet(component: Vue, id: String) {
         // @ts-ignore
@@ -22,6 +34,30 @@ export default class TweetService {
             // @ts-ignore
             component.loading = false
         }
+    }
+
+    static async findTweetsByTwitterUser(page: number, size: number, search: Nullable<string>, twitterUserId: string) {
+        try {
+            const response = await axios.get(ConstantTool.BASE_URL + `/api/twitter/${twitterUserId}/tweet`, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+                params: { page, size, search }
+            })
+            const tweets = JsonTool.jsonConvert.deserializeArray(response.data, Tweet)
+            const xTotalCount = Number(response.headers["x-total-count"])
+            return Promise.resolve({result: tweets, xTotalCount})
+        } catch (e) { return Promise.reject(e) }
+    }
+
+    static async findArtistTweets2(page: number, size: number, search: Nullable<string>, artistId: number): Promise<Response<Tweet[]>> {
+        try {
+            const response = await axios.get(ConstantTool.BASE_URL + `/api/artist/${artistId}/tweets`, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+                params: { page, size, search }
+            })
+            const tweets = JsonTool.jsonConvert.deserializeArray(response.data, Tweet)
+            const xTotalCount = Number(response.headers["x-total-count"])
+            return Promise.resolve({result: tweets, xTotalCount})
+        } catch (e) { return Promise.reject(e) }
     }
 
     static async findArtistTweets(component: Vue, tweets: Tweet[], page: number, size: number, search: string, artistId: number) {

@@ -109,13 +109,13 @@ import PostService from "@/service/PostService"
 import Post from "@/model/Post";
 import Tweet from "@/model/twitter/Tweet";
 import TweetService from "@/service/TweetService";
-import CreatePostDialog from "@/components/dialog/CreatePostDialog.vue";
+import CreateTweetPostDialog from "@/components/dialog/CreatePostDialog.vue";
 import Tab from "@/model/vue/Tab";
 import CreatePostTab from "@/components/tabs/CreatePostTab.vue";
 import DialogModule from "@/store/DialogModule";
 import Dialog from "@/model/vue/Dialog";
 
-@Component( { components: { CreatePostDialog, CreatePostTab } } )
+@Component( { components: { CreatePostDialog: CreateTweetPostDialog, CreatePostTab } } )
 export default class TweetTab extends Vue {
 
   get lang() { return getModule(LangModule).lang }

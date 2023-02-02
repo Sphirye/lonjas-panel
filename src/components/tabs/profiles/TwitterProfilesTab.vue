@@ -1,8 +1,9 @@
 <template>
-  <div  >
+  <div>
     <v-data-table
       :headers="headers" class="elevation-0 transparent" dark
       hide-default-footer disable-filtering disable-sort :items="profiles.items"
+      @click:row="rowClick"
     >
       <template v-slot:item._createdAt="{ item }">
         {{ item.createdAt.setLocale("es").toFormat('HH:mm - dd/MM/yy') }}
@@ -45,9 +46,13 @@ export default class TwitterProfilesTab extends Vue {
   async refresh() {
     try {
       await Handler.getItems(this, this.profiles, () =>
-          ProfilesService.getTwitterProfiles(this.page - 1, this.size)
+          ProfilesService.getTwitterProfiles(this.page - 1, this.size, "")
       )
     } catch (e) { console.log(e) }
+  }
+
+  rowClick(twitterUser: TwitterUser) {
+    this.$router.push(`/profiles/twitter/${twitterUser.id}`)
   }
 
 }

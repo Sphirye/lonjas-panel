@@ -24,7 +24,14 @@ export default new Vuetify({
         warning: '#FFC107',
 
         'lonjas-base': '#1b1b31',
-        'lonjas-base-2': '#2e2638'
+        'lonjas-base-2': '#85586F',
+
+        'dark-1': '#424549',
+        'dark-2': '#36393e',
+        'dark-3': '#303239',
+        'dark-4': '#2e3034',
+        'dark-5': '#1e2324'
+
       }
     }
   }

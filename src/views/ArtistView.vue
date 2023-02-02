@@ -7,7 +7,7 @@
         <v-col cols="4">
           <v-card flat class="lonjas-base-2" dark>
             <v-card-title class="mx-3">
-              <v-avatar size="128">
+              <v-avatar size="128" class="mr-4">
                 <v-img contain :src="artist.twitter.profileImageUrl"/>
               </v-avatar>
               <div>
@@ -49,7 +49,12 @@
         </v-col>
 
         <v-col cols="8">
-          <template>
+          <v-row>
+
+          </v-row>
+
+
+          <template v-if="false">
             <v-row no-gutters align="center" dense>
               <v-tabs v-model="tab" centered background-color="transparent">
                 <v-tab v-for="item in tabs" :key="item.route" active-class="grey darken-2 grey--text">
@@ -92,6 +97,8 @@ import ArtistPostsTab from "@/components/tabs/ArtistPostsTab.vue";
 import ArtistTweetsTab from "@/components/tabs/ArtistTweetsTab.vue";
 import RouterTool from "@/service/tool/RouterTool";
 import Tab from "@/model/vue/Tab";
+import Handler from "@/handlers/Handler";
+import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 
 @Component( { components: { PostCardComponent, ArtistPostsTab, ArtistTweetsTab } } )
 export default class PostsView extends Vue {
@@ -107,22 +114,33 @@ export default class PostsView extends Vue {
 
   loading: boolean = false
   artist: Artist = new Artist()
-  posts: Post[] = []
+
+  posts: MultipleItem<Post> = {
+    items: [],
+    totalItems: 0
+  }
+
+  post: Post = new Post()
   page: number = 1
   size: number = 10
-
-  totalPosts: number = 0
 
   get lang() { return getModule(LangModule).lang }
   get rules() { return Rules }
 
-  created() {
-    this.refresh()
+  async created() {
+    await ArtistService.getArtist(this, Number(this.$route.params.id))
+    await this.refresh()
     this.tab = RouterTool.configTabs(this, this.tabs)
   }
 
   async refresh() {
-    await ArtistService.getArtist(this, Number(this.$route.params.id))
+    try {
+      await Handler.getItems(this, this.posts, () =>
+          PostService.getPosts(this.page - 1, this.size, this.artist.id!!, null, null, null, null)
+      )
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   validate() {
