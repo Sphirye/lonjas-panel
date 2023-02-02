@@ -13,19 +13,12 @@ import Category from "@/model/Category";
 
 export default class PostService {
 
-    static async getPost(component: Vue, id: number) {
-        // @ts-ignore
-        component.loading = true
+    static async getPost(id: number): Promise<Response<Post>> {
         try {
-            const response = await component.axios.get(`${ConstantTool.BASE_URL}/public/post/${id}`)
-            // @ts-ignore
-            component.post = JsonTool.jsonConvert.deserializeObject(response.data, Post)
-        } catch (e) {
-
-        } finally {
-            // @ts-ignore
-            component.loading = false
-        }
+            const response = await axios.get(`${ConstantTool.BASE_URL}/public/post/${id}`)
+            const post = JsonTool.jsonConvert.deserializeObject(response.data, Post)
+            return Promise.resolve({ result: post })
+        } catch (e) { return Promise.reject(e) }
     }
 
     static async getPosts(
@@ -64,7 +57,7 @@ export default class PostService {
     static async createPostFromTweet(tweetId: string, tags: number[], categories: number[], characters: number[]): Promise<Response<Post>> {
         try {
             const response = await axios.post(`${ConstantTool.BASE_URL}/api/post/from/tweet/${tweetId}`, null, {
-                params: {tags, categories, characters},
+                params: { tags: tags.toString(), categories: categories.toString(), characters: characters.toString() },
                 headers: { Authorization: getModule(SessionModule).session.token }
             })
             const post = JsonTool.jsonConvert.deserializeObject(response.data, Post)
@@ -73,11 +66,14 @@ export default class PostService {
         } catch (e) { return Promise.reject(e) }
     }
 
-    static async patchPost(id: number, request: Post) {
+    static async patchPost(id: number, request: Post): Promise<Response<Post>> {
         try {
             const response = await axios.patch(`${ConstantTool.BASE_URL}/api/post/${id}`, request, {
                 headers: { Authorization: getModule(SessionModule).session.token },
             })
+            const post = JsonTool.jsonConvert.deserializeObject(response.data, Post)
+            getModule(SnackbarModule).makeToast("Post actualizado exitosamente.")
+            return Promise.resolve({ result: post })
         } catch (e) {
             return Promise.reject(e)
         }

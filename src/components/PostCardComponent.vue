@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined dark rounded>
+  <v-card outlined dark rounded @click="$router.push('/posts/' + post.id)">
     <v-hover v-slot="{ hover }">
       <v-img height="250px" class="ma-1 pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="images[0]">
         <v-expand-transition>

@@ -83,7 +83,7 @@ import CharacterService from "@/service/CharacterService";
 import Post from "@/model/Post";
 
 @Component
-export default class CreatePostDialog extends Vue {
+export default class CreateTweetPostDialog extends Vue {
 
   @PropSync('dialog', { type: Boolean }) syncedDialog!: boolean
   @Ref() readonly form!: HTMLFormElement
@@ -120,6 +120,7 @@ export default class CreatePostDialog extends Vue {
           await Handler.getItem(this, this.post, () =>
               PostService.createPostFromTweet(this.tweet.id!!, this.selectedTags, this.selectedCategories, this.selectedCharacters)
           )
+          this.syncedDialog = false
         } catch (e) { console.log(e) }
       }))
     }

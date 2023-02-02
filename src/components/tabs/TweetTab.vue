@@ -109,7 +109,7 @@ import PostService from "@/service/PostService"
 import Post from "@/model/Post";
 import Tweet from "@/model/twitter/Tweet";
 import TweetService from "@/service/TweetService";
-import CreateTweetPostDialog from "@/components/dialog/CreatePostDialog.vue";
+import CreateTweetPostDialog from "@/components/dialog/CreateTweetPostDialog.vue";
 import Tab from "@/model/vue/Tab";
 import CreatePostTab from "@/components/tabs/CreatePostTab.vue";
 import DialogModule from "@/store/DialogModule";

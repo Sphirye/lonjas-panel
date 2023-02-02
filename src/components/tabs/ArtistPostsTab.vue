@@ -68,11 +68,10 @@ import Artist from "@/model/Artist"
 import PostService from "@/service/PostService"
 import Post from "@/model/Post";
 import Tab from "@/model/vue/Tab";
-import PostTab from "@/components/tabs/PostTab.vue";
 import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 import Handler from "@/handlers/Handler";
 
-@Component( { components: { PostTab } } )
+@Component( { components: { } } )
 export default class ArtistPostsTab extends Vue {
 
   @Prop() readonly artist!: Artist

@@ -118,7 +118,7 @@ import ProfilesService from "@/service/ProfilesService";
 import TweetService from "@/service/TweetService";
 import LangModule from "@/store/LangModule";
 import Tweet from "@/model/twitter/Tweet";
-import CreateTweetPostDialog from "@/components/dialog/CreatePostDialog.vue";
+import CreateTweetPostDialog from "@/components/dialog/CreateTweetPostDialog.vue";
 
 @Component( {components: { CreatePostDialog: CreateTweetPostDialog }})
 export default class TwitterProfileView extends Vue {

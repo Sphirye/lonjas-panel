@@ -48,4 +48,7 @@ export default class Post {
     @JsonProperty("type", TypeConverter, true)
     type?: Type = undefined
 
+    @JsonProperty("enabled", Boolean, true)
+    enabled?: boolean = undefined
+
 }
