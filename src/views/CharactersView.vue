@@ -6,9 +6,9 @@
       <v-expand-x-transition>
         <v-sheet class="transparent mr-3" v-if="showSearchBar" dark>
           <v-text-field
-              @click:clear="search = ''; resetAll()" @keydown.enter="refresh"
-              v-model="search" v-debounce:250ms="resetAll"
-              clearable hide-details dense outlined :label="lang.search"
+              @click:clear="search = ''; resetAll()" @keydown.enter="refresh" flat
+              v-model="search" v-debounce:250ms="resetAll" background-color="dark-1"
+              clearable hide-details dense solo :label="lang.search"
           />
         </v-sheet>
       </v-expand-x-transition>
@@ -22,8 +22,8 @@
 
     <v-row align="start" dense>
       <v-col cols="auto" v-for="(character, key) in characters.items" :key="key">
-        <v-card outlined dark rounded>
-          <v-card-title>
+        <v-card outlined dark rounded color="dark-1" @click="$router.push('/characters/' + character.id)">
+          <v-card-title class="grey--text text--lighten-3">
             {{ character.name }}
           </v-card-title>
         </v-card>

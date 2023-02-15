@@ -23,7 +23,7 @@
 
     <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
 
-    <v-row align="start" dense>
+    <v-row align="start" dense no-gutters>
       <v-col cols="auto" v-for="(artist, key) in artists.items" :key="key">
         <ArtistCardComponent :artist="artist"/>
       </v-col>
@@ -68,9 +68,7 @@ export default class ArtistsView extends Vue {
   async refresh() {
     try {
       await Handler.getItems(this, this.artists, () => ArtistService.getArtists(this.page - 1, this.size, this.search))
-    } catch (e) {
-      console.log(e)
-    }
+    } catch (e) { console.log(e) }
   }
 
   resetAll() {

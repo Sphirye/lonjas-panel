@@ -16,8 +16,8 @@
 
     <v-row align="start" dense>
       <v-col cols="auto" v-for="(tag, key) in tags.items" :key="key">
-        <v-card outlined dark @click="$router.push(`/tags/${tag.id}`)">
-          <v-card-title>{{ tag.name }}</v-card-title>
+        <v-card outlined dark @click="$router.push(`/tags/${tag.id}`)" color="dark-1">
+          <v-card-title class="grey--text text--lighten-3">{{ tag.name }}</v-card-title>
         </v-card>
       </v-col>
     </v-row>

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card outlined dark>
+    <v-card outlined dark color="dark-1">
       <v-card-title>
         <span class="uni-sans-heavy text-md white--text mx-4">Tag</span>
         <v-spacer/>

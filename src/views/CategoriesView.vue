@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <v-row dense align="center">
       <span class="uni-sans-heavy text-25 grey--text text--lighten-2 mx-4">{{ lang.categories }}</span>
       <v-spacer/>
@@ -22,8 +22,8 @@
 
     <v-row align="start" dense>
       <v-col cols="auto" v-for="(category, key) in categories.items" :key="key">
-        <v-card outlined dark rounded>
-          <v-card-title>
+        <v-card outlined dark rounded color="dark-1">
+          <v-card-title class="grey--text text--lighten-3">
             {{ category.name }}
           </v-card-title>
         </v-card>

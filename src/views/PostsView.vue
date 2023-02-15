@@ -19,8 +19,6 @@
       </v-col>
     </v-row>
 
-<!--    <span class="white&#45;&#45;text">{{posts}}</span>-->
-
     <v-dialog v-model="dialog" width="600px">
 <!--      <CreateTagDialog :dialog.sync="dialog" @created="this.refresh"/>-->
     </v-dialog>
@@ -50,25 +48,15 @@ export default class PostsView extends Vue {
   lang = getModule(LangModule).lang
   loading: boolean = false
   tag: Tag = new Tag()
-
-  posts: MultipleItem<Post> = {
-    items: [],
-    totalItems: 0
-  }
-
-  tags: MultipleItem<Tag> = {
-    items: [],
-    totalItems: 0
-  }
+  posts: MultipleItem<Post> = { items: [], totalItems: 0 }
+  tags: MultipleItem<Tag> = { items: [], totalItems: 0 }
   search: string = ""
   page: number = 1
   size: number = 20
   totalItems: number = 0
   dialog: boolean =false
 
-  created() {
-    this.refresh()
-  }
+  created() { this.refresh() }
 
   async refresh() {
     try {

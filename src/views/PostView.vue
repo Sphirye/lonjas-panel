@@ -25,7 +25,7 @@
                 hide-details class="rounded" solo flat background-color="dark-1"
                 :items="tags.items" multiple chips deletable-chips small-chips
                 label="Tags" item-text="name" item-value="id" v-model="post.item.tags"
-                :rules="[rules.required]"
+                :rules="[rules.required]" return-object
             />
           </v-col>
           <v-col cols="4">
@@ -33,7 +33,7 @@
                 hide-details class="rounded my-3" label="Grupos" solo flat background-color="dark-1"
                 :items="categories.items" v-model="post.item.categories" item-value="id"
                 multiple chips deletable-chips small-chips item-text="name" dark
-                :rules="[rules.required]"
+                :rules="[rules.required]" return-object
             />
           </v-col>
           <v-col cols="4">
@@ -41,7 +41,7 @@
                 hide-details solo flat class="rounded" label="Personajes" background-color="dark-1"
                 :items="characters.items" v-model="post.item.characters" item-value="id"
                 multiple chips deletable-chips small-chips item-text="name" dark
-                :rules="[rules.required]"
+                :rules="[rules.required]" return-object
             />
           </v-col>
         </v-row>
@@ -57,6 +57,8 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+
+    {{post.item.tags}}
 
     <v-dialog v-model="dialog" width="600px">
       <CreateTagDialog :dialog.sync="dialog" @created="this.refresh"/>
@@ -95,11 +97,8 @@ export default class PostView extends Vue {
   post: SingleItem<Post> = { item: new Post() }
 
   tags: MultipleItem<Tag> = { items: [], totalItems: 0 }
-  selectedTags: number[] = []
   categories: MultipleItem<Category> = { items: [], totalItems: 0 }
-  selectedCategories: number[] = []
   characters: MultipleItem<Character> = { items: [], totalItems: 0 }
-  selectedCharacters: number[] = []
 
   async created() {
     try {

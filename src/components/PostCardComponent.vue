@@ -1,25 +1,18 @@
 <template>
-  <v-card outlined dark rounded @click="$router.push('/posts/' + post.id)">
+  <v-card
+      :width="width" :height="height" outlined class="pa-1"
+      dark rounded @click="$router.push('/posts/' + post.id)"
+  >
     <v-hover v-slot="{ hover }">
-      <v-img height="250px" class="ma-1 pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="images[0]">
+      <v-img width="100%" height="100%" class="pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="images[0]">
         <v-expand-transition>
           <v-sheet tile color="rgba(44,48,59,0.84)" v-if="hover" class="d-flex flex-column transition-fast-in-fast-out" style="height: 100%">
 
-            <v-card-title v-if="post.type == Type.TWEET" class="px-2">
-              <p class="work-sans font-weight-bold line-clamp-1 text-20 pb-0 mb-0">{{post.artist.twitter.name}}</p>
-              <span class="work-sans grey--text mx-auto text-15">@{{post.artist.twitter.username}}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <p class="work-sans grey--text py-0 my-0 line-clamp-3 text-15">"{{post.tweet.text}}"</p>
+            <v-card-text v-if="post.type == Type.TWEET" class="px-2 text-center my-auto">
+              <p class="work-sans font-weight-bold line-clamp-1 text-20 pb-0 mx-auto mb-0">{{post.artist.twitter.name}}</p>
+              <p class="work-sans grey--text mx-auto text-15">@{{post.artist.twitter.username}}</p>
             </v-card-text>
 
-            <v-card-actions class="mt-auto">
-              <v-spacer/>
-              <v-btn icon>
-                <v-icon>fab fa-twitter</v-icon>
-              </v-btn>
-            </v-card-actions>
           </v-sheet>
         </v-expand-transition>
       </v-img>
@@ -47,6 +40,10 @@ import Post, {Type} from "@/model/Post";
 export default class PostCardComponent extends Vue {
 
   @Prop() readonly post!: Post
+  @Prop({ default: '200px' }) readonly width!: string
+  @Prop({ default: '200px' }) readonly height!: string
+
+
   get lang() { return getModule(LangModule).lang }
 
   get images(): Nullable<string[]> {
@@ -61,6 +58,10 @@ export default class PostCardComponent extends Vue {
 
 <style>
 .pre-blur-image .v-image__image{
+
+  filter: blur(0.5px);
+  -webkit-filter: blur(0.5px);
+
   image-rendering: crisp-edges !important;
   transition: all 0.5s;
 }
