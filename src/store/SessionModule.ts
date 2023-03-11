@@ -10,9 +10,7 @@ export default class SessionModule extends VuexModule {
     session: Session = new Session()
 
     @Mutation
-    setSession(session: Session) {
-        this.session = session;
-    }
+    setSession(session: Session) { this.session = session }
 
     @Action
     saveSession() {
@@ -47,6 +45,12 @@ export default class SessionModule extends VuexModule {
             localStorage.removeItem(Session.KEY)
             this.setSession(new Session())
         }
+    }
+
+    @Action
+    destroySession() {
+        this.setSession(new Session())
+        this.saveSession()
     }
 
 }

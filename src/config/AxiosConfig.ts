@@ -5,6 +5,7 @@ import {getModule} from "vuex-module-decorators"
 import LangModule from "@/store/LangModule";
 import axios from "axios"
 import {AxiosError} from "axios"
+import LoginService from "@/service/LoginService";
 
 export default class AxiosConfig {
 
@@ -26,18 +27,12 @@ export default class AxiosConfig {
             console.log('Response:', response)
             return response
         }, async (error: AxiosError) => {
-            if (error.response && error.response.status == 403) {
-                let sessionModule: SessionModule = getModule(SessionModule)
-                sessionModule.session.token = ""
-                sessionModule.saveSession()
-                await vue.$router.push("/login")
-            }
+            if (error.response) {
 
-            if (error.response && error.response.status == 401) { // TODO implement token refreshing
-                let sessionModule: SessionModule = getModule(SessionModule)
-                sessionModule.session.token = ""
-                sessionModule.saveSession()
-                await vue.$router.push("/login")
+                if (error.response.status == 403 || error.response.status == 401) {
+                    await LoginService.logout()
+                    await vue.$router.push("/login").catch(() => {})
+                }
             }
             console.log("Error: " + error)
             console.log(error.response)

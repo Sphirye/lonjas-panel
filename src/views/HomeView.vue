@@ -46,6 +46,7 @@
             <p class="text-center my-0">
               Para obtener ayuda sobre este panel, por favor póngase en contacto con nosotros a través de esotilin@gmail.com
             </p>
+
           </v-card-text>
         </v-card>
 			</v-col>
@@ -70,10 +71,11 @@ import PostCardComponent from "@/components/PostCardComponent.vue";
 import ArtistCardComponent from "@/components/ArtistCardComponent.vue";
 import ArtistService from "@/service/ArtistService";
 
-@Component({components: {ArtistCardComponent, PostCardComponent }})
+@Component({components: { ArtistCardComponent, PostCardComponent }})
 export default class HomeView extends Vue {
 
 	@Ref() readonly form!: HTMLFormElement
+  sessionModule = getModule(SessionModule)
   loading: boolean = false
   search: string = ""
   posts: MultipleItem<Post> = { items: [], totalItems: 0 }
@@ -90,7 +92,7 @@ export default class HomeView extends Vue {
       await Handler.getItems(this, this.posts, () => PostService.getPosts(
           0, 20, null, null, null, null, null)
       )
-      await Handler.getItems(this, this.artists, () => ArtistService.getArtists(0, 20, null))
+      await Handler.getItems(this, this.artists, () => ArtistService.getPublicArtists(0, 20, null))
 
     } catch (e) { console.log(e) }
   }

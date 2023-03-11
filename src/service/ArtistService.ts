@@ -24,9 +24,27 @@ export default class ArtistService {
         }
     }
 
-    static async getArtists(page: number, size: number, search: string | null): Promise<Response<Artist[]>> {
+    static async getPublicArtists(page: number, size: number, search: string | null): Promise<Response<Artist[]>> {
         try {
             const response = await axios.get(`${ConstantTool.BASE_URL}/public/artist`, {
+                params: { page, size, search }
+            })
+            let artists = JsonTool.jsonConvert.deserializeArray(response.data, Artist)
+            const xTotalCount = Number(response.headers["x-total-count"])
+
+            return Promise.resolve({
+                result: artists,
+                xTotalCount
+            })
+        } catch (e) {
+            return Promise.reject(e)
+        }
+    }
+
+    static async getArtists(page: number, size: number, search: string | null): Promise<Response<Artist[]>> {
+        try {
+            const response = await axios.get(`${ConstantTool.BASE_URL}/api/artist`, {
+                headers: { Authorization: getModule(SessionModule).session.token },
                 params: { page, size, search }
             })
             let artists = JsonTool.jsonConvert.deserializeArray(response.data, Artist)

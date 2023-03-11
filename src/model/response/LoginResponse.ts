@@ -1,5 +1,6 @@
 import {JsonObject, JsonProperty} from "json2typescript"
 import User from "@/model/User"
+import Authority from "@/model/Authority";
 
 @JsonObject("LoginResponse")
 export default class LoginResponse {
@@ -9,5 +10,8 @@ export default class LoginResponse {
 
     @JsonProperty("token", String, true)
     token?: string = undefined
+
+    @JsonProperty("authorities", [Authority], true)
+    authorities?: Authority[] = undefined
 
 }

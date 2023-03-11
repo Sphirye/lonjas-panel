@@ -68,9 +68,18 @@ export default class LoginView extends Vue {
   get sessionModule() { return getModule(SessionModule).session }
   get isLogged() { return LoginService.isLogged() }
 
-  login() {
+  async created() {
+    if (this.isLogged) { await this.$router.push("/") }
+  }
+
+  async login() {
     if (this.form.validate()) {
-    LoginService.login(this, this.email, this.password)
+      try {
+        await LoginService.login(this, this.email, this.password)
+
+        if (this.isLogged) await this.$router.push("/")
+
+      } catch (e) { console.log(e) }
     }
   }
 

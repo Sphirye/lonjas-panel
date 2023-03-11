@@ -81,7 +81,3 @@ export default class CreateTagDialog extends Vue {
 
 }
 </script>
-
-<style scoped>
-
-</style>

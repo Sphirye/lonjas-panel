@@ -1,7 +1,8 @@
 import DateTimeConverter from "@/service/tool/DateTimeConverter"
-import {JsonObject, JsonProperty} from "json2typescript"
+import {Any, JsonObject, JsonProperty} from "json2typescript"
 import User from "@/model/User"
 import {DateTime} from "luxon"
+
 
 @JsonObject("Auditing")
 export default class Auditing {
@@ -9,7 +10,7 @@ export default class Auditing {
     @JsonProperty("createdAt", DateTimeConverter, true)
     private _createdAt?: DateTime = undefined
 
-    @JsonProperty("createdBy", User, true)
+    @JsonProperty("createdBy", Any, true)
     private _createdBy?: User = undefined
 
     get createdBy(): User | undefined {

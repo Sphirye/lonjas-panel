@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <HeaderComponent/>
-    <DrawerComponent/>
+    <HeaderComponent v-if="isLogged"/>
+    <DrawerComponent v-if="isLogged"/>
     <v-main class="dark-2">
       <transition name="fade" mode="out-in">
         <router-view class="my-4"/>
@@ -24,6 +24,8 @@ import LoginService from "@/service/LoginService"
 
 @Component({ components: { DialogComponent, SnackbarComponent, HeaderComponent, FooterComponent, DrawerComponent } })
 export default class App extends Vue {
+
+  get isLogged() { return LoginService.isLogged() }
 
   async mounted() {
     // await LoginService.checkSession(this)

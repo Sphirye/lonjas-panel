@@ -67,7 +67,7 @@ export default class ArtistsView extends Vue {
 
   async refresh() {
     try {
-      await Handler.getItems(this, this.artists, () => ArtistService.getArtists(this.page - 1, this.size, this.search))
+      await Handler.getItems(this, this.artists, () => ArtistService.getPublicArtists(this.page - 1, this.size, this.search))
     } catch (e) { console.log(e) }
   }
 

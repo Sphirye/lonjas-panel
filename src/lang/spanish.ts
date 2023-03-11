@@ -30,6 +30,8 @@ export default {
     groups: "Grupos",
     clearFilters: "Limpiar filtros",
     artist: "Artista",
-    artists: "Artistas"
+    artists: "Artistas",
+    user: "Usuario",
+    users: "Usuarios",
 
 }
