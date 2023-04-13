@@ -14,9 +14,7 @@ Vue.config.productionTip = false
 Vue.use(vueDebounce)
 
 const vue = new Vue({
-  router,
-  store,
-  vuetify,
+  router, store, vuetify,
   render: h => h(App)
 }).$mount('#app')
 

@@ -44,10 +44,6 @@ router.beforeEach(async(to, from, next) => {
     }
   }
 
-  // if (to.path == "/login" && LoginService.isLogged()) {
-  //   return next({ path: '/' })
-  // }
-
   next()
 })
 

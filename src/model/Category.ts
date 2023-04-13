@@ -9,4 +9,7 @@ export default class Category {
     @JsonProperty("name", String, true)
     name?: string = undefined
 
+    @JsonProperty("enabled", Boolean, true)
+    enabled?: boolean = undefined
+
 }

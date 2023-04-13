@@ -4,10 +4,7 @@
       <span class="uni-sans-heavy text-25 grey--text  text--lighten-2 mx-4">Tags</span>
       <v-spacer/>
       <v-sheet color="transparent">
-        <v-text-field
-            clearable hide-details dense outlined dark rounded
-            append-icon="mdi-magnify" :label="lang.search"
-        />
+        <v-text-field clearable hide-details dense outlined dark rounded append-icon="mdi-magnify" :label="lang.search"/>
       </v-sheet>
       <v-btn class="mx-2" depressed @click="dialog = true">Añadir</v-btn>
     </v-row>
@@ -16,7 +13,7 @@
 
     <v-row align="start" dense>
       <v-col cols="auto" v-for="(tag, key) in tags.items" :key="key">
-        <v-card outlined dark @click="$router.push(`/tags/${tag.id}`)" color="dark-1">
+        <v-card outlined dark @click="$router.push(`/tags/${tag.id}`)" color="dark-3">
           <v-card-title class="grey--text text--lighten-3">{{ tag.name }}</v-card-title>
         </v-card>
       </v-col>

@@ -19,6 +19,26 @@ export default class CategoryService {
         } catch (e) { return Promise.resolve(e) }
     }
 
+    static async getCategory(id: number): Promise<Response<Category>> {
+        try {
+            const response = await axios.get(`${ConstantTool.BASE_URL}/api/category/${id}`, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+            })
+            let categories = JsonTool.jsonConvert.deserializeObject(response.data, Category)
+            const xTotalCount = Number(response.headers["x-total-count"])
+            return Promise.resolve({ result: categories, xTotalCount })
+        } catch (e) { return Promise.resolve(e) }
+    }
+
+    static async getPublicCategory(id: number): Promise<Response<Category>> {
+        try {
+            const response = await axios.get(`${ConstantTool.BASE_URL}/public/category/${id}`)
+            let categories = JsonTool.jsonConvert.deserializeObject(response.data, Category)
+            const xTotalCount = Number(response.headers["x-total-count"])
+            return Promise.resolve({ result: categories, xTotalCount })
+        } catch (e) { return Promise.resolve(e) }
+    }
+
     static async getPublicCategories(page: number, size: number, search: string | null): Promise<Response<Category[]>> {
         try {
             const response = await axios.get(ConstantTool.BASE_URL + "/public/category", {
@@ -27,10 +47,7 @@ export default class CategoryService {
 
             let categories = JsonTool.jsonConvert.deserializeArray(response.data, Category)
             const xTotalCount = Number(response.headers["x-total-count"])
-            return Promise.resolve({
-                result: categories,
-                xTotalCount
-            })
+            return Promise.resolve({ result: categories, xTotalCount })
         } catch (e) { return Promise.resolve(e) }
     }
 

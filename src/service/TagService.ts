@@ -20,8 +20,8 @@ export default class TagService {
         } catch (e) {
             return Promise.reject(e)
         }
-
     }
+
     static async getTag(component: Vue, id: number): Promise<Response<Tag>> {
         try {
             const response = await component.axios.get(`${ConstantTool.BASE_URL}/api/tag/${id}`, {

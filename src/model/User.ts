@@ -1,5 +1,5 @@
-import { JsonObject, JsonProperty, Any } from 'json2typescript';
-import Auditing from "@/model/Auditing";
+import { JsonObject, JsonProperty, Any } from 'json2typescript'
+import Auditing from "@/model/Auditing"
 
 @JsonObject("User")
 export default class User extends Auditing {

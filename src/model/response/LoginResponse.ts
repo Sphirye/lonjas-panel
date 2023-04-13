@@ -1,6 +1,6 @@
 import {JsonObject, JsonProperty} from "json2typescript"
+import Authority from "@/model/Authority"
 import User from "@/model/User"
-import Authority from "@/model/Authority";
 
 @JsonObject("LoginResponse")
 export default class LoginResponse {

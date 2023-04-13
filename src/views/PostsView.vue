@@ -59,6 +59,7 @@ export default class PostsView extends Vue {
   created() { this.refresh() }
 
   async refresh() {
+
     try {
       await Handler.getItems(this, this.posts, () => PostService.getPosts(
           this.page - 1, this.size, null, null, null, null, null)

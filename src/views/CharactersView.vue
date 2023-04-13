@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row dense align="center">
-      <span class="uni-sans-heavy text-25 white--text mx-4">{{ lang.characters }}</span>
+      <h2 class="uni-sans-heavy white--text mx-4">{{ lang.characters }}</h2>
       <v-spacer/>
       <v-expand-x-transition>
         <v-sheet class="transparent mr-3" v-if="showSearchBar" dark>
@@ -18,20 +18,28 @@
       <v-btn class="mx-2" depressed @click="dialog = true">Añadir</v-btn>
     </v-row>
 
-    <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
+    <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
+
 
     <v-row align="start" dense>
-      <v-col cols="auto" v-for="(character, key) in characters.items" :key="key">
-        <v-card outlined dark rounded color="dark-1" @click="$router.push('/characters/' + character.id)">
-          <v-card-title class="grey--text text--lighten-3">
-            {{ character.name }}
-          </v-card-title>
-        </v-card>
-      </v-col>
+      <template v-for="(character) in characters.items">
+        <v-col cols="auto">
+          <v-card flat dark>
+            <v-card-title class="font-weight-regular">
+              {{ character.name }}
+            </v-card-title>
+            <v-card-subtitle class="blue--text text--accent-1 text--darken-3">
+              <span class="pointer" @click="$router.push('/categories/' + character.category.id)">
+                {{ character.category.name }}
+              </span>
+            </v-card-subtitle>
+          </v-card>
+        </v-col>
+      </template>
     </v-row>
 
     <v-dialog v-model="dialog" width="500px">
-      <CreateCharacterDialog :dialog.sync="dialog" @created="refresh"/>
+      <CreateCharacterDialog :dialog.sync="dialog"  @created="refresh"/>
     </v-dialog>
 
   </v-container>
@@ -88,10 +96,8 @@ export default class CharactersView extends Vue {
 
   async refresh() {
     try {
-      await Handler.getItems(this, this.characters, () => CharacterService.getCharacters2(this.page - 1, this.size, this.search))
-    } catch (e) {
-      console.log(e)
-    }
+      await Handler.getItems(this, this.characters, () => CharacterService.getCharacters(this.page - 1, this.size, this.search, null))
+    } catch (e) { console.log(e) }
   }
 
   resetAll() {

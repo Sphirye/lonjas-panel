@@ -116,6 +116,7 @@ export default class RegisterArtistDialog extends Vue {
         }
 
         this.$emit("created")
+        this.$emit("refresh")
         this.close()
       }))
     }
@@ -126,12 +127,6 @@ export default class RegisterArtistDialog extends Vue {
       await Handler.getItems(this, this.twitterUsers, () =>
         ProfilesService.getTwitterProfiles(0, 10, this.search)
       )
-    } catch (e) { console.log(e) }
-  }
-
-  async getProfiles() {
-    try {
-
     } catch (e) { console.log(e) }
   }
 

@@ -1,6 +1,6 @@
 <template>
   <v-app-bar color="dark-4" dark app clipped-left flat>
-    <v-app-bar-nav-icon @click.stop="toggleDrawer" v-if="isLogged"/>
+    <v-app-bar-nav-icon @click.stop="toggleDrawer"/>
 
     <div class="pointer" @click="$router.push('/').catch(err => {})">
       <span class="uni-sans-heavy text-35 grey--text text--lighten-1 mx-3">LONJAS</span>

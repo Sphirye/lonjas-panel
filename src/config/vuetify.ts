@@ -26,11 +26,11 @@ export default new Vuetify({
         'lonjas-base': '#1b1b31',
         'lonjas-base-2': '#85586F',
 
-        'dark-1': '#424549',
-        'dark-2': '#36393e',
-        'dark-3': '#303239',
-        'dark-4': '#2e3034',
-        'dark-5': '#1e2324'
+        'dark-1': '#2e3141',
+        'dark-2': '#333443',
+        'dark-3': '#2c2b3a',
+        'dark-4': '#232530',
+        'dark-5': '#0f0c19'
 
       }
     }

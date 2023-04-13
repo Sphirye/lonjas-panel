@@ -50,17 +50,17 @@ import Rules from "@/service/tool/Rules";
 import DialogModule from "@/store/DialogModule";
 import Dialog from "@/model/vue/Dialog";
 import PostService from "@/service/PostService";
-import {MultipleItem} from "@/handlers/interfaces/ContentUI";
+import {MultipleItem, SingleItem} from "@/handlers/interfaces/ContentUI";
 import Category from "@/model/Category";
 import Handler from "@/handlers/Handler";
 import CategoryService from "@/service/CategoryService";
 import CharacterService from "@/service/CharacterService";
+import Character from "@/model/Character";
 
 @Component
 export default class CreateCharacterDialog extends Vue {
 
   get rules() { return Rules }
-
   @PropSync('dialog', { type: Boolean }) syncedDialog!: boolean
   @Ref() readonly form!: HTMLFormElement
   lang = getModule(LangModule).lang
@@ -68,6 +68,7 @@ export default class CreateCharacterDialog extends Vue {
 
   name: string = ""
   category: Nullable<Category> = null
+  character: SingleItem<Character> = { item: new Character() }
 
   categories: MultipleItem<Category> = { items: [], totalItems: 0 }
 
@@ -77,15 +78,19 @@ export default class CreateCharacterDialog extends Vue {
 
   async refresh() {
     try {
-      await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 5, null))
+      await Handler.getItems(this, this.categories, () =>
+          CategoryService.getPublicCategories(0, 5, null)
+      )
     } catch (e) { console.log(e) }
   }
 
   async createCharacter() {
     if (this.form.validate()) {
       getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Esta seguro de crear este personaje?", async () => {
-        await CharacterService.createCharacter(this.name, this.category!!.id!!)
-        this.$emit("created")
+        await Handler.getItem(this, this.character, () =>
+          CharacterService.createCharacter(this.name, this.category!!.id!!)
+        )
+        await this.$emit("created")
         this.close()
       }))
     }
@@ -98,7 +103,3 @@ export default class CreateCharacterDialog extends Vue {
 
 }
 </script>
-
-<style scoped>
-
-</style>

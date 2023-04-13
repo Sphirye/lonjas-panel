@@ -4,7 +4,7 @@
     <DrawerComponent v-if="isLogged"/>
     <v-main class="dark-2">
       <transition name="fade" mode="out-in">
-        <router-view class="my-4"/>
+        <router-view class="my-2"/>
       </transition>
     </v-main>
     <SnackbarComponent/>

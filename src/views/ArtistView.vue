@@ -1,32 +1,33 @@
 <template>
   <v-container fluid class="px-8">
-    <template v-if="artist.id">
 
-      <v-progress-linear class="mb-4" color="grey" :indeterminate="loading"/>
+    <v-progress-linear class="mb-4" color="grey" :indeterminate="loading"/>
+
+    <template v-if="artist.item.id">
       <v-row no-gutters justify="start" align="start" dense>
         <v-col cols="4">
           <v-card flat class="lonjas-base-2" dark>
             <v-card-title class="mx-3">
               <v-avatar size="128" class="mr-4">
-                <v-img contain :src="artist.twitter.profileImageUrl"/>
+                <v-img contain :src="artist.item.twitter.profileImageUrl"/>
               </v-avatar>
               <div>
-                <span class="text-20 font-weight-bold grey--text text--lighten-2">{{ artist.twitter.name }}</span>
+                <span class="text-20 font-weight-bold grey--text text--lighten-2">{{ artist.item.twitter.name }}</span>
                 <br/>
-                <span class="font-weight-medium grey--text">@{{ artist.twitter.username }}</span>
+                <span class="font-weight-medium grey--text">@{{ artist.item.twitter.username }}</span>
               </div>
             </v-card-title>
             <v-divider class="mx-3"/>
             <v-card-text>
               <div>
 
-                <p style="white-space: pre-wrap;" class="mx-4 font-weight-medium text-15">{{ artist.twitter.description }}</p>
+                <p style="white-space: pre-wrap;" class="mx-4 font-weight-medium text-15">{{ artist.item.twitter.description }}</p>
 
                 <v-divider class="my-3"/>
                 <div class="mx-3">
                   <v-row align="center">
                     <v-col cols="10">
-                      <h3 class="font-weight-medium">Posts: {{ totalPosts }}
+                      <h3 class="font-weight-medium">Posts:  totalPosts
                         <v-tooltip top max-width="150px">
                           <template v-slot:activator="{ on, attrs }">
                             <span v-on="on" v-bind="attrs" class="grey--text text--darken-1 pointer">?</span>
@@ -64,13 +65,6 @@
             </v-row>
             <v-tabs-items v-model="tab" class="transparent">
 
-              <v-tab-item :value="0" :key="0">
-                <ArtistPostsTab v-if="tab == 0" :artist="artist"/>
-              </v-tab-item>
-
-              <v-tab-item :value="1" :key="1">
-                <ArtistTweetsTab v-if="tab == 1" :artist="artist"/>
-              </v-tab-item>
             </v-tabs-items>
           </template>
         </v-col>
@@ -98,7 +92,7 @@ import ArtistTweetsTab from "@/components/tabs/ArtistTweetsTab.vue";
 import RouterTool from "@/service/tool/RouterTool";
 import Tab from "@/model/vue/Tab";
 import Handler from "@/handlers/Handler";
-import {MultipleItem} from "@/handlers/interfaces/ContentUI";
+import {MultipleItem, SingleItem} from "@/handlers/interfaces/ContentUI";
 
 @Component( { components: { PostCardComponent, ArtistPostsTab, ArtistTweetsTab } } )
 export default class PostsView extends Vue {
@@ -108,12 +102,12 @@ export default class PostsView extends Vue {
   tab = 0
 
   tabs: Tab[] = [
-    { name: "Posts", route: "/posts"  },
-    { name: "Tweets", route: "/tweets" }
+    { name: "Twitter", route: "/twitter"  },
   ]
 
+  artist: SingleItem<Artist> = { item: new Artist() }
+
   loading: boolean = false
-  artist: Artist = new Artist()
 
   posts: MultipleItem<Post> = {
     items: [],
@@ -128,19 +122,26 @@ export default class PostsView extends Vue {
   get rules() { return Rules }
 
   async created() {
-    await ArtistService.getArtist(this, Number(this.$route.params.id))
-    await this.refresh()
-    this.tab = RouterTool.configTabs(this, this.tabs)
+    try {
+      if (this.$route.params.id == undefined) {
+        await this.$router.push("/")
+      }
+      await Handler.getItem(this, this.artist, () =>
+          ArtistService.getArtist(Number(this.$route.params.id))
+      )
+      await this.refresh()
+      this.tab = RouterTool.configTabs(this, this.tabs)
+    } catch (e) { console.log(e) }
   }
 
   async refresh() {
-    try {
-      await Handler.getItems(this, this.posts, () =>
-          PostService.getPosts(this.page - 1, this.size, this.artist.id!!, null, null, null, null)
-      )
-    } catch (e) {
-      console.log(e)
-    }
+    // try {
+    //   await Handler.getItems(this, this.posts, () =>
+    //       PostService.getPosts(this.page - 1, this.size, this.artist.id!!, null, null, null, null)
+    //   )
+    // } catch (e) {
+    //   console.log(e)
+    // }
   }
 
   validate() {

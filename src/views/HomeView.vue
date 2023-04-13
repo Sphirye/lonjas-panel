@@ -9,7 +9,6 @@
     <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
 
 		<v-row align="start" justify="center" class="fill-height">
-
       <v-col cols="6">
         <v-card outlined color="dark-4" dark>
           <v-subheader class="my-0 my-0">Posts recientes:</v-subheader>

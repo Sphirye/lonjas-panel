@@ -17,4 +17,3 @@ export default class Authority {
     @JsonProperty("role", NameConverter, true)
     name?: AuthorityName = undefined
 }
-
