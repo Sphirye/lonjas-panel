@@ -28,11 +28,11 @@ import Artist from "@/model/Artist";
 import Handler from "@/handlers/Handler";
 import PostService from "@/service/PostService";
 import PostCardComponent from "@/components/PostCardComponent.vue";
-import ArtistCardComponent from "@/components/ArtistCardComponent.vue";
+import ArtistButtonComponent from "@/components/ArtistButtonComponent.vue";
 import ArtistService from "@/service/ArtistService";
 import User from "@/model/User";
 
-@Component({components: {ArtistCardComponent, PostCardComponent }})
+@Component({components: {ArtistCardComponent: ArtistButtonComponent, PostCardComponent }})
 export default class HomeView extends Vue {
 
   @Ref() readonly form!: HTMLFormElement

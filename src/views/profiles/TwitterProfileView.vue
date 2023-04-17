@@ -49,11 +49,7 @@
           <v-col cols="auto" v-for="(tweet, key) in tweets.items" :key="key">
             <v-menu transition="origin" rounded bottom right offset-x :close-on-content-click="false" z-index="1" absolute>
               <template v-slot:activator="{ on, attrs }">
-                <v-card
-                    height="150px" width="150px" outlined
-                    dark rounded @click="selectedTweet = tweet"
-                    v-bind="attrs" v-on="on"
-                >
+                <v-card height="150px" width="150px" outlined dark rounded @click="selectedTweet = tweet" v-bind="attrs" v-on="on">
                   <v-hover v-slot="{ hover }">
                     <v-img width="100%" height="100%" class="pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="tweet.images[0]">
                       <v-expand-transition>

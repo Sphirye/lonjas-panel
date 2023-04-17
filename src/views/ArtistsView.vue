@@ -42,12 +42,12 @@ import LangModule from "@/store/LangModule"
 import {getModule} from "vuex-module-decorators"
 import Artist from "@/model/Artist";
 import ArtistService from "@/service/ArtistService";
-import ArtistCardComponent from "@/components/ArtistCardComponent.vue";
+import ArtistButtonComponent from "@/components/ArtistButtonComponent.vue";
 import RegisterArtistDialog from "@/components/dialog/RegisterArtistDialog.vue";
 import Handler from "@/handlers/Handler";
 import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 
-@Component( { components: { ArtistCardComponent, RegisterArtistDialog } } )
+@Component( { components: { ArtistCardComponent: ArtistButtonComponent, RegisterArtistDialog } } )
 export default class ArtistsView extends Vue {
 
   artist: Artist = new Artist()

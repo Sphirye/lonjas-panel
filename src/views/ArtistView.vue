@@ -4,72 +4,30 @@
     <v-progress-linear class="mb-4" color="grey" :indeterminate="loading"/>
 
     <template v-if="artist.item.id">
-      <v-row no-gutters justify="start" align="start" dense>
+      <v-row justify="start" align="start" dense>
         <v-col cols="4">
-          <v-card flat class="lonjas-base-2" dark>
-            <v-card-title class="mx-3">
-              <v-avatar size="128" class="mr-4">
-                <v-img contain :src="artist.item.twitter.profileImageUrl"/>
-              </v-avatar>
-              <div>
-                <span class="text-20 font-weight-bold grey--text text--lighten-2">{{ artist.item.twitter.name }}</span>
-                <br/>
-                <span class="font-weight-medium grey--text">@{{ artist.item.twitter.username }}</span>
-              </div>
-            </v-card-title>
-            <v-divider class="mx-3"/>
-            <v-card-text>
-              <div>
-
-                <p style="white-space: pre-wrap;" class="mx-4 font-weight-medium text-15">{{ artist.item.twitter.description }}</p>
-
-                <v-divider class="my-3"/>
-                <div class="mx-3">
-                  <v-row align="center">
-                    <v-col cols="10">
-                      <h3 class="font-weight-medium">Posts:  totalPosts
-                        <v-tooltip top max-width="150px">
-                          <template v-slot:activator="{ on, attrs }">
-                            <span v-on="on" v-bind="attrs" class="grey--text text--darken-1 pointer">?</span>
-                          </template>
-                          <span class="text-center">Cantidad total de posts añadidos a la galería.</span>
-                        </v-tooltip>
-                      </h3>
-                      <h3 class="font-weight-medium">
-                        Last update: 30 min ago.
-                      </h3>
-                    </v-col>
-                    <v-col cols="2">
-                      <v-icon size="30">fab fa-twitter</v-icon>
-                    </v-col>
-                  </v-row>
-                </div>
-              </div>
-            </v-card-text>
-          </v-card>
+          <ArtistCardComponent :artist="artist.item"/>
         </v-col>
 
         <v-col cols="8">
-          <v-row>
-
+          <v-row no-gutters>
+            <v-spacer/>
+            <v-switch label="Activo" inset dark dense hide-details="auto" v-model="artist.item.enabled" @change="setArtistStatus"/>
           </v-row>
-
-
-          <template v-if="false">
-            <v-row no-gutters align="center" dense>
-              <v-tabs v-model="tab" centered background-color="transparent">
-                <v-tab v-for="item in tabs" :key="item.route" active-class="grey darken-2 grey--text">
-                  <span class="uni-sans-heavy grey--text text--lighten-2 text-20">{{ item.name }}</span>
-                </v-tab>
-              </v-tabs>
-            </v-row>
-            <v-tabs-items v-model="tab" class="transparent">
-
-            </v-tabs-items>
-          </template>
+          <v-divider class="my-2" dark/>
+          <v-row no-gutters>
+            <v-sheet color="transparent" min-height="550px">
+              <v-row dense>
+                <template v-for="(post) in posts.items">
+                  <v-col cols="auto">
+                    <PostCardComponent width="150px" height="150px" :post="post"/>
+                  </v-col>
+                </template>
+              </v-row>
+            </v-sheet>
+          </v-row>
         </v-col>
       </v-row>
-
     </template>
   </v-container>
 </template>
@@ -93,8 +51,9 @@ import RouterTool from "@/service/tool/RouterTool";
 import Tab from "@/model/vue/Tab";
 import Handler from "@/handlers/Handler";
 import {MultipleItem, SingleItem} from "@/handlers/interfaces/ContentUI";
+import ArtistCardComponent from "@/components/ArtistCardComponent.vue";
 
-@Component( { components: { PostCardComponent, ArtistPostsTab, ArtistTweetsTab } } )
+@Component( { components: {ArtistCardComponent, PostCardComponent, ArtistPostsTab, ArtistTweetsTab } } )
 export default class PostsView extends Vue {
 
   @Ref() readonly form!: HTMLFormElement
@@ -120,6 +79,8 @@ export default class PostsView extends Vue {
 
   get lang() { return getModule(LangModule).lang }
   get rules() { return Rules }
+  get artistId() { return Number(this.$route.params.id) }
+
 
   async created() {
     try {
@@ -135,19 +96,23 @@ export default class PostsView extends Vue {
   }
 
   async refresh() {
-    // try {
-    //   await Handler.getItems(this, this.posts, () =>
-    //       PostService.getPosts(this.page - 1, this.size, this.artist.id!!, null, null, null, null)
-    //   )
-    // } catch (e) {
-    //   console.log(e)
-    // }
+    try {
+      await Handler.getItems(this, this.posts, () =>
+          PostService.getPosts(this.page - 1, this.size, this.artistId, null, null, null, null)
+      )
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   validate() {
     getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea continuar?", () => {
       alert("Has continuado.")
     }))
+  }
+
+  setArtistStatus() {
+
   }
 
   @Watch("tab")

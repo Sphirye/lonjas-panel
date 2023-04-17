@@ -23,7 +23,7 @@
           <v-col cols="4">
             <v-autocomplete
                 hide-details class="rounded" solo flat background-color="dark-1"
-                :items="tags.items" multiple chips deletable-chips small-chips
+                :items="tags.items" multiple deletable-chips small-chips
                 label="Tags" item-text="name" item-value="id" v-model="post.item.tags"
                 :rules="[rules.required]" return-object
             />

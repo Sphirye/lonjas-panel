@@ -13,11 +13,13 @@
         <v-card outlined color="dark-4" dark>
           <v-subheader class="my-0 my-0">Posts recientes:</v-subheader>
           <v-card-text class="pt-0">
-            <div class="d-flex justify-center flex-wrap">
-              <div v-for="(post, key) in posts.items" :key="key">
-                <PostCardComponent width="150px" height="150px" :post="post"/>
-              </div>
-            </div>
+            <v-row dense justify="center">
+              <template v-for="(post) in posts.items">
+                <v-col cols="auto">
+                  <PostCardComponent width="180px" height="250px" :post="post"/>
+                </v-col>
+              </template>
+            </v-row>
           </v-card-text>
         </v-card>
       </v-col>
@@ -67,10 +69,10 @@ import Artist from "@/model/Artist";
 import Handler from "@/handlers/Handler";
 import PostService from "@/service/PostService";
 import PostCardComponent from "@/components/PostCardComponent.vue";
-import ArtistCardComponent from "@/components/ArtistCardComponent.vue";
+import ArtistButtonComponent from "@/components/ArtistButtonComponent.vue";
 import ArtistService from "@/service/ArtistService";
 
-@Component({components: { ArtistCardComponent, PostCardComponent }})
+@Component({components: { ArtistCardComponent: ArtistButtonComponent, PostCardComponent }})
 export default class HomeView extends Vue {
 
 	@Ref() readonly form!: HTMLFormElement

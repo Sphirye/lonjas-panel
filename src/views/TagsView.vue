@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row dense align="center">
       <span class="uni-sans-heavy text-25 grey--text  text--lighten-2 mx-4">Tags</span>
       <v-spacer/>
@@ -11,12 +11,17 @@
 
     <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
 
+
     <v-row align="start" dense>
-      <v-col cols="auto" v-for="(tag, key) in tags.items" :key="key">
-        <v-card outlined dark @click="$router.push(`/tags/${tag.id}`)" color="dark-3">
-          <v-card-title class="grey--text text--lighten-3">{{ tag.name }}</v-card-title>
-        </v-card>
-      </v-col>
+      <template v-for="(tag) in tags.items">
+        <v-col cols="auto">
+          <v-card flat dark @click="$router.push('/tags/' + tag.id)">
+            <v-card-title class="font-weight-regular">
+              {{ tag.name }}
+            </v-card-title>
+          </v-card>
+        </v-col>
+      </template>
     </v-row>
 
     <v-dialog v-model="dialog" width="600px">
