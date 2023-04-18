@@ -7,14 +7,21 @@
       <v-row justify="start" align="start" dense>
         <v-col cols="4">
           <ArtistCardComponent :artist="artist.item"/>
+
+          <v-divider class="my-2" dark/>
+
+          <v-card flat dark>
+            <v-card-actions class="px-2">
+              <v-spacer/>
+              <v-switch
+                  class="my-0" label="Activo" inset dark dense hide-details="auto" v-model="artist.item.enabled" @click="setArtistStatus"
+                  readonly
+              />
+            </v-card-actions>
+          </v-card>
         </v-col>
 
         <v-col cols="8">
-          <v-row no-gutters>
-            <v-spacer/>
-            <v-switch label="Activo" inset dark dense hide-details="auto" v-model="artist.item.enabled" @change="setArtistStatus"/>
-          </v-row>
-          <v-divider class="my-2" dark/>
           <v-row no-gutters>
             <v-sheet color="transparent" min-height="550px">
               <v-row dense>
@@ -112,7 +119,11 @@ export default class PostsView extends Vue {
   }
 
   setArtistStatus() {
-
+    getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea continuar?", async () => {
+      await Handler.getItem(this, this.artist, () =>
+        ArtistService.setArtistStatus(this.artistId, !this.artist.item.enabled)
+      )
+    }))
   }
 
   @Watch("tab")

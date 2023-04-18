@@ -24,4 +24,7 @@ export default class Artist {
     @JsonProperty("source", SourceConverter, true)
     source?: Source = undefined
 
+    @JsonProperty("enabled", Boolean, true)
+    enabled?: boolean = undefined
+
 }

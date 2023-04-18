@@ -6,6 +6,7 @@ import {getModule} from "vuex-module-decorators";
 import SessionModule from "@/store/SessionModule";
 import axios from "axios"
 import Response from "@/model/response/Response"
+import Post from "@/model/Post";
 
 export default class ArtistService {
 
@@ -69,6 +70,19 @@ export default class ArtistService {
         } finally {
             // @ts-ignore
             component.loading = false
+        }
+    }
+
+    static async setArtistStatus(id: number, enabled: boolean): Promise<Response<Artist>> {
+        try {
+            const response = await axios.patch(`${ConstantTool.BASE_URL}/api/artist/${id}/status`, null, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+                params: { enabled }
+            })
+            const post = JsonTool.jsonConvert.deserializeObject(response.data, Artist)
+            return Promise.resolve({result: post})
+        } catch (e) {
+            return Promise.reject(e)
         }
     }
 

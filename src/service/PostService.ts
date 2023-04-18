@@ -109,11 +109,14 @@ export default class PostService {
         }
     }
 
-    static async deletePost(id: number) {
+    static async setPostStatus(id: number, enabled: boolean): Promise<Response<Post>> {
         try {
-            const response = await axios.delete(`${ConstantTool.BASE_URL}/api/post/${id}`, {
+            const response = await axios.patch(`${ConstantTool.BASE_URL}/api/post/${id}/status`, null, {
                 headers: {Authorization: getModule(SessionModule).session.token},
+                params: { enabled }
             })
+            const post = JsonTool.jsonConvert.deserializeObject(response.data, Post)
+            return Promise.resolve({result: post})
         } catch (e) {
             return Promise.reject(e)
         }

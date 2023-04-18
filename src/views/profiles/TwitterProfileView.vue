@@ -45,7 +45,7 @@
       </v-col>
 
       <v-col cols="8">
-        <v-row dense justify="center">
+        <v-row dense>
           <v-col cols="auto" v-for="(tweet, key) in tweets.items" :key="key">
             <v-menu transition="origin" rounded bottom right offset-x :close-on-content-click="false" z-index="1" absolute>
               <template v-slot:activator="{ on, attrs }">

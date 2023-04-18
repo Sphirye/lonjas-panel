@@ -3,6 +3,8 @@ import {Vue} from "vue-property-decorator"
 import axios from "axios"
 import {AxiosError} from "axios"
 import LoginService from "@/service/LoginService";
+import {getModule} from "vuex-module-decorators";
+import SnackbarModule from "@/store/SnackbarModule";
 
 export default class AxiosConfig {
 
@@ -26,9 +28,13 @@ export default class AxiosConfig {
         }, async (error: AxiosError) => {
             if (error.response) {
 
-                if (error.response.status == 403 || error.response.status == 401) {
+                if (error.response.status == 401) {
                     await LoginService.logout()
                     await vue.$router.push("/login").catch(() => {})
+                }
+
+                if (error.response.status == 403) {
+                    getModule(SnackbarModule).makeToast("Acceso no autorizado")
                 }
             }
             console.log("Error: " + error)
