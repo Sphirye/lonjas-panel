@@ -2,12 +2,12 @@
   <v-container fluid>
     <v-row dense>
 
-      <v-col cols="4">
+      <v-col cols="4" v-if="post.item.id">
         <ArtistCardComponent :artist="post.item.artist"/>
       </v-col>
 
       <v-col cols="8">
-        <v-card outlined dark color="dark-4" class="mx-auto" width="800px" v-if="post.item.id">
+        <v-card outlined dark color="dark-4" v-if="post.item.id">
           <v-card-title class="pb-0">
             <span class="uni-sans-heavy text-md white--text mx-4">Post - {{ post.item.id }}</span>
             <v-spacer/>
@@ -16,13 +16,9 @@
           </v-card-title>
 
           <v-card-text class="py-0">
-            <v-sheet dark outlined class="rounded">
-              <v-carousel show-arrows>
-                <template v-for="(image, key) in post.item.tweet.images">
-                  <v-carousel-item :src="image" :key="key" contain/>
-                </template>
-              </v-carousel>
-            </v-sheet>
+
+            <PostImageComponent :post="post.item"/>
+
           </v-card-text>
 
           <v-card-text class="py-0 my-2">
@@ -32,12 +28,12 @@
                     hide-details class="rounded" solo flat background-color="dark-1"
                     :items="tags.items" multiple deletable-chips small-chips
                     label="Tags" item-text="name" item-value="id" v-model="post.item.tags"
-                    :rules="[rules.required]" return-object
+                    :rules="[rules.required]" return-object chips
                 />
               </v-col>
               <v-col cols="4">
                 <v-autocomplete
-                    hide-details class="rounded my-3" label="Grupos" solo flat background-color="dark-1"
+                    hide-details class="rounded my-3" :label="lang.categories" solo flat background-color="dark-1"
                     :items="categories.items" v-model="post.item.categories" item-value="id"
                     multiple chips deletable-chips small-chips item-text="name" dark
                     :rules="[rules.required]" return-object
@@ -93,9 +89,10 @@ import CategoryService from "@/service/CategoryService";
 import CharacterService from "@/service/CharacterService";
 import ArtistService from "@/service/ArtistService";
 import ArtistCardComponent from "@/components/ArtistCardComponent.vue";
+import PostImageComponent from "@/components/PostImageComponent.vue";
 
 @Component({
-  components: {ArtistCardComponent}
+  components: {PostImageComponent, ArtistCardComponent}
 })
 export default class PostView extends Vue {
 
@@ -120,9 +117,9 @@ export default class PostView extends Vue {
 
   async refresh() {
     try {
-      await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 5, null))
-      await Handler.getItems(this, this.tags, () => TagService.getTags(0, 5, null, null))
-      await Handler.getItems(this, this.characters, () => CharacterService.getCharacters(0, 5, null, null))
+      await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 10, null))
+      await Handler.getItems(this, this.tags, () => TagService.getTags(0, 10, null, null))
+      await Handler.getItems(this, this.characters, () => CharacterService.getCharacters(0, 10, null, null))
     } catch (e) { console.log(e) }
   }
 

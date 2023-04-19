@@ -64,9 +64,17 @@ export default class CategoryService {
                 result: categories,
                 xTotalCount
             })
-        } catch (e) {
-            return Promise.resolve(e)
-        }
+        } catch (e) { return Promise.resolve(e) }
+    }
+
+    static async updateCategory(id: number, request: Category): Promise<Response<Category>> {
+        try {
+            const response = await axios.patch(`${ConstantTool.BASE_URL}/api/category/${id}`, request, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+            })
+            let categories = JsonTool.jsonConvert.deserializeObject(response.data, Category)
+            return Promise.resolve({ result: categories })
+        } catch (e) { return Promise.resolve(e) }
     }
 
 }

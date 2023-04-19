@@ -177,7 +177,7 @@ export default class CreateTweetPostDialog extends Vue {
           await Handler.getItem(this, this.post, () =>
               PostService.createPostFromTweet(this.tweet.id!!, this.selectedTags, this.selectedCategories, this.selectedCharacters)
           )
-          this.syncedDialog = false
+          this.close()
         } catch (e) { console.log(e) }
       }))
     }
@@ -185,6 +185,10 @@ export default class CreateTweetPostDialog extends Vue {
 
   close() {
     this.syncedDialog = false
+    this.selectedTags = []
+    this.selectedCategories = []
+    this.selectedCategories = []
+    this.refresh()
   }
 
   clear() {

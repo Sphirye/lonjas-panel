@@ -1,54 +1,83 @@
 <template>
   <v-container fluid>
-    <v-row dense align="center">
-      <h2 class="uni-sans-heavy white--text mx-4">{{ category.item.name }}</h2>
-    </v-row>
+    <template v-if="category.item.id">
+      <v-row dense align="center">
+        <h2 class="uni-sans-heavy white--text mx-4">{{ lang.category }}</h2>
+      </v-row>
 
-    <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
+      <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
 
-    <v-row dense>
-      <v-col cols="3">
-        <v-card outlined color="dark-3" dark>
-          <v-card-title>
-            {{ lang.characters }}
-          </v-card-title>
-          <v-divider/>
-          <v-card-text class="pt-1">
-            <v-list dense color="transparent" dark>
-              <template v-for="(character) in characters.items">
-                <v-list-item>
-                  <v-list-item-title class="text-15">
-                    {{character.name}}
-                  </v-list-item-title>
-                </v-list-item>
+      <v-row dense>
+        <v-col cols="4">
+
+          <v-card outlined color="dark-3" dark>
+            <v-card-title class="uni-sans-heavy">
+              {{ lang.category }}
+            </v-card-title>
+            <v-divider/>
+
+            <v-card-text>
+
+              <v-row dense>
+                <v-col cols="12">
+                  <v-text-field v-model="category.item.name" dense outlined dark hide-details rounded :label="lang.name"/>
+                </v-col>
+              </v-row>
+
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer/>
+              <v-btn color="green" depressed tile @click="updateCategory">
+                <span class="font-weight-bold">{{ lang.save }}</span>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+
+          <v-divider class="my-2" dark/>
+
+          <v-card outlined color="dark-3" dark>
+            <v-card-title class="uni-sans-heavy">
+              {{ lang.characters }}
+            </v-card-title>
+            <v-divider/>
+            <v-card-text class="pt-1">
+              <v-list dense color="transparent" dark>
+                <template v-for="(character) in characters.items">
+                  <v-list-item>
+                    <v-list-item-title class="text-15">
+                      {{character.name}}
+                    </v-list-item-title>
+                  </v-list-item>
+                </template>
+              </v-list>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer/>
+              <v-pagination light v-model="charactersPage" :length="charactersPageCount" :total-visible="8"/>
+            </v-card-actions>
+
+          </v-card>
+        </v-col>
+
+        <v-col cols="8">
+          <v-sheet color="transparent" min-height="550px">
+            <v-row dense>
+              <template v-for="(post) in posts.items">
+                <v-col cols="auto">
+                  <PostCardComponent width="150px" height="150px" :post="post"/>
+                </v-col>
               </template>
-            </v-list>
-          </v-card-text>
+            </v-row>
+          </v-sheet>
 
-          <v-card-actions>
-            <v-spacer/>
-            <v-pagination light v-model="charactersPage" :length="charactersPageCount" :total-visible="8"/>
-          </v-card-actions>
-
-        </v-card>
-      </v-col>
-
-      <v-col cols="9">
-        <v-sheet color="transparent" min-height="550px">
-          <v-row dense>
-            <template v-for="(post) in posts.items">
-              <v-col cols="auto">
-                <PostCardComponent width="150px" height="150px" :post="post"/>
-              </v-col>
-            </template>
+          <v-row dense justify="end" align="center">
+            <v-pagination v-model="postsPage" :length="postsPageCount" :total-visible="8"/>
           </v-row>
-        </v-sheet>
-
-        <v-row dense justify="end" align="center">
-          <v-pagination v-model="postsPage" :length="postsPageCount" :total-visible="8"/>
-        </v-row>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
+    </template>
 
   </v-container>
 </template>
@@ -70,6 +99,8 @@ import {getModule} from "vuex-module-decorators";
 import LangModule from "@/store/LangModule";
 import Character from "@/model/Character";
 import CharacterService from "@/service/CharacterService";
+import DialogModule from "@/store/DialogModule";
+import Dialog from "@/model/vue/Dialog";
 
 @Component({
   components: {PostCardComponent}
@@ -105,7 +136,7 @@ export default class CategoryView extends Vue {
 
   async getCategoryPosts() {
     await Handler.getItems(this, this.posts, () =>
-        PostService.getPublicPosts(0, 30, null, [this.category.item.id!!], null, null)
+        PostService.getPublicPosts(0, 30, null, [Number(this.$route.params.id)], null, null)
     )
   }
 
@@ -117,6 +148,16 @@ export default class CategoryView extends Vue {
         await this.getCategoryPosts()
       }
     } catch (e) { console.log(e) }
+  }
+
+  updateCategory() {
+    getModule(DialogModule).showDialog(new Dialog(this.lang.warning, `¿Esta seguro de actualizar la categoria?`, async () => {
+      try {
+        await Handler.getItem(this, this.category, () =>
+            CategoryService.updateCategory(Number(this.$route.params.id), this.category.item)
+        )
+      } catch (e) { console.log(e) }
+    }))
   }
 
   @Watch('charactersPage')

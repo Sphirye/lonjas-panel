@@ -75,4 +75,14 @@ export default class CharacterService {
         } catch (e) { return Promise.reject(e) }
     }
 
+    static async updateCharacter(id: number, request: Character): Promise<Response<Character>> {
+        try {
+            const response = await axios.patch(`${ConstantTool.BASE_URL}/api/character/${id}`, request, {
+                headers: { Authorization: getModule(SessionModule).session.token }
+            })
+            const character = JsonTool.jsonConvert.deserializeObject(response.data, Character)
+            return Promise.resolve({ result: character })
+        } catch (e) { return Promise.reject(e) }
+    }
+
 }

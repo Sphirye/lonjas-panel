@@ -17,9 +17,9 @@
             <v-text-field label="Nombre" hide-details outlined dense rounded v-model="name" :rules="[rules.required]"/>
           </v-col>
           <v-col cols="12">
-            <v-select
-                label="Categoría" hide-details outlined dense rounded
-                v-model="category" :items="categories.items" item-text="name"
+            <v-autocomplete
+                label="Categoría" hide-details outlined dense rounded :search-input.sync="categorySearch"
+                v-model="category" :items="categories.items" item-text="name" v-debounce:200="refresh"
                 :rules="[rules.required2]" clearable return-object dark required
             />
           </v-col>
@@ -67,6 +67,7 @@ export default class CreateCharacterDialog extends Vue {
   loading: boolean = false
 
   name: string = ""
+  categorySearch: string = ""
   category: Nullable<Category> = null
   character: SingleItem<Character> = { item: new Character() }
 
@@ -79,7 +80,7 @@ export default class CreateCharacterDialog extends Vue {
   async refresh() {
     try {
       await Handler.getItems(this, this.categories, () =>
-          CategoryService.getPublicCategories(0, 5, null)
+          CategoryService.getPublicCategories(0, 10, this.categorySearch)
       )
     } catch (e) { console.log(e) }
   }

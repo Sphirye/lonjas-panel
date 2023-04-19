@@ -24,7 +24,7 @@
     <v-row align="start" dense>
       <template v-for="(character) in characters.items">
         <v-col cols="auto">
-          <v-card flat dark>
+          <v-card flat dark @click="$router.push('/characters/'+character.id)">
             <v-card-title class="font-weight-regular">
               {{ character.name }}
             </v-card-title>
@@ -60,8 +60,15 @@ import CategoryService from "@/service/CategoryService";
 import Character from "@/model/Character";
 import CharacterService from "@/service/CharacterService";
 import CreateCharacterDialog from "@/components/dialog/CreateCharacterDialog.vue";
+import roundable from "vuetify/src/mixins/roundable";
 
-@Component({ components: { CreateCharacterDialog } })
+@Component({
+  computed: {
+    roundable() {
+      return roundable
+    }
+  },
+  components: { CreateCharacterDialog } })
 export default class CharactersView extends Vue {
 
   @Ref() readonly form!: HTMLFormElement
