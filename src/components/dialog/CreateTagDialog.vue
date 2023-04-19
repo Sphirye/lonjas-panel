@@ -1,5 +1,5 @@
 <template>
-  <v-card width="100%" dark color="lonjas-base-2">
+  <v-card width="100%" dark color="dark-2">
     <v-card-title>
       <v-row class="py-1" align="center" no-gutters>
         <h4 class="grey--text text--lighten-2 font-weight-bold">Crear Tag</h4>

@@ -21,26 +21,47 @@
               </v-card>
             </v-col>
             <v-col cols="5">
-              <v-autocomplete
-                  hide-details class="rounded" solo flat background-color="dark-1"
-                  :items="tags.items" multiple chips deletable-chips small-chips
-                  label="Tags" item-text="name" item-value="id" v-model="selectedTags"
-                  :rules="[rules.required]"
-              />
 
-              <v-autocomplete
-                  hide-details class="rounded my-3" label="Grupos" solo flat background-color="dark-1"
-                  :items="categories.items" v-model="selectedCategories" item-value="id"
-                  multiple chips deletable-chips small-chips item-text="name" dark
-                  :rules="[rules.required]"
-              />
+              <v-row no-gutters>
+                <v-col cols="12" class="d-flex align-center">
+                  <v-autocomplete
+                      hide-details class="rounded" solo flat
+                      :items="tags.items" multiple chips deletable-chips small-chips
+                      label="Tags" item-text="name" item-value="id" v-model="selectedTags"
+                      :rules="[rules.required]" v-debounce:200="getTags" :search-input.sync="tagSearch"
+                  />
 
-              <v-autocomplete
-                  hide-details solo flat class="rounded" label="Personajes" background-color="dark-1"
-                  :items="characters.items" v-model="selectedCharacters" item-value="id"
-                  multiple chips deletable-chips small-chips item-text="name" dark
-                  :rules="[rules.required]"
-              />
+                  <v-btn icon class="ml-2" @click="tagDialog = true">
+                    <v-icon large>far fa-square-plus</v-icon>
+                  </v-btn>
+                </v-col>
+
+                <v-col cols="12" class="d-flex align-center">
+                  <v-autocomplete
+                      hide-details class="rounded my-3" label="Grupos" solo flat
+                      :items="categories.items" v-model="selectedCategories" item-value="id"
+                      multiple chips deletable-chips small-chips item-text="name" dark
+                      :rules="[rules.required]" v-debounce:200="getCategories" :search-input.sync="categorySearch"
+                  />
+
+                  <v-btn icon class="ml-2" @click="categoryDialog = true">
+                    <v-icon large>far fa-square-plus</v-icon>
+                  </v-btn>
+                </v-col>
+
+                <v-col cols="12" class="d-flex align-center">
+                  <v-autocomplete
+                      hide-details solo flat class="rounded" :label="lang.characters"
+                      :items="characters.items" v-model="selectedCharacters" item-value="id"
+                      multiple chips deletable-chips small-chips item-text="name" dark
+                      :rules="[rules.required]" v-debounce:200="getCharacters" :search-input.sync="characterSearch"
+                  />
+
+                  <v-btn icon class="ml-2" @click="characterDialog = true">
+                    <v-icon large>far fa-square-plus</v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
         </v-form>
@@ -57,6 +78,18 @@
         Continuar
       </v-btn>
     </v-card-actions>
+
+    <v-dialog v-model="tagDialog" width="600px">
+      <CreateTagDialog  :dialog.sync="tagDialog" @created="this.refresh"/>
+    </v-dialog>
+
+    <v-dialog v-model="categoryDialog" width="600px">
+      <CreateCategoryDialog :dialog.sync="categoryDialog" @created="this.refresh"/>
+    </v-dialog>
+
+    <v-dialog v-model="characterDialog" width="600px">
+      <CreateCharacterDialog :dialog.sync="characterDialog" @created="this.refresh"/>
+    </v-dialog>
 
   </v-card>
 </template>
@@ -81,8 +114,13 @@ import CategoryService from "@/service/CategoryService";
 import TagService from "@/service/TagService";
 import CharacterService from "@/service/CharacterService";
 import Post from "@/model/Post";
+import CreateTagDialog from "@/components/dialog/CreateTagDialog.vue";
+import CreateCategoryDialog from "@/components/dialog/CreateCategoryDialog.vue";
+import CreateCharacterDialog from "@/components/dialog/CreateCharacterDialog.vue";
 
-@Component
+@Component({
+  components: {CreateCharacterDialog, CreateCategoryDialog, CreateTagDialog}
+})
 export default class CreateTweetPostDialog extends Vue {
 
   @PropSync('dialog', { type: Boolean }) syncedDialog!: boolean
@@ -92,12 +130,21 @@ export default class CreateTweetPostDialog extends Vue {
   get lang() { return getModule(LangModule).lang }
 
   loading: boolean = false
-  tags: MultipleItem<Tag> = { items: [], totalItems: 0 }
+
+  tagSearch: string = ""
+  tagDialog: boolean = false
   selectedTags: number[] = []
-  categories: MultipleItem<Category> = { items: [], totalItems: 0 }
+  tags: MultipleItem<Tag> = { items: [], totalItems: 0 }
+
+  categorySearch: string = ""
+  categoryDialog: boolean = false
   selectedCategories: number[] = []
-  characters: MultipleItem<Character> = { items: [], totalItems: 0 }
+  categories: MultipleItem<Category> = { items: [], totalItems: 0 }
+
+  characterSearch: string = ""
+  characterDialog: boolean = false
   selectedCharacters: number[] = []
+  characters: MultipleItem<Character> = { items: [], totalItems: 0 }
 
   post: SingleItem<Post> = { item: new Post() }
 
@@ -105,12 +152,22 @@ export default class CreateTweetPostDialog extends Vue {
     this.refresh()
   }
 
-  async refresh() {
-    try {
-      await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 5, null))
-      await Handler.getItems(this, this.tags, () => TagService.getTags(0, 5, null, null))
-      await Handler.getItems(this, this.characters, () => CharacterService.getCharacters(0, 5, null, null))
-    } catch (e) { console.log(e) }
+  refresh() {
+    this.getTags()
+    this.getCharacters()
+    this.getCategories()
+  }
+
+  async getTags() {
+    await Handler.getItems(this, this.tags, () => TagService.getTags(0, 5, this.tagSearch, null))
+  }
+
+  async getCharacters() {
+    await Handler.getItems(this, this.characters, () => CharacterService.getCharacters(0, 5, this.characterSearch, null))
+  }
+
+  async getCategories() {
+    await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 5, this.categorySearch))
   }
 
   async createPost() {
