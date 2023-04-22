@@ -22,7 +22,7 @@
                   <v-autocomplete
                       solo background-color="dark-2" dark hide-details="auto" class="my-0 py-0" :items="categories.items"
                       label="Categoría" flat menu-props="offset-y" v-model="character.item.category" item-text="name"
-                      return-object
+                      return-object cache-items disabled
                   />
                 </v-col>
 
@@ -62,6 +62,8 @@
         </v-row>
       </v-col>
     </v-row>
+
+
   </v-container>
 </template>
 
@@ -103,7 +105,6 @@ export default class CharacterView extends Vue {
     { name: "Hombre", gender: Gender.MALE} ,
     { name: "Mujer", gender: Gender.FEMALE },
     { name: "Otro", gender: Gender.OTHER },
-
   ]
 
   page: number = 1
@@ -111,14 +112,14 @@ export default class CharacterView extends Vue {
 
   async created() {
     try {
-      await Handler.getItem(this, this.character, () =>
-          CharacterService.getCharacter(Number(this.$route.params.id))
-      )
-    } catch (e) {
-      console.log(e)
-    }
+      await Handler.getItem(this, this.character, () => CharacterService.getCharacter(Number(this.$route.params.id)))
 
-    if (this.character.item.id) { await this.refresh() }
+      if (this.character.item.id) {
+        this.categories.items.push(this.character.item.category!)
+        await this.refresh()
+      }
+
+    } catch (e) { console.log(e) }
 
   }
 
