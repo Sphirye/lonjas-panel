@@ -26,26 +26,40 @@
               <v-col cols="4">
                 <v-autocomplete
                     hide-details class="rounded" solo flat background-color="dark-1"
-                    :items="tags.items" multiple deletable-chips small-chips
                     label="Tags" item-text="name" item-value="id" v-model="post.item.tags"
-                    :rules="[rules.required]" return-object chips
+                    :items="tags.items" multiple deletable-chips small-chips :search-input.sync="tagSearch"
+                    :rules="[rules.required]" return-object chips cache-items v-debounce:200="getTags"
                 />
               </v-col>
               <v-col cols="4">
                 <v-autocomplete
                     hide-details class="rounded my-3" :label="lang.categories" solo flat background-color="dark-1"
                     :items="categories.items" v-model="post.item.categories" item-value="id"
-                    multiple chips deletable-chips small-chips item-text="name" dark
-                    :rules="[rules.required]" return-object
+                    multiple chips deletable-chips small-chips item-text="name" dark :search-input.sync="categorySearch"
+                    :rules="[rules.required]" return-object cache-items v-debounce:200="getCategories"
                 />
               </v-col>
               <v-col cols="4">
                 <v-autocomplete
                     hide-details solo flat class="rounded" label="Personajes" background-color="dark-1"
                     :items="characters.items" v-model="post.item.characters" item-value="id"
-                    multiple chips deletable-chips small-chips item-text="name" dark
-                    :rules="[rules.required]" return-object
-                />
+                    multiple chips deletable-chips item-text="name" dark :search-input.sync="characterSearch"
+                    :rules="[rules.required]" return-object cache-items v-debounce:200="getCharacters"
+                >
+                  <template v-slot:item="{ item, on, attrs }">
+                    <v-list-item dense v-on="on">
+                      <v-list-item-action disabled class="mr-3">
+                        <v-simple-checkbox v-model="attrs.inputValue"/>
+                      </v-list-item-action>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          <h3 class="font-weight-medium">{{ item.name }}</h3>
+                        </v-list-item-title>
+                        <v-list-item-subtitle>{{ item.category.name }}</v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-autocomplete>
               </v-col>
             </v-row>
           </v-card-text>
@@ -104,23 +118,45 @@ export default class PostView extends Vue {
   dialog: boolean =false
   post: SingleItem<Post> = { item: new Post() }
 
+  tagSearch: string = ""
   tags: MultipleItem<Tag> = { items: [], totalItems: 0 }
+
+  categorySearch: string = ""
   categories: MultipleItem<Category> = { items: [], totalItems: 0 }
+
+  characterSearch: string = ""
   characters: MultipleItem<Character> = { items: [], totalItems: 0 }
 
   async created() {
     try {
       await Handler.getItem(this, this.post, () => PostService.getPost(Number(this.$route.params.id)))
-      if (this.post.item.id) { await this.refresh() }
+      if (this.post.item.id) {
+        this.characters.items.push(...this.post.item.characters!)
+        this.categories.items.push(...this.post.item.categories!)
+        this.tags.items.push(...this.post.item.tags!)
+        await this.refresh()
+      }
     } catch (e) { console.log(e) }
   }
 
   async refresh() {
     try {
-      await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 10, null))
-      await Handler.getItems(this, this.tags, () => TagService.getTags(0, 10, null, null))
-      await Handler.getItems(this, this.characters, () => CharacterService.getCharacters(0, 10, null, null))
+      await this.getTags()
+      await this.getCategories()
+      await this.getCharacters()
     } catch (e) { console.log(e) }
+  }
+
+  async getCategories() {
+    await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 10, this.categorySearch))
+  }
+
+  async getCharacters() {
+    await Handler.getItems(this, this.characters, () => CharacterService.getCharacters(0, 10, this.characterSearch, null))
+  }
+
+  async getTags() {
+    await Handler.getItems(this, this.tags, () => TagService.getTags(0, 10, this.tagSearch, null))
   }
 
   async updatePost() {

@@ -88,9 +88,7 @@ export default class CreateCharacterDialog extends Vue {
   async createCharacter() {
     if (this.form.validate()) {
       getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Esta seguro de crear este personaje?", async () => {
-        await Handler.getItem(this, this.character, () =>
-          CharacterService.createCharacter(this.name, this.category!!.id!!)
-        )
+        await Handler.getItem(this, this.character, () => CharacterService.createCharacter(this.name, this.category!!.id!!))
         await this.$emit("created")
         this.close()
       }))

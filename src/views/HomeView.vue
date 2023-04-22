@@ -8,7 +8,7 @@
 
     <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
 
-		<v-row align="start" justify="center" class="fill-height">
+		<v-row align="start" justify="center" class="fill-height" dense>
       <v-col cols="6">
         <v-card outlined color="dark-4" dark>
           <v-subheader class="my-0 my-0">Posts recientes:</v-subheader>
@@ -16,7 +16,7 @@
             <v-row dense justify="center">
               <template v-for="(post) in posts.items">
                 <v-col cols="auto">
-                  <PostCardComponent width="180px" height="250px" :post="post"/>
+                  <PostCardComponent width="125px" height="125px" :post="post"/>
                 </v-col>
               </template>
             </v-row>
@@ -29,8 +29,8 @@
           <v-subheader>Artistas añadidos recientemente:</v-subheader>
           <v-card-text class="pt-0">
             <div class="d-flex justify-center flex-wrap">
-              <template v-for="(artist, key) in artists.items">
-                <ArtistCardComponent :artist="artist"/>
+              <template v-for="(artist) in artists.items">
+                <ArtistCardComponent width="150px" height="125px" :artist="artist"/>
               </template>
             </div>
           </v-card-text>
