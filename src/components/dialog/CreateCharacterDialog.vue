@@ -23,6 +23,20 @@
                 :rules="[rules.required2]" clearable return-object dark required
             />
           </v-col>
+
+          <v-col cols="6">
+            <v-card outlined color="dark-3">
+              <v-card-title class="pb-2">
+                <span>Genero:</span>
+              </v-card-title>
+              <v-divider/>
+              <v-card-text class="pt-0">
+                <template v-for="item in genders">
+                  <v-checkbox :label="item.name" hide-details="auto" :value="item.gender" v-model="gender"/>
+                </template>
+              </v-card-text>
+            </v-card>
+          </v-col>
         </v-row>
       </v-form>
     </v-card-text>
@@ -55,7 +69,7 @@ import Category from "@/model/Category";
 import Handler from "@/handlers/Handler";
 import CategoryService from "@/service/CategoryService";
 import CharacterService from "@/service/CharacterService";
-import Character from "@/model/Character";
+import Character, {Gender} from "@/model/Character";
 
 @Component
 export default class CreateCharacterDialog extends Vue {
@@ -66,9 +80,16 @@ export default class CreateCharacterDialog extends Vue {
   lang = getModule(LangModule).lang
   loading: boolean = false
 
+  genders = [
+    { name: "Hombre", gender: Gender.MALE} ,
+    { name: "Mujer", gender: Gender.FEMALE },
+    { name: "Otro", gender: Gender.OTHER },
+  ]
+
   name: string = ""
   categorySearch: string = ""
   category: Nullable<Category> = null
+  gender: Gender = Gender.OTHER
   character: SingleItem<Character> = { item: new Character() }
 
   categories: MultipleItem<Category> = { items: [], totalItems: 0 }
@@ -88,7 +109,7 @@ export default class CreateCharacterDialog extends Vue {
   async createCharacter() {
     if (this.form.validate()) {
       getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Esta seguro de crear este personaje?", async () => {
-        await Handler.getItem(this, this.character, () => CharacterService.createCharacter(this.name, this.category!!.id!!))
+        await Handler.getItem(this, this.character, () => CharacterService.createCharacter(this.name, this.category!!.id!!, this.gender))
         await this.$emit("created")
         this.close()
       }))

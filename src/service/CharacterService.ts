@@ -1,6 +1,6 @@
 import ConstantTool from "@/service/tool/ConstantTool"
 import JsonTool from "@/service/tool/JsonTool"
-import Character from "@/model/Character"
+import Character, {Gender} from "@/model/Character"
 import Response from "@/model/response/Response"
 import {getModule} from "vuex-module-decorators"
 import SessionModule from "@/store/SessionModule"
@@ -64,11 +64,11 @@ export default class CharacterService {
         } catch (e) { return Promise.reject(e) }
     }
 
-    static async createCharacter(name: string, categoryId: number): Promise<Response<Character>> {
+    static async createCharacter(name: string, categoryId: number, gender: Gender): Promise<Response<Character>> {
         try {
             const response = await axios.post(ConstantTool.BASE_URL + "/api/character", null, {
                 headers: { Authorization: getModule(SessionModule).session.token },
-                params: { name, categoryId },
+                params: { name, categoryId, gender },
             })
             const character = JsonTool.jsonConvert.deserializeObject(response.data, Character)
             return Promise.resolve({ result: character })
