@@ -31,29 +31,19 @@ export default class TagService {
             return Promise.resolve({ result: tag })
         } catch (e) { return Promise.reject(e) }
     }
-    static async createTag(component: Vue, name: string) {
-        // @ts-ignore
-        component.loading = true
-
-        let formData = new FormData()
-        formData.set("name", name)
-
+    static async createTag(request: Tag): Promise<Response<Tag>> {
         try {
-            const response = await component.axios.post(`${ConstantTool.BASE_URL}/api/tag`, formData, {
+            const response = await axios.post(`${ConstantTool.BASE_URL}/api/tag`, request, {
                 headers: { Authorization: getModule(SessionModule).session.token }
             })
-        } catch (e) {
-
-        } finally {
-            // @ts-ignore
-            component.loading = false
-        }
+            const tag = JsonTool.jsonConvert.deserializeObject(response.data, Tag)
+            return Promise.resolve({ result: tag })
+        } catch (e) { return Promise.reject(e) }
     }
     static async updateTag(id: number, request: Tag): Promise<Response<Tag>> {
         try {
             const response = await axios.patch(`${ConstantTool.BASE_URL}/api/tag/${id}`, request, {
                 headers: { Authorization: getModule(SessionModule).session.token }
-
             })
             const tag = JsonTool.jsonConvert.deserializeObject(response.data, Tag)
             return Promise.resolve({ result: tag })

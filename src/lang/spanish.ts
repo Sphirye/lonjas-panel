@@ -4,6 +4,7 @@ export default {
     requiredField: "Campo requerido.",
     invalidField: "Campo inválido.",
     invalidEmail: "Email inválido.",
+    mustSnakeCase: "Este campo debe usar el formato snake_case.",
 
     // User interface
     accept: "Aceptar",
@@ -33,5 +34,5 @@ export default {
     artists: "Artistas",
     user: "Usuario",
     users: "Usuarios",
-
+    description: "Descripción",
 }

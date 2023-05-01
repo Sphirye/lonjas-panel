@@ -8,6 +8,15 @@ export default class Tag {
     @JsonProperty("name", String, true)
     name?: string = undefined
 
+    @JsonProperty("description", String, true)
+    description?: string = undefined
+
+    @JsonProperty("nsfw", Boolean, true)
+    nsfw?: boolean = undefined
+
+    @JsonProperty("weirdMaterial", Boolean, true)
+    weirdMaterial?: boolean = undefined
+
     @JsonProperty("enabled", Boolean, true)
     enabled?: boolean = undefined
 }

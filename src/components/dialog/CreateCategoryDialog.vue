@@ -14,7 +14,10 @@
       <v-form ref="form">
         <v-row dense align="center" class="ma-4">
           <v-col cols="12">
-            <v-text-field label="Nombre" hide-details outlined dense rounded v-model="name" :rules="[rules.required]"/>
+            <v-text-field
+                :label="lang.name" hide-details outlined dense rounded
+                v-model="name" :rules="[rules.required, rules.snakeCase]"
+            />
           </v-col>
         </v-row>
       </v-form>

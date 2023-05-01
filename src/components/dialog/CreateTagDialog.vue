@@ -12,15 +12,25 @@
 
     <v-card-text>
       <v-form ref="form">
-        <v-row dense no-gutters align="center" class="ma-4">
+        <v-row dense align="center" class="ma-4">
           <v-col cols="12">
-            <v-text-field label="Nombre" hide-details outlined dense rounded v-model="name" :rules="[rules.required]"/>
+            <v-text-field
+                :label="lang.name" hide-details="auto" outlined dense rounded v-model="tag.item.name"
+                :rules="[rules.required, rules.snakeCase]"
+            />
+          </v-col>
+
+          <v-col cols="12">
+            <v-textarea
+                no-resize :label="lang.description" hide-details="auto" outlined dense
+                v-model="tag.item.description" :rules="[rules.required]"
+            />
           </v-col>
           <v-col cols="6">
-            <v-switch label="NSFW" inset hide-details/>
+            <v-switch label="NSFW" v-model="tag.item.nsfw" inset hide-details/>
           </v-col>
           <v-col cols="6">
-            <v-switch label="Material Raro" inset hide-details/>
+            <v-switch label="Material Raro" v-model="tag.item.weirdMaterial" inset hide-details/>
           </v-col>
         </v-row>
       </v-form>
@@ -49,6 +59,7 @@ import Rules from "@/service/tool/Rules";
 import DialogModule from "@/store/DialogModule";
 import Dialog from "@/model/vue/Dialog";
 import PostService from "@/service/PostService";
+import {SingleItem} from "@/handlers/interfaces/ContentUI";
 
 @Component({ components: { } })
 export default class CreateTagDialog extends Vue {
@@ -60,14 +71,14 @@ export default class CreateTagDialog extends Vue {
   lang = getModule(LangModule).lang
   loading: boolean = false
   name: string = ""
+  description: string = ""
 
-  created() {
-  }
+  tag: SingleItem<Tag> = { item: new Tag() }
 
   async createTag() {
     if (this.form.validate()) {
       getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Esta seguro de crear este tag?", async () => {
-        await TagService.createTag(this, this.name)
+        await TagService.createTag(this.tag.item)
         this.$emit("created")
         this.close()
       }))

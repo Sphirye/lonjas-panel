@@ -29,6 +29,7 @@
                       :items="tags.items" multiple chips deletable-chips small-chips
                       label="Tags" item-text="name" item-value="id" v-model="selectedTags"
                       :rules="[rules.required]" v-debounce:200="getTags" :search-input.sync="tagSearch"
+                      :loading="loading"
                   />
 
                   <v-btn icon class="ml-2" @click="tagDialog = true">
@@ -42,6 +43,7 @@
                       :items="categories.items" v-model="selectedCategories" item-value="id"
                       multiple chips deletable-chips small-chips item-text="name" dark
                       :rules="[rules.required]" v-debounce:200="getCategories" :search-input.sync="categorySearch"
+                      :loading="loading"
                   />
 
                   <v-btn icon class="ml-2" @click="categoryDialog = true">
@@ -55,7 +57,22 @@
                       :items="characters.items" v-model="selectedCharacters" item-value="id"
                       multiple chips deletable-chips small-chips item-text="name" dark
                       :rules="[rules.required]" v-debounce:200="getCharacters" :search-input.sync="characterSearch"
-                  />
+                      :loading="loading"
+                  >
+                    <template v-slot:item="{ item, on, attrs }">
+                      <v-list-item dense v-on="on">
+                        <v-list-item-action disabled class="mr-4">
+                          <v-simple-checkbox v-model="attrs.inputValue"/>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            <h3 class="font-weight-medium">{{ item.name }}</h3>
+                          </v-list-item-title>
+                          <v-list-item-subtitle>{{ item.category.name }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </template>
+                  </v-autocomplete>
 
                   <v-btn icon class="ml-2" @click="characterDialog = true">
                     <v-icon large>far fa-square-plus</v-icon>

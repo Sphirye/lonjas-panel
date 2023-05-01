@@ -14,11 +14,14 @@
       <v-form ref="form">
         <v-row dense align="center" class="ma-4">
           <v-col cols="12">
-            <v-text-field label="Nombre" hide-details outlined dense rounded v-model="name" :rules="[rules.required]"/>
+            <v-text-field
+                :label="lang.name" hide-details="auto" outlined dense rounded v-model="name"
+                :rules="[rules.required, rules.snakeCase]"
+            />
           </v-col>
           <v-col cols="12">
             <v-autocomplete
-                label="Categoría" hide-details outlined dense rounded :search-input.sync="categorySearch"
+                :label="lang.category" hide-details="auto" outlined dense rounded :search-input.sync="categorySearch"
                 v-model="category" :items="categories.items" item-text="name" v-debounce:200="refresh"
                 :rules="[rules.required2]" clearable return-object dark required
             />
