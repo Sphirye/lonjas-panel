@@ -6,6 +6,8 @@ import {Vue} from "vue-property-decorator"
 import Tweet from "@/model/twitter/Tweet"
 import axios from "axios";
 import Response from "@/model/response/Response";
+import SnackbarModule from "@/store/SnackbarModule";
+import MediaStoringResponse from "@/model/dto/MediaStoringResponse";
 
 export default class TweetService {
 
@@ -92,6 +94,16 @@ export default class TweetService {
             // @ts-ignore
             component.loading = false
         }
+    }
+
+    static async storeMediaTweets(twitterUserId: string) {
+        try {
+            let response = await axios.patch(ConstantTool.BASE_URL + `/api/twitter/user/${twitterUserId}/store`, null, {
+                headers: { Authorization: getModule(SessionModule).session.token }
+            })
+            const mediaRetrievingData = JsonTool.jsonConvert.deserializeObject(response.data, MediaStoringResponse)
+            getModule(SnackbarModule).makeToast(`Se guardaron ${mediaRetrievingData.retrievedCount} archivos nuevos, habiendo ahora un total de ${mediaRetrievingData.totalCount} archivos.`)
+        } catch (e) { return Promise.reject(e) }
     }
 
     static async deleteTweet(component: Vue, id: string) {

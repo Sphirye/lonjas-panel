@@ -38,8 +38,9 @@
             </div>
           </v-card-text>
 
-          <v-card-actions>
-            <v-btn block @click="syncTweets" depressed>Sincronizar Tweets</v-btn>
+          <v-card-actions class="d-flex flex-column">
+              <v-btn color="dark-1" block @click="syncTweets" depressed>Sincronizar Tweets</v-btn>
+              <v-btn color="dark-1" block @click="storeMediaTweets" class="my-1" depressed>Almacenar archivos</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -88,7 +89,7 @@
         </v-row>
         <v-divider class="my-4" dark/>
         <v-row dense justify="end" align="center">
-          <v-pagination v-model="page" :length="pageCount" :total-visible="8"/>
+          <v-pagination class="white--text" v-model="page" :length="pageCount" :total-visible="8"/>
         </v-row>
       </v-col>
     </v-row>
@@ -149,6 +150,10 @@ export default class TwitterProfileView extends Vue {
   openPostDialog(tweet: Tweet) {
     this.selectedTweet = tweet
     this.postDialog = true
+  }
+
+  async storeMediaTweets() {
+      await TweetService.storeMediaTweets(this.twitterUser.item.id!!)
   }
 
   validate() {
