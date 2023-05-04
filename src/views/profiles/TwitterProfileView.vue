@@ -94,7 +94,7 @@
       </v-col>
     </v-row>
 
-    <v-dialog v-model="postDialog" width="800px">
+    <v-dialog v-model="postDialog" width="800px" persistent>
       <CreatePostDialog :dialog.sync="postDialog" :tweet="selectedTweet"/>
     </v-dialog>
 

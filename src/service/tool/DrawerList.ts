@@ -18,6 +18,7 @@ let drawerList: DrawerItem[] = [
 
     { subheader: "Configuración", allowed: [ AuthorityName.SUPER_ADMIN, AuthorityName.ADMIN ]},
     { title: "Usuarios", to: "/users", allowed: [ AuthorityName.SUPER_ADMIN, AuthorityName.ADMIN ] },
+    { title: "Sincronizaciones", to: "/synchros", allowed: [ AuthorityName.SUPER_ADMIN, AuthorityName.ADMIN ] },
     { title: "Historial", to: "/users", allowed: [ AuthorityName.SUPER_ADMIN, AuthorityName.ADMIN ] },
 
 ]

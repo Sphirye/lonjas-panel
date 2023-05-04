@@ -82,18 +82,12 @@ export default class TweetService {
     }
 
     static async syncUserTweets(component: Vue, twitterUserId: string) {
-        // @ts-ignore
-        component.loading = true
         try {
             let response = await component.axios.patch(ConstantTool.BASE_URL + `/api/twitter/user/${twitterUserId}/tweet/sync`, null, {
                 headers: { Authorization: getModule(SessionModule).session.token }
             })
-        } catch (e) {
-            console.log(e)
-        } finally {
-            // @ts-ignore
-            component.loading = false
-        }
+            getModule(SnackbarModule).makeToast(`La sincronización ha empezado, el estado puede consultarse en la vista de sincronizaciones.`)
+        } catch (e) { return Promise.reject(e) }
     }
 
     static async storeMediaTweets(twitterUserId: string) {

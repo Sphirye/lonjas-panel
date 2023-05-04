@@ -35,4 +35,6 @@ export default {
     user: "Usuario",
     users: "Usuarios",
     description: "Descripción",
+    synchros: "Sincronizaciones",
+    synchro: "Sincronización"
 }

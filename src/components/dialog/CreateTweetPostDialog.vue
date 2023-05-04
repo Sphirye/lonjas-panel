@@ -29,7 +29,7 @@
                       :items="tags.items" multiple chips deletable-chips small-chips
                       label="Tags" item-text="name" item-value="id" v-model="selectedTags"
                       :rules="[rules.required]" v-debounce:200="getTags" :search-input.sync="tagSearch"
-                      :loading="loading"
+                      :loading="loading" cache-items
                   />
 
                   <v-btn icon class="ml-2" @click="tagDialog = true">
@@ -43,7 +43,7 @@
                       :items="categories.items" v-model="selectedCategories" item-value="id"
                       multiple chips deletable-chips small-chips item-text="name" dark
                       :rules="[rules.required]" v-debounce:200="getCategories" :search-input.sync="categorySearch"
-                      :loading="loading"
+                      :loading="loading" cache-items
                   />
 
                   <v-btn icon class="ml-2" @click="categoryDialog = true">
@@ -57,7 +57,7 @@
                       :items="characters.items" v-model="selectedCharacters" item-value="id"
                       multiple chips deletable-chips small-chips item-text="name" dark
                       :rules="[rules.required]" v-debounce:200="getCharacters" :search-input.sync="characterSearch"
-                      :loading="loading"
+                      :loading="loading" cache-items
                   >
                     <template v-slot:item="{ item, on, attrs }">
                       <v-list-item dense v-on="on">
@@ -204,7 +204,7 @@ export default class CreateTweetPostDialog extends Vue {
     this.syncedDialog = false
     this.selectedTags = []
     this.selectedCategories = []
-    this.selectedCategories = []
+    this.selectedCharacters = []
     this.refresh()
   }
 
