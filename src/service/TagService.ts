@@ -40,6 +40,7 @@ export default class TagService {
             return Promise.resolve({ result: tag })
         } catch (e) { return Promise.reject(e) }
     }
+
     static async updateTag(id: number, request: Tag): Promise<Response<Tag>> {
         try {
             const response = await axios.patch(`${ConstantTool.BASE_URL}/api/tag/${id}`, request, {
@@ -49,6 +50,18 @@ export default class TagService {
             return Promise.resolve({ result: tag })
         } catch (e) { return Promise.reject(e) }
     }
+
+    static async setStatus(id: number, enabled: boolean): Promise<Response<Tag>> {
+        try {
+            const response = await axios.patch(`${ConstantTool.BASE_URL}/api/tag/${id}/status`, null, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+                params: { enabled }
+            })
+            const tag = JsonTool.jsonConvert.deserializeObject(response.data, Tag)
+            return Promise.resolve({ result: tag })
+        } catch (e) { return Promise.reject(e) }
+    }
+
     static async deleteTag(component: Vue, id: number) {
         // @ts-ignore
         component.loading = true

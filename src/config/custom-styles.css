@@ -1,3 +1,11 @@
+.full-height {
+    height: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
 .custom-borderline {
     /* you can change these variables to control the border */
     --border-color: #8659b5;

@@ -18,7 +18,9 @@
                     </template>
 
                     <template v-slot:item.finishDate="{ item }">
-                        {{ item.finishDate.setLocale("es").toFormat('hh:mm a - dd/MM/yy') }}
+                        <template v-if="item.finishDate != undefined">
+                            {{ item.finishDate.setLocale("es").toFormat('hh:mm a - dd/MM/yy') }}
+                        </template>
                     </template>
 
                     <template v-slot:item.createdBy="{ item }">

@@ -116,7 +116,7 @@ export default class PostService {
                 params: { enabled }
             })
             const post = JsonTool.jsonConvert.deserializeObject(response.data, Post)
-            return Promise.resolve({result: post})
+            return Promise.resolve({ result: post })
         } catch (e) {
             return Promise.reject(e)
         }

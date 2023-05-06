@@ -4,10 +4,7 @@
       <span class="uni-sans-heavy text-25 grey--text  text--lighten-2 mx-4">Perfiles</span>
       <v-spacer/>
       <v-sheet color="transparent" width="250px">
-        <v-select
-            v-model="source" dark :items="items" label="Fuente" outlined
-            return-object item-text="name" hide-details dense :menu-props="{ bottom: true, offsetY: true }"
-        >
+        <v-select v-model="source" dark :items="items" label="Fuente" outlined return-object item-text="name" hide-details dense :menu-props="{ bottom: true, offsetY: true }">
           <template v-slot:item="{ active, item, attrs, on }">
             <v-list-item selectable v-on="on" v-bind="attrs" #default="{ active }">
               <v-list-item-title>
@@ -55,30 +52,30 @@ import RegisterProfileDialog from "@/components/dialog/RegisterProfileDialog.vue
 
 Component.registerHooks(['beforeRouteLeave'])
 
-@Component({ components: { TwitterProfilesTab, RegisterProfileDialog } })
+@Component({components: {TwitterProfilesTab, RegisterProfileDialog}})
 export default class ProfilesView extends Vue {
 
-  items: Source[] = [
-    { name: "Twitter", icon: "fab fa-twitter", id: "twitter" },
-  ]
-  source: Source = this.items[0]
+    items: Source[] = [
+        {name: "Twitter", icon: "fab fa-twitter", id: "twitter"},
+    ]
+    source: Source = this.items[0]
 
-  lang = getModule(LangModule).lang
-  loading: boolean = false
-  search: string = ""
-  page: number = 1
-  size: number = 20
-  totalItems: number = 0
-  dialog: boolean =false
+    lang = getModule(LangModule).lang
+    loading: boolean = false
+    search: string = ""
+    page: number = 1
+    size: number = 10
 
-  headers = [
-    {align: 'center', width: 'auto', text: "Nombre", value: 'name'}
-  ]
+    dialog: boolean = false
 
-  async refresh() {
-    // @ts-ignore
-    console.log(this.$refs["twitterProfilesTab"].refresh())
-  }
+    headers = [
+        {align: 'center', width: 'auto', text: "Nombre", value: 'name'}
+    ]
+
+    async refresh() {
+        // @ts-ignore
+        console.log(this.$refs["twitterProfilesTab"].refresh())
+    }
 
 }
 </script>
