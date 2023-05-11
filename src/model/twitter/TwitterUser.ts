@@ -1,5 +1,6 @@
-import {JsonObject, JsonProperty} from "json2typescript"
+import {Any, JsonObject, JsonProperty} from "json2typescript"
 import Auditing from "@/model/Auditing";
+import Artist from "@/model/Artist";
 
 @JsonObject("TwitterUser")
 export default class TwitterUser extends Auditing {
@@ -18,5 +19,8 @@ export default class TwitterUser extends Auditing {
 
     @JsonProperty("profileImageUrl", String, true)
     profileImageUrl?: string = undefined
+
+    @JsonProperty("artist", Any, true)
+    artist?: Artist = undefined
 
 }

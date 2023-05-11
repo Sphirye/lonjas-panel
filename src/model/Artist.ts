@@ -1,4 +1,4 @@
-import {JsonConverter, JsonCustomConvert, JsonObject, JsonProperty} from "json2typescript"
+import {Any, JsonConverter, JsonCustomConvert, JsonObject, JsonProperty} from "json2typescript"
 import TwitterUser from "@/model/twitter/TwitterUser"
 
 export enum Source {
@@ -18,7 +18,7 @@ export default class Artist {
     @JsonProperty("id", Number, true)
     id?: number = undefined
 
-    @JsonProperty("twitter", TwitterUser, true)
+    @JsonProperty("twitter", Any, true)
     twitter?: TwitterUser = undefined
 
     @JsonProperty("source", SourceConverter, true)

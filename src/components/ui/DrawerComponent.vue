@@ -2,7 +2,7 @@
   <v-navigation-drawer v-model="drawer" clipped app color="dark-3" width="210" :mobile-breakpoint="0">
 
     <v-list dark class="my-0 py-0" dense>
-      <v-list-item-group class="pa-2" mandatory>
+      <div class="ma-2">
         <template v-for="(item, key) in drawerList">
           <template v-if="item.subheader != null">
             <v-divider class="grey mx-1 mt-1 mb-2"/>
@@ -14,7 +14,7 @@
             </v-list-item-content>
           </v-list-item>
         </template>
-      </v-list-item-group>
+      </div>
     </v-list>
   </v-navigation-drawer>
 </template>

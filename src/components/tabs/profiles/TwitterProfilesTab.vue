@@ -7,9 +7,21 @@
             disable-filtering disable-sort :items="profiles.items" @click:row="rowClick"
             disable-pagination
         >
+
           <template v-slot:item._createdAt="{ item }">
             {{ item.createdAt.setLocale("es").toFormat('HH:mm - dd/MM/yy') }}
           </template>
+
+          <template v-slot:item.username="{ item }">
+            @{{ item.username }}
+          </template>
+
+          <template v-slot:item.photo="{ item }">
+            <v-avatar class="my-1">
+              <v-img :src="item.profileImageUrl"/>
+            </v-avatar>
+          </template>
+
         </v-data-table>
       </v-col>
     </v-row>
@@ -43,10 +55,10 @@ export default class TwitterProfilesTab extends Vue {
     profiles: MultipleItem<TwitterUser> = {items: [], totalItems: 0}
 
     headers = [
+        {align: 'center', width: 'auto', text: "Foto", value: 'photo'},
         {align: 'center', width: 'auto', text: "Nombre", value: 'name'},
         {align: 'center', width: 'auto', text: "Nombre de usuario", value: 'username'},
         {align: 'center', width: 'auto', text: "Fecha de creación", value: '_createdAt'},
-        {align: 'center', width: 'auto', text: "Fuente", value: 'source'},
     ]
 
     created() {
@@ -59,9 +71,8 @@ export default class TwitterProfilesTab extends Vue {
                 ProfilesService.getTwitterProfiles(this.page - 1, this.size, "")
             )
             this.pageCount = Math.ceil(this.profiles.totalItems! / this.size)
-        } catch (e) {
-            console.log(e)
-        }
+            console.log(this.profiles.items)
+        } catch (e) { console.log(e)}
     }
 
     rowClick(twitterUser: TwitterUser) {

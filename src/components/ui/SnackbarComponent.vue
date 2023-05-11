@@ -1,8 +1,6 @@
 <template>
-	<v-snackbar
-		 v-model="enabled" :timeout="snackbarModule.timeout" transition="slide-y-reverse-transition"
-	>
-		<span>{{ snackbarModule.message }}</span>
+	<v-snackbar v-model="enabled" :timeout="snackbarModule.timeout" transition="slide-y-reverse-transition">
+		<span class="text-15 ma-4">{{ snackbarModule.message }}</span>
 	</v-snackbar>
 </template>
 
