@@ -12,13 +12,14 @@ class SourceConverter implements JsonCustomConvert<Source> {
     serialize(data: Source): any { return data.toString() }
 }
 
+
 @JsonObject("Artist")
 export default class Artist {
 
     @JsonProperty("id", Number, true)
     id?: number = undefined
 
-    @JsonProperty("twitter", Any, true)
+    @JsonProperty("twitter", Any, false)
     twitter?: TwitterUser = undefined
 
     @JsonProperty("source", SourceConverter, true)

@@ -52,50 +52,66 @@
         </v-col>
 
         <v-col cols="8">
-          <v-row dense>
-            <v-col cols="auto" v-for="(tweet, key) in tweets.items" :key="key">
-              <v-menu transition="origin" rounded bottom right offset-x :close-on-content-click="false" z-index="1" absolute>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-card height="180px" width="180px" outlined dark rounded @click="selectedTweet = tweet" v-bind="attrs" v-on="on">
-                    <v-hover v-slot="{ hover }">
-                      <v-img width="100%" height="100%" class="pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="tweet.images[0]">
-                        <div class="full-width full-height d-flex">
-                          <v-chip class="mt-auto ml-auto ma-1" small>1/{{ tweet.images.length + tweet.videos.length }}</v-chip>
-                        </div>
-                      </v-img>
-                    </v-hover>
-                  </v-card>
-                </template>
-                <v-list width="350" outlined flat color="dark-4" dark dense>
-                  <v-list-item-group>
+          <v-container fluid>
+            <v-row dense>
+              <v-spacer/>
+              <v-sheet color="transparent">
+                <v-text-field
+                    clearable hide-details dense outlined dark append-icon="mdi-magnify" :label="lang.search"
+                    v-model="search" @keydown.enter="clearAndRefresh"
+                />
+              </v-sheet>
+            </v-row>
 
-                    <v-list-item @click="openTweetSource(tweet)">
-                      <v-list-item-icon class="mx-2 my-auto">
-                        <v-icon>fab fa-twitter</v-icon>
-                      </v-list-item-icon>
-                      <v-list-item-content>
-                        <v-list-item-title class="text-15">Abrir tweet</v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
+            <v-divider class="mt-4 mb-2" dark/>
 
-                    <v-list-item @click="openPostDialog(tweet)">
-                      <v-list-item-icon class="mx-2 my-auto">
-                        <v-icon>far fa-square-plus</v-icon>
-                      </v-list-item-icon>
-                      <v-list-item-content>
-                        <v-list-item-title class="text-15">Añadir como un post</v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
+            <v-row dense>
+              <v-col cols="auto" class="flex-grow-1" v-for="(tweet, key) in tweets.items" :key="key">
+                <v-menu transition="origin" rounded bottom right offset-x :close-on-content-click="false" z-index="1" absolute>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-card height="180px" width="180px" outlined dark rounded @click="selectedTweet = tweet" v-bind="attrs" v-on="on">
+                      <v-hover v-slot="{ hover }">
+                        <v-img width="100%" height="100%" class="pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="tweet.images[0]">
+                          <div class="full-width full-height d-flex">
+                            <v-chip class="mt-auto ml-auto ma-1" small>1/{{ tweet.images.length + tweet.videos.length }}</v-chip>
+                          </div>
+                        </v-img>
+                      </v-hover>
+                    </v-card>
+                  </template>
+                  <v-list width="350" outlined flat color="dark-4" dark dense>
+                    <v-list-item-group>
 
-                  </v-list-item-group>
-                </v-list>
-              </v-menu>
-            </v-col>
-          </v-row>
-          <v-divider class="my-4" dark/>
-          <v-row dense justify="end" align="center">
-            <v-pagination class="white--text" v-model="page" :length="pageCount" :total-visible="8"/>
-          </v-row>
+                      <v-list-item @click="openTweetSource(tweet)">
+                        <v-list-item-icon class="mx-2 my-auto">
+                          <v-icon>fab fa-twitter</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                          <v-list-item-title class="text-15">Abrir tweet</v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+
+                      <v-list-item @click="openPostDialog(tweet)">
+                        <v-list-item-icon class="mx-2 my-auto">
+                          <v-icon>far fa-square-plus</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                          <v-list-item-title class="text-15">Añadir como un post</v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+
+                    </v-list-item-group>
+                  </v-list>
+                </v-menu>
+              </v-col>
+            </v-row>
+
+            <v-divider class="my-4" dark/>
+
+            <v-row dense justify="end" align="center">
+              <v-pagination class="white--text" v-model="page" :length="pageCount" :total-visible="8"/>
+            </v-row>
+          </v-container>
         </v-col>
       </v-row>
 
@@ -108,6 +124,7 @@
 </template>
 
 <script lang="ts">
+import 'reflect-metadata'
 import {Component, Ref, Vue, Watch} from 'vue-property-decorator'
 import Rules from "@/service/tool/Rules"
 import {getModule} from "vuex-module-decorators"
@@ -124,7 +141,9 @@ import Tweet from "@/model/twitter/Tweet";
 import CreateTweetPostDialog from "@/components/dialog/CreateTweetPostDialog.vue";
 import SnackbarModule from "@/store/SnackbarModule";
 
-@Component({components: {CreatePostDialog: CreateTweetPostDialog}})
+@Component({
+    components: { CreatePostDialog: CreateTweetPostDialog }
+})
 export default class TwitterProfileView extends Vue {
 
     @Ref() readonly form!: HTMLFormElement
@@ -142,20 +161,21 @@ export default class TwitterProfileView extends Vue {
 
     page: number = 1
     size: number = 40
+    search: string = ""
     pageCount: number = 0
 
     async created() {
         try {
             await Handler.getItem(this, this.twitterUser, () => ProfilesService.getTwitterProfile(this.$route.params.id))
             if (this.twitterUser.item.id) { await this.refresh() }
-        } catch (e) {
-            console.log(e)
-        }
+        } catch (e) { console.log(e) }
     }
 
     async refresh() {
         try {
-            await Handler.getItems(this, this.tweets, () => TweetService.findTweetsByTwitterUser(this.page - 1, this.size, null, this.twitterUser.item!!.id!!))
+            await Handler.getItems(this, this.tweets, () =>
+                TweetService.findTweetsByTwitterUser(this.page - 1, this.size, this.search, this.twitterUser.item!!.id!!)
+            )
             this.pageCount = Math.ceil(this.tweets.totalItems! / this.size)
         } catch (e) {
             console.log(e)
@@ -171,9 +191,7 @@ export default class TwitterProfileView extends Vue {
         }
     }
 
-    async storeMediaTweets() {
-        await TweetService.storeMediaTweets(this.twitterUser.item.id!!)
-    }
+    async storeMediaTweets() { await TweetService.storeMediaTweets(this.twitterUser.item.id!!) }
 
     validate() {
         getModule(DialogModule).showDialog(new Dialog("Aviso", "¿Desea continuar?", () => {
@@ -188,18 +206,17 @@ export default class TwitterProfileView extends Vue {
         }))
     }
 
-    selectTweet(tweet: Tweet) {
-        this.$router.push(`/profiles/twitter/${tweet.author!!.id}/tweet/${tweet.id}`)
-    }
-
     openTweetSource(tweet: Tweet) {
         window.open(`https://twitter.com/${tweet.author!!.username}/status/${tweet.id}`, '_blank');
     }
 
-    @Watch('page')
-    onPageChanged() {
+    clearAndRefresh() {
+        this.page = 1
         this.refresh()
     }
+
+    @Watch('page')
+    onPageChanged() { this.refresh() }
 
 }
 </script>

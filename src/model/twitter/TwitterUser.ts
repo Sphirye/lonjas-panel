@@ -20,7 +20,7 @@ export default class TwitterUser extends Auditing {
     @JsonProperty("profileImageUrl", String, true)
     profileImageUrl?: string = undefined
 
-    @JsonProperty("artist", Any, true)
+    @JsonProperty("artist", Any, false)
     artist?: Artist = undefined
 
 }

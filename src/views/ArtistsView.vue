@@ -24,9 +24,11 @@
     <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
 
     <v-row align="start" dense no-gutters>
-      <v-col cols="auto" v-for="(artist, key) in artists.items" :key="key">
-        <ArtistCardComponent :artist="artist"/>
-      </v-col>
+      <template v-if="artists.items.length != 0">
+        <v-col cols="auto" v-for="(artist, key) in artists.items" :key="key">
+          <ArtistCardComponent :artist="artist"/>
+        </v-col>
+      </template>
     </v-row>
 
     <v-dialog v-model="dialog" width="600px" persistent>
