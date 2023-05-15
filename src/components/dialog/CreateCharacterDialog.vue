@@ -23,7 +23,7 @@
             <v-autocomplete
                 :label="lang.category" hide-details="auto" outlined dense rounded :search-input.sync="categorySearch"
                 v-model="category" :items="categories.items" item-text="name" v-debounce:200="refresh"
-                :rules="[rules.required2]" clearable return-object dark required
+                :rules="[rules.required]" clearable return-object dark required
             />
           </v-col>
 

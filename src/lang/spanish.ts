@@ -19,6 +19,10 @@ export default {
     options: "Opciones",
     continue: "Continuar",
     name: "Nombre",
+    email: "Email",
+    password: "Contraseña",
+    login: "Iniciar sesión",
+    add: "Añadir",
 
     recentPosts: "Posts Recientes",
     post: "Post",
@@ -36,5 +40,7 @@ export default {
     users: "Usuarios",
     description: "Descripción",
     synchros: "Sincronizaciones",
-    synchro: "Sincronización"
+    synchro: "Sincronización",
+    tag: "Tag",
+    tags: "Tags",
 }
