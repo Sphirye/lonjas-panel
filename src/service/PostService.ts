@@ -1,15 +1,12 @@
 import ConstantTool from "@/service/tool/ConstantTool"
+import SnackbarModule from "@/store/SnackbarModule"
+import SessionModule from "@/store/SessionModule"
+import Response from "@/model/response/Response"
+import {getModule} from "vuex-module-decorators"
 import JsonTool from "@/service/tool/JsonTool"
-import {Vue} from "vue-property-decorator"
+import Category from "@/model/Category"
 import Post from "@/model/Post"
-import {getModule} from "vuex-module-decorators";
-import SessionModule from "@/store/SessionModule";
-import SnackbarModule from "@/store/SnackbarModule";
-import axios from "axios";
-import Response from "@/model/response/Response";
-import Tag from "@/model/Tag";
-import Artist from "@/model/Artist";
-import Category from "@/model/Category";
+import axios from "axios"
 
 export default class PostService {
 
@@ -31,7 +28,7 @@ export default class PostService {
     ): Promise<Response<Category[]>> {
         try {
             const response = await axios.get(`${ConstantTool.BASE_URL}/api/post`, {
-                headers: {Authorization: getModule(SessionModule).session.token},
+                headers: { Authorization: getModule(SessionModule).session.token },
                 params: {
                     page, size, enabled, artistId,
                     categoryIds: categoryIds?.toString(),
@@ -96,10 +93,16 @@ export default class PostService {
         }
     }
 
-    static async patchPost(id: number, request: Post): Promise<Response<Post>> {
+    static async updatePost(id: number, request: Post): Promise<Response<Post>> {
+
+        let formData: FormData = new FormData()
+        formData.set("categories", request.categories!.toString())
+        formData.set("characters", request.characters!!.toString())
+        formData.set("tags", request.tags!!.toString())
+
         try {
             const response = await axios.patch(`${ConstantTool.BASE_URL}/api/post/${id}`, request, {
-                headers: {Authorization: getModule(SessionModule).session.token},
+                headers: { Authorization: getModule(SessionModule).session.token },
             })
             const post = JsonTool.jsonConvert.deserializeObject(response.data, Post)
             getModule(SnackbarModule).makeToast("Post actualizado exitosamente.")

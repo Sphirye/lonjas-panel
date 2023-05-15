@@ -11,4 +11,9 @@ export default class PaginationMixin extends Vue {
     // Should be called after items refresh.
     setPageCount(totalItems: number) { this.pageCount = Math.ceil(totalItems / this.size) }
 
+    resetAll() {
+        this.page = 1
+        this.search = ""
+    }
+
 }

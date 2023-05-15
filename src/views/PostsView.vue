@@ -4,10 +4,7 @@
       <h2 class="uni-sans-heavy white--text mx-4">{{ lang.posts }}</h2>
       <v-spacer/>
       <v-sheet color="transparent">
-        <v-text-field
-            clearable hide-details dense outlined dark rounded
-            append-icon="mdi-magnify" :label="lang.search"
-        />
+        <v-text-field clearable hide-details dense outlined dark rounded append-icon="mdi-magnify" :label="lang.search"/>
       </v-sheet>
     </v-row>
 
@@ -20,15 +17,16 @@
       </v-col>
     </v-row>
 
-    <v-dialog v-model="dialog" width="600px">
-<!--      <CreateTagDialog :dialog.sync="dialog" @created="this.refresh"/>-->
-    </v-dialog>
+    <v-row dense align="center">
+      <v-spacer/>
+      <v-pagination class="white--text" v-model="page" :length="pageCount" :total-visible="8"/>
+    </v-row>
 
   </v-container>
 </template>
 
 <script lang="ts">
-import {Component, Vue} from "vue-property-decorator"
+import {Component, Mixins, Vue, Watch} from "vue-property-decorator"
 import DrawerModule from "@/store/DrawerModule"
 import LangModule from "@/store/LangModule"
 import {getModule} from "vuex-module-decorators"
@@ -42,34 +40,32 @@ import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 import Post from "@/model/Post";
 import PostService from "@/service/PostService";
 import PostCardComponent from "@/components/PostCardComponent.vue";
+import PaginationMixin from "@/mixins/PaginationMixin";
 
-@Component({ components: { PostCardComponent } })
-export default class PostsView extends Vue {
+@Component({components: {PostCardComponent}})
+export default class PostsView extends Mixins(PaginationMixin) {
 
-  lang = getModule(LangModule).lang
-  loading: boolean = false
-  tag: Tag = new Tag()
-  posts: MultipleItem<Post> = { items: [], totalItems: 0 }
-  tags: MultipleItem<Tag> = { items: [], totalItems: 0 }
-  search: string = ""
-  page: number = 1
-  size: number = 20
-  totalItems: number = 0
-  dialog: boolean =false
+    lang = getModule(LangModule).lang
+    size = 30
+    dialog: boolean = false
+    loading: boolean = false
+    posts: MultipleItem<Post> = { items: [], totalItems: 0 }
 
-  created() { this.refresh() }
+    created() { this.refresh() }
 
-  async refresh() {
+    async refresh() {
+        try {
+            await Handler.getItems(this, this.posts, () => PostService.getPosts(
+                this.page - 1, this.size, null, null, null, null, null)
+            )
+            this.setPageCount(this.posts.totalItems!!)
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
-    try {
-      await Handler.getItems(this, this.posts, () => PostService.getPosts(
-          this.page - 1, this.size, null, null, null, null, null)
-      )
-    } catch (e) { console.log(e) }
-  }
+    @Watch("page")
+    onPageChanged() { this.refresh() }
+
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -3,19 +3,12 @@
     <v-row dense align="center">
       <span class="uni-sans-heavy text-25 grey--text text--lighten-2 mx-4">{{ lang.categories }}</span>
       <v-spacer/>
-      <v-expand-x-transition>
-        <v-sheet class="transparent mr-3" v-if="showSearchBar" dark>
-          <v-text-field
-              @click:clear="search = ''; resetAll()" @keydown.enter="refresh"
-              v-model="search" v-debounce:250ms="resetAll"
-              clearable hide-details dense outlined :label="lang.search"
-          />
-        </v-sheet>
-      </v-expand-x-transition>
-      <v-btn icon outlined @click="showSearchBar = !showSearchBar" dark class="mr-3">
-        <v-icon small>fas fa-search</v-icon>
-      </v-btn>
-      <v-btn class="mx-2" depressed @click="dialog = true">Añadir</v-btn>
+      <div>
+        <v-text-field
+            @keydown.enter="refresh" v-model="search" hide-details dense outlined :label="lang.search" dark
+        />
+      </div>
+      <v-btn class="mx-2" depressed @click="dialog = true">{{ lang.add }}</v-btn>
     </v-row>
 
     <v-progress-linear class="my-2" color="grey" :indeterminate="loading"/>
@@ -32,6 +25,11 @@
       </template>
     </v-row>
 
+    <v-row dense align="center">
+      <v-spacer/>
+      <v-pagination class="white--text" v-model="page" :length="pageCount" :total-visible="8"/>
+    </v-row>
+
     <v-dialog v-model="dialog" width="500px">
       <CreateCategoryDialog :dialog.sync="dialog" @created="refresh"/>
     </v-dialog>
@@ -40,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Ref, Vue} from 'vue-property-decorator'
+import {Component, Mixins, Ref, Vue, Watch} from 'vue-property-decorator'
 import {getModule} from "vuex-module-decorators"
 import DialogModule from "@/store/DialogModule"
 import LangModule from "@/store/LangModule"
@@ -52,48 +50,39 @@ import {MultipleItem} from "@/handlers/interfaces/ContentUI";
 import Category from "@/model/Category";
 import CategoryService from "@/service/CategoryService";
 import CreateCategoryDialog from "@/components/dialog/CreateCategoryDialog.vue";
+import PaginationMixin from "@/mixins/PaginationMixin";
 
-@Component( { components: { CreateCategoryDialog } } )
-export default class CategoriesView extends Vue {
+@Component({ components: { CreateCategoryDialog } })
+export default class CategoriesView extends Mixins(PaginationMixin) {
 
-  @Ref() readonly form!: HTMLFormElement
+    @Ref() readonly form!: HTMLFormElement
 
-  dialog: boolean = false
-  loading: boolean = false
-  showSearchBar: boolean = false
-  search: string = ""
-  page: number = 1
-  size: number = 20
-  categories: MultipleItem<Category> = {
-    items: [],
-    totalItems: 0
-  }
+    dialog: boolean = false
+    loading: boolean = false
+    showSearchBar: boolean = false
+    categories: MultipleItem<Category> = { items: [], totalItems: 0 }
+    size = 50
 
-  get lang() { return getModule(LangModule).lang }
-  get rules() { return Rules }
+    get lang() { return getModule(LangModule).lang }
+    get rules() { return Rules }
+    created() { this.refresh() }
 
-  created() {
-    this.refresh()
-  }
-
-  validate() {
-    getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea continuar?", () => {
-      alert("Has continuado.")
-    }))
-  }
-
-  async refresh() {
-    try {
-      await Handler.getItems(this, this.categories, () => CategoryService.getCategories(this.page - 1, this.size, this.search, null))
-    } catch (e) {
-      console.log(e)
+    async refresh() {
+        try {
+            await Handler.getItems(this, this.categories, () =>
+                CategoryService.getCategories(this.page - 1, this.size, this.search, null)
+            )
+            this.setPageCount(this.categories.totalItems!!)
+        } catch (e) { console.log(e) }
     }
-  }
 
-  resetAll() {
-    this.page = 1
-    this.refresh()
-  }
+    reset() {
+        this.resetAll()
+        this.refresh()
+    }
+
+    @Watch("page")
+    onPageChanged() { this.refresh() }
 
 }
 </script>

@@ -162,7 +162,7 @@ export default class PostView extends Vue {
   async updatePost() {
     getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea actualizar los datos del post?", async () => {
       try {
-        await Handler.getItem(this, this.post, () => PostService.patchPost(Number(this.$route.params.id), this.post.item))
+        await Handler.getItem(this, this.post, () => PostService.updatePost(Number(this.$route.params.id), this.post.item))
       } catch (e) { console.log(e) }
     }))
   }
