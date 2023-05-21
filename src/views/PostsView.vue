@@ -8,7 +8,6 @@
       </v-sheet>
     </v-row>
 
-
     <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
 
     <v-row dense>

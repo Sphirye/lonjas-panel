@@ -29,6 +29,9 @@
           </v-card-text>
 
           <v-card-actions>
+            <v-btn color="red" depressed tile @click="deleteTag">
+              <span class="font-weight-bold">{{ lang.delete }}</span>
+            </v-btn>
             <v-spacer/>
             <v-btn color="green" depressed tile :disabled="!tag.item.id" @click="updateTag">
               <span class="font-weight-bold">{{ lang.save }}</span>

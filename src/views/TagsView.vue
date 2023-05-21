@@ -4,7 +4,11 @@
       <span class="uni-sans-heavy text-25 grey--text  text--lighten-2 mx-4">{{ lang.tags }}</span>
       <v-spacer/>
       <v-sheet color="transparent">
-        <v-text-field clearable hide-details dense outlined dark append-icon="mdi-magnify" :label="lang.search"/>
+        <v-text-field
+            @keydown.enter="refresh" clearable hide-details dense outlined
+            dark append-icon="mdi-magnify" :label="lang.search"
+            v-model="search"
+        />
       </v-sheet>
       <v-btn class="mx-2" depressed @click="dialog = true">{{ lang.add }}</v-btn>
     </v-row>

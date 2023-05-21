@@ -6,6 +6,7 @@ import JsonTool from "@/service/tool/JsonTool"
 import {Vue} from "vue-property-decorator"
 import axios from "axios/index"
 import Tag from "@/model/Tag"
+import SnackbarModule from "@/store/SnackbarModule";
 
 export default class TagService {
     static async getTags(page: number, size: number, search: string | null, enabled: boolean | null): Promise<Response<Tag[]>> {
@@ -63,17 +64,19 @@ export default class TagService {
     }
 
     static async deleteTag(component: Vue, id: number) {
-        // @ts-ignore
-        component.loading = true
         try {
             const response = await component.axios.delete(`${ConstantTool.BASE_URL}/api/tag/${id}`, {
                 headers: { Authorization: getModule(SessionModule).session.token }
             })
-        } catch (e) {
 
-        } finally {
-            // @ts-ignore
-            component.loading = false
-        }
+            if (response.data == "ENTITY_DELETED") {
+                getModule(SnackbarModule).makeToast("Tag eliminado exitosamente.")
+            }
+
+            if (response.data == "ENTITY_DISABLED") {
+                getModule(SnackbarModule).makeToast("Habían posts usando el tag, así que este fue deshabilitado.")
+            }
+
+        } catch (e) { return Promise.reject(e) }
     }
 }
