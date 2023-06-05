@@ -34,4 +34,7 @@ export default class Character {
     @JsonProperty("gender", GenderConverter, true)
     gender: Gender | null = null
 
+    @JsonProperty("enabled", Boolean, true)
+    enabled?: boolean = undefined
+
 }

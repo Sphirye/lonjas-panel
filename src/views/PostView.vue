@@ -4,7 +4,7 @@
       <v-row dense>
 
         <v-col cols="4" v-if="post.item.id">
-          <ArtistCardComponent :artist="post.item.artist"/>
+          <ArtistCardComponent :artist="post.item.artist" :post="post.item"/>
         </v-col>
 
         <v-col cols="8">

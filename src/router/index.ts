@@ -24,6 +24,7 @@ const routes: Array<RouteConfig> = [
   { path: '/profiles/twitter/:twitterUserId/tweet/:id', name: "Tweet", component: () => import('../views/TweetView.vue'), meta: { requiresAuth: true } },
   { path: '/users', name: "Users", component: () => import('../views/UsersView.vue'), meta: { requiresAuth: true } },
   { path: '/synchros', name: "Synchros", component: () => import('../views/SynchrosView.vue'), meta: { requiresAuth: true } },
+  { path: '/tweets', name: "Tweets", component: () => import('../views/TweetsView.vue'), meta: { requiresAuth: true } },
 ]
 
 const router = new VueRouter({

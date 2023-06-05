@@ -43,4 +43,5 @@ export default {
     synchro: "Sincronización",
     tag: "Tag",
     tags: "Tags",
+    tweets: "Tweets"
 }

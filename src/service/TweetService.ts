@@ -21,21 +21,16 @@ export default class TweetService {
         } catch (e) { return Promise.reject(e) }
     }
 
-    static async getTweet(component: Vue, id: String) {
-        // @ts-ignore
-        component.loading = true
+    static async findTweets(page: number, size: number, search: Nullable<string>) {
         try {
-            let response = await component.axios.get(ConstantTool.BASE_URL + `/api/twitter/tweet/${id}`, {
-                headers: { Authorization: getModule(SessionModule).session.token }
+            const response = await axios.get(ConstantTool.BASE_URL + `/api/twitter/tweet`, {
+                headers: { Authorization: getModule(SessionModule).session.token },
+                params: { page, size, search }
             })
-            // @ts-ignore
-            component.tweet = JsonTool.jsonConvert.deserializeObject(response.data, Tweet)
-        } catch (e) {
-            console.log(e)
-        } finally {
-            // @ts-ignore
-            component.loading = false
-        }
+            const tweets = JsonTool.jsonConvert.deserializeArray(response.data, Tweet)
+            const xTotalCount = Number(response.headers["x-total-count"])
+            return Promise.resolve({result: tweets, xTotalCount})
+        } catch (e) { return Promise.reject(e) }
     }
 
     static async findTweetsByTwitterUser(page: number, size: number, search: Nullable<string>, twitterUserId: string) {

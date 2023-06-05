@@ -6,7 +6,8 @@
     <template v-if="artist.item.id">
       <v-row justify="start" align="start" dense>
         <v-col cols="4">
-          <ArtistCardComponent :artist="artist.item"/>
+          <ArtistCardComponent :artist="artist.item">
+          </ArtistCardComponent>
 
           <v-divider class="my-2" dark/>
 
@@ -52,15 +53,14 @@ import Dialog from "@/model/vue/Dialog"
 import Artist from "@/model/Artist"
 import Post from "@/model/Post";
 import PostService from "@/service/PostService";
-import ArtistPostsTab from "@/components/tabs/ArtistPostsTab.vue";
-import ArtistTweetsTab from "@/components/tabs/ArtistTweetsTab.vue";
-import RouterTool from "@/service/tool/RouterTool";
-import Tab from "@/model/vue/Tab";
+import ArtistPostsTab from "@/components/tabs/ArtistPostsTab.vue"
+import RouterTool from "@/service/tool/RouterTool"
+import Tab from "@/model/vue/Tab"
 import Handler from "@/handlers/Handler";
 import {MultipleItem, SingleItem} from "@/handlers/interfaces/ContentUI";
 import ArtistCardComponent from "@/components/ArtistCardComponent.vue";
 
-@Component( { components: {ArtistCardComponent, PostCardComponent, ArtistPostsTab, ArtistTweetsTab } } )
+@Component( { components: {ArtistCardComponent, PostCardComponent, ArtistPostsTab } } )
 export default class PostsView extends Vue {
 
   @Ref() readonly form!: HTMLFormElement

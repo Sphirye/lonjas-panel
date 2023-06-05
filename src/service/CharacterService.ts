@@ -5,6 +5,7 @@ import Response from "@/model/response/Response"
 import {getModule} from "vuex-module-decorators"
 import SessionModule from "@/store/SessionModule"
 import axios from "axios"
+import Post from "@/model/Post";
 
 export default class CharacterService {
 
@@ -79,6 +80,17 @@ export default class CharacterService {
         try {
             const response = await axios.patch(`${ConstantTool.BASE_URL}/api/character/${id}`, request, {
                 headers: { Authorization: getModule(SessionModule).session.token }
+            })
+            const character = JsonTool.jsonConvert.deserializeObject(response.data, Character)
+            return Promise.resolve({ result: character })
+        } catch (e) { return Promise.reject(e) }
+    }
+
+    static async setCharacterStatus(id: number, enabled: boolean): Promise<Response<Character>> {
+        try {
+            const response = await axios.patch(`${ConstantTool.BASE_URL}/api/character/${id}/status`, null, {
+                headers: {Authorization: getModule(SessionModule).session.token},
+                params: { enabled }
             })
             const character = JsonTool.jsonConvert.deserializeObject(response.data, Character)
             return Promise.resolve({ result: character })

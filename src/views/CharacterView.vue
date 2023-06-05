@@ -5,8 +5,9 @@
         <v-card outlined dark color="dark-1">
           <v-card outlined dark color="dark-3">
             <v-card-title>
-              <span class="uni-sans-heavy text-md white--text mx-4">Personaje</span>
+              <span class="uni-sans-heavy text-md white--text mx-4">{{ lang.character }}</span>
               <v-spacer/>
+              <v-switch readonly @click="setCharacterStatus" v-model="character.item.enabled" label="Activo" hide-details class="my-0 py-0" inset/>
             </v-card-title>
 
             <div class="mx-4">
@@ -19,11 +20,7 @@
                   <v-text-field v-model="character.item.name" dense outlined dark hide-details rounded :label="lang.name"/>
                 </v-col>
                 <v-col cols="12">
-                  <v-autocomplete
-                      solo background-color="dark-2" dark hide-details="auto" class="my-0 py-0" :items="categories.items"
-                      label="Categoría" flat menu-props="offset-y" v-model="character.item.category" item-text="name"
-                      return-object cache-items disabled
-                  />
+                  <v-autocomplete solo background-color="dark-2" dark hide-details="auto" class="my-0 py-0" :items="categories.items" label="Categoría" flat menu-props="offset-y" v-model="character.item.category" item-text="name" return-object cache-items disabled/>
                 </v-col>
 
                 <v-col cols="6">
@@ -87,63 +84,81 @@ import Post from "@/model/Post";
 import PostService from "@/service/PostService";
 import PostCardComponent from "@/components/PostCardComponent.vue";
 
-@Component( { components: {PostCardComponent} })
+@Component({components: {PostCardComponent}})
 export default class CharacterView extends Vue {
 
-  @Ref() readonly form!: HTMLFormElement
+    @Ref() readonly form!: HTMLFormElement
 
-  loading: boolean = false
+    loading: boolean = false
 
-  character: SingleItem<Character> = { item: new Character() }
+    character: SingleItem<Character> = {item: new Character()}
 
-  get lang() { return getModule(LangModule).lang }
-  get rules() { return Rules }
-  categories: MultipleItem<Category> = { items: [], totalItems: 0 }
-  posts: MultipleItem<Post> = { items: [], totalItems: 0 }
+    get lang() {
+        return getModule(LangModule).lang
+    }
 
-  genders = [
-    { name: "Hombre", gender: Gender.MALE} ,
-    { name: "Mujer", gender: Gender.FEMALE },
-    { name: "Otro", gender: Gender.OTHER },
-  ]
+    get rules() {
+        return Rules
+    }
 
-  page: number = 1
-  size: number = 30
+    categories: MultipleItem<Category> = {items: [], totalItems: 0}
+    posts: MultipleItem<Post> = {items: [], totalItems: 0}
 
-  async created() {
-    try {
-      await Handler.getItem(this, this.character, () => CharacterService.getCharacter(Number(this.$route.params.id)))
+    genders = [
+        {name: "Hombre", gender: Gender.MALE},
+        {name: "Mujer", gender: Gender.FEMALE},
+        {name: "Otro", gender: Gender.OTHER},
+    ]
 
-      if (this.character.item.id) {
-        this.categories.items.push(this.character.item.category!)
-        await this.refresh()
-      }
+    page: number = 1
+    size: number = 30
 
-    } catch (e) { console.log(e) }
+    async created() {
+        try {
+            await Handler.getItem(this, this.character, () => CharacterService.getCharacter(Number(this.$route.params.id)))
 
-  }
+            if (this.character.item.id) {
+                this.categories.items.push(this.character.item.category!)
+                await this.refresh()
+            }
 
-  validate() {
-    getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea continuar?", () => {
-      alert("Has continuado.")
-    }))
-  }
+        } catch (e) {
+            console.log(e)
+        }
 
-  async refresh() {
-    try {
-      await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 10, null))
-      await Handler.getItems(this, this.posts, () =>
-          PostService.getPosts(this.page - 1, this.size, null, null, [Number(this.$route.params.id)], null, null)
-      )
-    } catch (e) { console.log(e) }
-  }
+    }
 
-  updateCharacter() {
-    getModule(DialogModule).showDialog(new Dialog(this.lang.warning, `¿Esta seguro de actualizar el personaje?`, async () => {
-      await Handler.getItem(this, this.character, () =>
-        CharacterService.updateCharacter(Number(this.$route.params.id), this.character.item)
-      )
-    }))
-  }
+    validate() {
+        getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea continuar?", () => {
+            alert("Has continuado.")
+        }))
+    }
+
+    async refresh() {
+        try {
+            await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 10, null))
+            await Handler.getItems(this, this.posts, () =>
+                PostService.getPosts(this.page - 1, this.size, null, null, [Number(this.$route.params.id)], null, null)
+            )
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    updateCharacter() {
+        getModule(DialogModule).showDialog(new Dialog(this.lang.warning, `¿Esta seguro de actualizar el personaje?`, async () => {
+            await Handler.getItem(this, this.character, () =>
+                CharacterService.updateCharacter(Number(this.$route.params.id), this.character.item)
+            )
+        }))
+    }
+
+    setCharacterStatus() {
+        getModule(DialogModule).showDialog(new Dialog(this.lang.warning, "¿Desea cambiar el estado del personaje?", async () => {
+            await Handler.getItem(this, this.character, () =>
+                CharacterService.setCharacterStatus(this.character.item.id!, !this.character.item.enabled)
+            )
+        }))
+    }
 }
 </script>
