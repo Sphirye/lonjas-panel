@@ -138,7 +138,7 @@ export default class CharacterView extends Vue {
         try {
             await Handler.getItems(this, this.categories, () => CategoryService.getPublicCategories(0, 10, null))
             await Handler.getItems(this, this.posts, () =>
-                PostService.getPosts(this.page - 1, this.size, null, null, [Number(this.$route.params.id)], null, null)
+                PostService.getPosts(this.page - 1, this.size, null, null, null, [Number(this.$route.params.id)], null, null)
             )
         } catch (e) {
             console.log(e)

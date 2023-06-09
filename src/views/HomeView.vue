@@ -91,8 +91,8 @@ export default class HomeView extends Vue {
   async refresh() {
     try {
       await Handler.getItems(this, this.posts, () => PostService.getPosts(
-          0, 20, null, null, null, null, null)
-      )
+          0, 20, null, null, null, null, null, null
+      ))
       await Handler.getItems(this, this.artists, () => ArtistService.getPublicArtists(0, 20, null))
 
     } catch (e) { console.log(e) }

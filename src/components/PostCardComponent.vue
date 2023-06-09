@@ -2,7 +2,7 @@
   <v-card :width="width" :height="height" outlined class="pa-1" dark rounded @click="$router.push('/posts/' + post.id)">
     <template v-if="images != null">
       <v-hover v-slot="{ hover }">
-        <v-img width="100%" height="100%" class="pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="images[0] + '?name=small'">
+        <v-img width="100%" height="100%" class="pre-blur-image rounded-b" :class="hover ? 'blur-image' : ''" :src="images[0] + '?format=jpg&name=small'">
           <v-expand-transition>
             <v-sheet tile color="rgba(44,48,59,0.84)" v-if="hover" class="d-flex flex-column transition-fast-in-fast-out" style="height: 100%">
               <v-card-text v-if="post.type == Type.TWEET" class="px-2 text-center my-auto">

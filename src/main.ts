@@ -7,6 +7,7 @@ import AxiosConfig from "@/config/AxiosConfig"
 import LoginService from "@/service/LoginService"
 import "@/config/custom-styles.css"
 import vueDebounce from 'vue-debounce'
+import '@mdi/font/css/materialdesignicons.css'
 
 
 Vue.config.productionTip = false

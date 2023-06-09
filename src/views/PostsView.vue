@@ -1,10 +1,13 @@
 <template>
   <v-container fluid>
-    <v-row dense align="center">
-      <h2 class="uni-sans-heavy white--text mx-4">{{ lang.posts }}</h2>
+    <v-row dense align="center" class="mx-4">
+      <h2 class="uni-sans-heavy white--text">{{ lang.posts }}</h2>
       <v-spacer/>
       <v-sheet color="transparent">
-        <v-text-field clearable hide-details dense outlined dark rounded append-icon="mdi-magnify" :label="lang.search"/>
+        <v-text-field
+            clearable hide-details dense outlined dark rounded append-icon="mdi-magnify"
+            :label="lang.search" @keydown.enter="refresh" @click:clear="refresh" v-model="search"
+        />
       </v-sheet>
     </v-row>
 
@@ -55,7 +58,7 @@ export default class PostsView extends Mixins(PaginationMixin) {
     async refresh() {
         try {
             await Handler.getItems(this, this.posts, () => PostService.getPosts(
-                this.page - 1, this.size, null, null, null, null, null)
+                this.page - 1, this.size, this.search, null, null, null, null, null)
             )
             this.setPageCount(this.posts.totalItems!!)
         } catch (e) {

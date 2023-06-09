@@ -110,7 +110,7 @@ export default class TagView extends Vue {
             if (this.tag.item.id) {
                 await Handler.getItems(this, this.posts, () =>
                     PostService.getPosts(
-                        this.postsPage - 1, this.postsSize, null, null, null, [this.tag.item.id!!], null
+                        this.postsPage - 1, this.postsSize, null, null, null, null, [this.tag.item.id!!], null
                     )
                 )
             }

@@ -23,14 +23,14 @@ export default class PostService {
     }
 
     static async getPosts(
-        page: number, size: number, artistId: Nullable<number>, categoryIds: Nullable<number[]>,
+        page: number, size: number, search: Nullable<string>, artistId: Nullable<number>, categoryIds: Nullable<number[]>,
         characterIds: Nullable<number[]>, tagIds: Nullable<number[]>, enabled: Nullable<boolean>
     ): Promise<Response<Category[]>> {
         try {
             const response = await axios.get(`${ConstantTool.BASE_URL}/api/post`, {
                 headers: { Authorization: getModule(SessionModule).session.token },
                 params: {
-                    page, size, enabled, artistId,
+                    page, size, enabled, artistId, search,
                     categoryIds: categoryIds?.toString(),
                     characterIds: characterIds?.toString(),
                     tagIds: tagIds?.toString()

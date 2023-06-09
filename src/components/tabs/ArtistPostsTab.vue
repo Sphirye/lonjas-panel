@@ -102,7 +102,7 @@ export default class ArtistPostsTab extends Vue {
   async refresh() {
     try {
       await Handler.getItems(this, this.posts, () =>
-          PostService.getPosts(this.page - 1, this.size, this.artist.id!!, null, null, null, null)
+          PostService.getPosts(this.page - 1, this.size, null, this.artist.id!!, null, null, null, null)
       )
     } catch (e) {
       console.log(e)

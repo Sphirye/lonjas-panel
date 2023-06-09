@@ -105,7 +105,7 @@ export default class PostsView extends Vue {
   async refresh() {
     try {
       await Handler.getItems(this, this.posts, () =>
-          PostService.getPosts(this.page - 1, this.size, this.artistId, null, null, null, null)
+          PostService.getPosts(this.page - 1, this.size, null, this.artistId, null, null, null, null)
       )
     } catch (e) {
       console.log(e)
