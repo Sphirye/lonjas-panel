@@ -3,11 +3,13 @@
     <v-row dense align="center">
       <span class="uni-sans-heavy text-25 grey--text  text--lighten-2 mx-4">{{ lang.tags }}</span>
       <v-spacer/>
+
+      <v-switch v-model="nsfw" label="NSFW" hide-details class="my-0 py-0 mr-6" dark inset/>
+
       <v-sheet color="transparent">
         <v-text-field
             @keydown.enter="refresh" clearable hide-details dense outlined
-            dark append-icon="mdi-magnify" :label="lang.search"
-            v-model="search"
+            dark append-icon="mdi-magnify" :label="lang.search" v-model="search"
         />
       </v-sheet>
       <v-btn class="mx-2" depressed @click="dialog = true">{{ lang.add }}</v-btn>
@@ -32,6 +34,7 @@
 
     <v-row dense align="center">
       <v-spacer/>
+      <span class="white--text mx-4">Mostrando {{tags.items.length}} de {{tags.totalItems}} posts.</span>
       <v-pagination class="white--text" v-model="page" :length="pageCount" :total-visible="8"/>
     </v-row>
 
@@ -63,19 +66,21 @@ export default class TagsService extends Mixins(PaginationMixin) {
     dialog: boolean = false
     tags: MultipleItem<Tag> = { items: [], totalItems: 0 }
     size = 50
+    nsfw: boolean = false
 
     created() { this.refresh() }
 
     async refresh() {
         try {
             await Handler.getItems(this, this.tags, () =>
-                TagService.getTags(this.page - 1, this.size, this.search, null)
+                TagService.getTags(this.page - 1, this.size, this.search, null, this.nsfw)
             )
             this.setPageCount(this.tags.totalItems!!)
         } catch (e) { console.log(e) }
     }
 
     @Watch("page")
+    @Watch("nsfw")
     onPageChanged() { this.refresh() }
 
 }

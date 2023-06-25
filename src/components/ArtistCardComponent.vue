@@ -135,9 +135,7 @@ export default class ArtistCardComponent extends Vue {
     @Prop(Post) readonly post!: Post | undefined
     @Prop() readonly totalPostCount?: number
 
-    get lang() {
-        return getModule(LangModule).lang
-    }
+    get lang() { return getModule(LangModule).lang }
 
     toArtistPage() {
         this.$router.push("/artists/" + this.artist.id).catch(() => {

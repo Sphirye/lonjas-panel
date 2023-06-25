@@ -176,7 +176,7 @@ export default class CreateTweetPostDialog extends Vue {
   }
 
   async getTags() {
-    await Handler.getItems(this, this.tags, () => TagService.getTags(0, 5, this.tagSearch, null))
+    await Handler.getItems(this, this.tags, () => TagService.getTags(0, 5, this.tagSearch, null, null))
   }
 
   async getCharacters() {

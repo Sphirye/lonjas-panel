@@ -25,11 +25,11 @@
             <v-card-text class="py-0 my-2">
               <v-row align="center" dense>
                 <v-col cols="6">
-                  <TagAutocomplete v-model="tags"/>
+                  <TagAutocomplete v-model="post.item.tags"/>
                 </v-col>
 
                 <v-col cols="6">
-                  <CharacterAutocompleteComponent v-model="characters"/>
+                  <CharacterAutocompleteComponent v-model="post.item.characters"/>
                 </v-col>
               </v-row>
             </v-card-text>
@@ -51,6 +51,7 @@
         <!--      <CreateTagDialog :dialog.sync="dialog" @created="this.refresh"/>-->
       </v-dialog>
     </template>
+
   </v-container>
 </template>
 
@@ -67,16 +68,13 @@ import Dialog from "@/model/vue/Dialog"
 import Tag from "@/model/Tag"
 import PostService from "@/service/PostService";
 import Post from "@/model/Post";
-import Category from "@/model/Category";
 import Character from "@/model/Character";
 import Rules from "@/service/tool/Rules";
-import CategoryService from "@/service/CategoryService";
-import CharacterService from "@/service/CharacterService";
-import ArtistService from "@/service/ArtistService";
 import ArtistCardComponent from "@/components/ArtistCardComponent.vue";
 import PostImageComponent from "@/components/PostImageComponent.vue";
 import TagAutocomplete from "@/components/autocomplete/TagAutocompleteComponent.vue";
 import CharacterAutocompleteComponent from "@/components/autocomplete/CharacterAutocompleteComponent.vue";
+import Category from "@/model/Category";
 
 @Component({
     components: {CharacterAutocompleteComponent, TagAutocomplete, PostImageComponent, ArtistCardComponent}
@@ -96,22 +94,23 @@ export default class PostView extends Vue {
     characters: Character[] = []
 
     async created() {
-        try {
-            await Handler.getItem(this, this.post, () => PostService.getPost(Number(this.$route.params.id)))
-            if (this.post.item.id) {
-                this.characters.push(...this.post.item.characters!)
-                this.tags.push(...this.post.item.tags!)
-                await this.refresh()
-            }
-        } catch (e) {
-            console.log(e)
-        }
+      await this.refresh()
     }
 
     async refresh() {
-        try {
-        } catch (e) {
-            console.log(e)
+        await Handler.getItem(this, this.post, () => PostService.getPost(Number(this.$route.params.id)))
+        if (this.post.item.id) {
+
+            this.post.item.characters!.forEach((character: Character) => {
+                const exists = this.characters.some((item) => item.id === character.id)
+                console.log(`${character.id} - ${exists}`)
+                if (!exists) { this.characters.push(character) }
+            })
+
+            this.post.item.tags!.forEach((tag: Tag) => {
+                const exists = this.tags.some((item) => item.id === tag.id)
+                if (!exists) { this.tags.push(tag) }
+            })
         }
     }
 

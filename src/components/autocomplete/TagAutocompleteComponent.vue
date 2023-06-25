@@ -18,11 +18,13 @@ import TagService from "@/service/TagService"
 import LangModule from "@/store/LangModule"
 import Handler from "@/handlers/Handler"
 import Tag from "@/model/Tag"
+import Character from "@/model/Character";
 
 @Component
 export default class TagAutocompleteComponent extends Mixins(PaginationMixin) {
 
     @VModel({ type: Array }) selectedTags!: Tag[]
+    @PropSync("secondaryModel") syncedSecondaryModel!: Tag[]
     @Ref('autocomplete') readonly autocomplete!: any
 
     loading: boolean = false
@@ -33,13 +35,17 @@ export default class TagAutocompleteComponent extends Mixins(PaginationMixin) {
     created() { this.refresh() }
 
     async refresh() {
-        await Handler.getItems(this, this.tags, () => TagService.getTags(this.page - 1, this.size, this.search, null))
+        await Handler.getItems(this, this.tags, () => TagService.getTags(this.page - 1, this.size, this.search, null, null))
+
+        //Check if there is any pre-selected tags and add it to the items array
+        this.selectedTags.forEach((tag: Tag) => {
+            const exists = this.tags.items.some((item: Tag) => item.id === tag.id)
+            if (!exists) { this.tags.items.push(tag) }
+        })
+
     }
 
-    @Watch("selectedTags")
-    onXD() {
-        console.log(this.autocomplete)
-    }
+
 
 }
 </script>

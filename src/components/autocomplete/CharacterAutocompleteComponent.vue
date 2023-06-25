@@ -33,6 +33,7 @@ import {getModule} from "vuex-module-decorators"
 import LangModule from "@/store/LangModule"
 import Character from "@/model/Character"
 import Handler from "@/handlers/Handler";
+import Tag from "@/model/Tag";
 
 @Component
 export default class CharacterAutocompleteComponent extends Mixins(PaginationMixin) {
@@ -52,6 +53,12 @@ export default class CharacterAutocompleteComponent extends Mixins(PaginationMix
         await Handler.getItems(this, this.characters, () =>
             CharacterService.getCharacters(this.page - 1, this.size, this.search, null)
         )
+
+        //Check if there is any pre-selected character and add it to the items array
+        this.selectedCharacters.forEach((character: Character) => {
+            const exists = this.characters.items.some((item: Tag) => item.id === character.id)
+            if (!exists) { this.characters.items.push(character) }
+        })
     }
 
 }

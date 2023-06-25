@@ -9,11 +9,11 @@ import Tag from "@/model/Tag"
 import SnackbarModule from "@/store/SnackbarModule";
 
 export default class TagService {
-    static async getTags(page: number, size: number, search: string | null, enabled: boolean | null): Promise<Response<Tag[]>> {
+    static async getTags(page: number, size: number, search: Nullable<string>, enabled: Nullable<boolean>, nsfw: Nullable<boolean>): Promise<Response<Tag[]>> {
         try {
             const response = await axios.get(`${ConstantTool.BASE_URL}/api/tag`, {
                 headers: { Authorization: getModule(SessionModule).session.token },
-                params: { page, size, search }
+                params: { page, size, search, nsfw }
             })
             const tags = JsonTool.jsonConvert.deserializeArray(response.data, Tag)
             const xTotalCount = Number(response.headers["x-total-count"])
