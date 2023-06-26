@@ -40,23 +40,9 @@
         </v-card>
       </v-col>
 
-      <v-col cols="8">
-        <v-row no-gutters>
-          <v-sheet color="transparent" min-height="550px">
-            <v-row dense>
-              <template v-for="(post) in posts.items">
-                <v-col cols="auto">
-                  <PostCardComponent width="150px" height="150px" :post="post"/>
-                </v-col>
-              </template>
-            </v-row>
-          </v-sheet>
-        </v-row>
 
-        <v-row>
-          <v-spacer/>
-          <v-pagination light v-model="postsPage" :length="postsPageCount" :total-visible="8"/>
-        </v-row>
+      <v-col cols="8">
+        <PostsGridPaginableComponent :posts.sync="posts" :page.sync="postsPage" :page-count.sync="postsPageCount"/>
       </v-col>
     </v-row>
 
@@ -69,7 +55,7 @@
 <script lang="ts">
 import {MultipleItem, SingleItem} from "@/handlers/interfaces/ContentUI"
 import CreateTagDialog from "@/components/dialog/CreateTagDialog.vue"
-import {Component, Vue, Watch} from "vue-property-decorator"
+import {Component, Mixins, Vue, Watch} from "vue-property-decorator"
 import {getModule} from "vuex-module-decorators"
 import DialogModule from "@/store/DialogModule"
 import TagService from "@/service/TagService"
@@ -80,16 +66,14 @@ import Tag from "@/model/Tag"
 import Post from "@/model/Post";
 import PostCardComponent from "@/components/PostCardComponent.vue";
 import PostService from "@/service/PostService";
+import PaginationMixin from "@/mixins/PaginationMixin";
+import PostsGridPaginableComponent from "@/components/PostsGridPageableComponent.vue";
 
-@Component({components: {PostCardComponent, CreateTagDialog}})
-export default class TagView extends Vue {
+@Component({components: {PostsGridPaginableComponent, PostCardComponent, CreateTagDialog }})
+export default class TagView extends Mixins(PaginationMixin) {
 
     lang = getModule(LangModule).lang
     loading: boolean = false
-    search: string = ""
-    page: number = 1
-    size: number = 20
-    totalItems: number = 0
     dialog: boolean = false
     tag: SingleItem<Tag> = {item: new Tag()}
     tags: MultipleItem<Tag> = {items: [], totalItems: 0}

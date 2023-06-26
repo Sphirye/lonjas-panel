@@ -13,16 +13,7 @@
 
     <v-progress-linear class="my-4" color="grey" :indeterminate="loading"/>
 
-    <v-row dense>
-      <v-col cols="auto" v-for="(post, key) in posts.items" :key="key">
-        <PostCardComponent :post="post"/>
-      </v-col>
-    </v-row>
-
-    <v-row dense align="center">
-      <v-spacer/>
-      <v-pagination class="white--text" v-model="page" :length="pageCount" :total-visible="8"/>
-    </v-row>
+    <PostsPaginableComponent :posts.sync="posts" :page.sync="page" :page-count.sync="pageCount"/>
 
   </v-container>
 </template>
@@ -43,8 +34,9 @@ import Post from "@/model/Post";
 import PostService from "@/service/PostService";
 import PostCardComponent from "@/components/PostCardComponent.vue";
 import PaginationMixin from "@/mixins/PaginationMixin";
+import PostGridListComponent from "@/components/PostsGridPageableComponent.vue";
 
-@Component({components: {PostCardComponent}})
+@Component({components: {PostsPaginableComponent: PostGridListComponent, PostCardComponent}})
 export default class PostsView extends Mixins(PaginationMixin) {
 
     lang = getModule(LangModule).lang
